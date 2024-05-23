@@ -14,10 +14,7 @@ public class DisplayManager {
 	private static final int FPS_CAP = 144;
 	
 	public static void createDisplay() {
-		ContextAttribs attribs = new ContextAttribs(3, 2);
-		attribs.withForwardCompatible(true);
-		attribs.withProfileCore(true);
-		
+		ContextAttribs attribs = new ContextAttribs(3, 2).withForwardCompatible(true).withProfileCore(true);
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create(new PixelFormat(), attribs);
@@ -25,8 +22,7 @@ public class DisplayManager {
 		} catch (LWJGLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}	
 		GL11.glViewport(0, 0, WIDTH, HEIGHT);
 	}
 	

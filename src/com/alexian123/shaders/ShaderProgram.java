@@ -3,11 +3,17 @@ package com.alexian123.shaders;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 public abstract class ShaderProgram {
+	
+	private static FloatBuffer matrix4fBuffer = BufferUtils.createFloatBuffer(16);
 	
 	private int programID;
 	private int vertexShaderID;
@@ -19,8 +25,10 @@ public abstract class ShaderProgram {
 		programID = GL20.glCreateProgram();
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);
+		bindAttributes();
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
+		getAllUniformLocations();
 	}
 	
 	public void start() {
@@ -44,6 +52,30 @@ public abstract class ShaderProgram {
 	
 	protected void bindAttrib(int attrib, String varName) {
 		GL20.glBindAttribLocation(programID, attrib, varName);
+	}
+	
+	protected abstract void getAllUniformLocations();
+	
+	protected int getUniformLocation(String uniformName) {
+		return GL20.glGetUniformLocation(programID, uniformName);
+	}
+	
+	protected void loadFLoat(int location, float val) {
+		GL20.glUniform1f(location, val);
+	}
+	
+	protected void loadBoolean(int location, boolean val) {
+		GL20.glUniform1f(location, val ? 1.0f : 0.0f);
+	}
+	
+	protected void loadVector3f(int location, Vector3f vec) {
+		GL20.glUniform3f(location, vec.x, vec.y, vec.z);
+	}
+	
+	protected void loadMatrix4f(int location, Matrix4f mat) {
+		mat.store(matrix4fBuffer);
+		matrix4fBuffer.flip();
+		GL20.glUniformMatrix4(location, false, matrix4fBuffer);
 	}
 
 	@SuppressWarnings("deprecation")
