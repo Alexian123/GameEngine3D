@@ -6,18 +6,17 @@ import java.util.Random;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.entities.Camera;
-import com.alexian123.entities.Entity;
-import com.alexian123.entities.Light;
-import com.alexian123.models.RawModel;
-import com.alexian123.models.TexturedModel;
+import com.alexian123.entity.Camera;
+import com.alexian123.entity.Entity;
+import com.alexian123.entity.Light;
+import com.alexian123.model.RawModel;
+import com.alexian123.model.TexturedModel;
 import com.alexian123.renderEngine.DisplayManager;
 import com.alexian123.renderEngine.Loader;
 import com.alexian123.renderEngine.OBJLoader;
-import com.alexian123.renderEngine.Renderer;
 import com.alexian123.renderEngine.RenderingManager;
-import com.alexian123.shaders.StaticShader;
-import com.alexian123.textures.ModelTexture;
+import com.alexian123.terrain.Terrain;
+import com.alexian123.texture.ModelTexture;
 
 public class Main {
 
@@ -27,21 +26,18 @@ public class Main {
 		RenderingManager rendManager = new RenderingManager();
 		
 		RawModel rawModel = OBJLoader.loadObjModel("dragon", loader);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("red"), 10, 1);
+		ModelTexture texture = new ModelTexture(loader.loadTexture("dirt"), 10, 1);
 		TexturedModel texturedModel = new TexturedModel(rawModel, texture);
 		
-		//Entity entity = new Entity(texturedModel, new Vector3f(0, -3, -25), new Vector3f(0, 0, 0), 1);
-		
 		List<Entity> entities = new ArrayList<>();
-		Random random = new Random();
-		for (int i = 0; i < 100; ++i) {
-			float x = random.nextFloat() * 100 - 50;
-			float y = random.nextFloat() * 100 - 50;
-			float z = random.nextFloat() * -300;
-			entities.add(new Entity(texturedModel, new Vector3f(x, y, z), new Vector3f(0, 0, 0), 0.5f));
- 		}
+		Entity e = new Entity(texturedModel, new Vector3f(0, 0, -25), new Vector3f(0, 0, 0), 1);
+		entities.add(e);
 		
-		
+		List<Terrain> terrains = new ArrayList<>();
+		terrains.add(new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("grass"))));
+		terrains.add(new Terrain(-1, 0, loader, new ModelTexture(loader.loadTexture("grass"))));
+		terrains.add(new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("grass"))));
+		terrains.add(new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grass"))));
 		
 		Light light = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
 		
@@ -49,10 +45,16 @@ public class Main {
 		
 		while (!DisplayManager.displayShouldClose()) {
 			camera.move();
+			
 			for (Entity entity : entities) {
-				entity.incrementRotation(0.5f, 0.5f, 0);
+				entity.incrementRotation(0, 0.5f, 0);
 				rendManager.processEntity(entity);
 			}
+			
+			for (Terrain terrain : terrains) {
+				rendManager.processTerrain(terrain);
+			}
+			
 			rendManager.renderScene(light, camera);
 			DisplayManager.updateDisplay();
 		}

@@ -10,37 +10,22 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
-import com.alexian123.entities.Entity;
-import com.alexian123.models.RawModel;
-import com.alexian123.models.TexturedModel;
-import com.alexian123.shaders.StaticShader;
-import com.alexian123.textures.ModelTexture;
-import com.alexian123.utils.Maths;
+import com.alexian123.entity.Entity;
+import com.alexian123.model.RawModel;
+import com.alexian123.model.TexturedModel;
+import com.alexian123.shader.StaticShader;
+import com.alexian123.texture.ModelTexture;
+import com.alexian123.util.Maths;
 
-public class Renderer {
-	
-	private static final float FOV = 70.0f;
-	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 1000.0f;
+public class EntityRenderer {
 	
 	private final StaticShader shader;
 	
-	private final Matrix4f projectionMatrix;
-	
-	public Renderer(StaticShader shader) {
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
+	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
-		projectionMatrix = createProjectionMatrix();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-	}
-	
-	public void prepare() {
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(0, 0, 0, 0);
 	}
 	
 	public void render(Map<TexturedModel, List<Entity>> entities) {
@@ -77,20 +62,4 @@ public class Renderer {
 		Matrix4f matrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		shader.loadTransformationMatrix(matrix);
 	}
-	
-	private static Matrix4f createProjectionMatrix() {
-		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-		float xScale = (float) (1.0f / Math.tan(Math.toRadians(FOV / 2.0f)));
-		float yScale = xScale * aspectRatio;
-		float frustumLength = FAR_PLANE - NEAR_PLANE;
-		Matrix4f projectionMatrix = new Matrix4f();
-		projectionMatrix.m00 = xScale;
-		projectionMatrix.m11 = yScale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustumLength);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustumLength);
-		projectionMatrix.m33 = 0;
-		return projectionMatrix;
-	}
-
 }

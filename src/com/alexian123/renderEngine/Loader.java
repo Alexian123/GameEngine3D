@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-import com.alexian123.models.RawModel;
+import com.alexian123.model.RawModel;
 
 public class Loader {
 	

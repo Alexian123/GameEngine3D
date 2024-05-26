@@ -1,4 +1,4 @@
-package com.alexian123.textures;
+package com.alexian123.texture;
 
 public class ModelTexture {
 	

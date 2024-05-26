@@ -1,4 +1,4 @@
-package com.alexian123.models;
+package com.alexian123.model;
 
 public class RawModel {
 	

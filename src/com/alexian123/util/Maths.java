@@ -1,9 +1,9 @@
-package com.alexian123.utils;
+package com.alexian123.util;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.entities.Camera;
+import com.alexian123.entity.Camera;
 
 public class Maths {
 	

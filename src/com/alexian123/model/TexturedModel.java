@@ -1,6 +1,6 @@
-package com.alexian123.models;
+package com.alexian123.model;
 
-import com.alexian123.textures.ModelTexture;
+import com.alexian123.texture.ModelTexture;
 
 public class TexturedModel {
 	

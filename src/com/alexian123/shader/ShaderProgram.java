@@ -1,4 +1,4 @@
-package com.alexian123.shaders;
+package com.alexian123.shader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

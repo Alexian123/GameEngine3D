@@ -10,7 +10,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.models.RawModel;
+import com.alexian123.model.RawModel;
 
 public class OBJLoader {
 	

@@ -1,8 +1,8 @@
-package com.alexian123.entities;
+package com.alexian123.entity;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.models.TexturedModel;
+import com.alexian123.model.TexturedModel;
 
 public class Entity {
 	

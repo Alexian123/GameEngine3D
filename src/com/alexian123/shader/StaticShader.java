@@ -1,15 +1,15 @@
-package com.alexian123.shaders;
+package com.alexian123.shader;
 
 import org.lwjgl.util.vector.Matrix4f;
 
-import com.alexian123.entities.Camera;
-import com.alexian123.entities.Light;
-import com.alexian123.utils.Maths;
+import com.alexian123.entity.Camera;
+import com.alexian123.entity.Light;
+import com.alexian123.util.Maths;
 
 public class StaticShader extends ShaderProgram {
 	
-	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shaders/shader.vert";
-	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shaders/shader.frag";
+	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/entityShader.vert";
+	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/entityShader.frag";
 	
 	private int transformationMatrixLocation;
 	private int projectionMatrixLocation;
