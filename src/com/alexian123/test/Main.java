@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entities.Camera;
 import com.alexian123.entities.Entity;
+import com.alexian123.entities.Light;
 import com.alexian123.models.RawModel;
 import com.alexian123.models.TexturedModel;
 import com.alexian123.renderEngine.DisplayManager;
@@ -21,12 +22,12 @@ public class Main {
 		StaticShader shader = new StaticShader();
 		Renderer renderer = new Renderer(shader);
 		
-		
-		
-		RawModel model = OBJLoader.loadObjModel("stall", loader);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
+		RawModel model = OBJLoader.loadObjModel("dragon", loader);
+		ModelTexture texture = new ModelTexture(loader.loadTexture("red"));
 		TexturedModel texturedModel = new TexturedModel(model, texture);
-		Entity entity = new Entity(texturedModel, new Vector3f(0, -2, -5), new Vector3f(0, 0, 0), 1);
+		Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -25), new Vector3f(0, 0, 0), 1);
+		
+		Light light = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
 		
 		Camera camera = new Camera();
 		
@@ -36,6 +37,7 @@ public class Main {
 			
 			renderer.prepare();
 			shader.start();
+			shader.loadLight(light);
 			shader.loadViewMatrix(camera);
 			renderer.render(entity, shader);
 			shader.stop();

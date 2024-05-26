@@ -3,6 +3,7 @@ package com.alexian123.shaders;
 import org.lwjgl.util.vector.Matrix4f;
 
 import com.alexian123.entities.Camera;
+import com.alexian123.entities.Light;
 import com.alexian123.utils.Maths;
 
 public class StaticShader extends ShaderProgram {
@@ -10,37 +11,47 @@ public class StaticShader extends ShaderProgram {
 	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shaders/shader.vert";
 	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shaders/shader.frag";
 	
-	private int location_transformationMatrix;
-	private int location_projectionMatrix;
-	private int location_viewMatrix;
+	private int transformationMatrixLocation;
+	private int projectionMatrixLocation;
+	private int viewMatrixLocation;
+	private int lightPositionLocation;
+	private int lightColorLocation;
 
 	public StaticShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {
-		super.loadMatrix4f(location_transformationMatrix, matrix);
+		super.loadMatrix4f(transformationMatrixLocation, matrix);
 	}
 	
 	public void loadProjectionMatrix(Matrix4f matrix) {
-		super.loadMatrix4f(location_projectionMatrix, matrix);
+		super.loadMatrix4f(projectionMatrixLocation, matrix);
 	}
 	
 	public void loadViewMatrix(Camera camera) {
-		super.loadMatrix4f(location_viewMatrix, Maths.createViewMatrix(camera));
+		super.loadMatrix4f(viewMatrixLocation, Maths.createViewMatrix(camera));
+	}
+	
+	public void loadLight(Light light) {
+		super.loadVector3f(lightPositionLocation, light.getPosition());
+		super.loadVector3f(lightColorLocation, light.getColor());
 	}
 	
 	@Override
 	protected void bindAttributes() {
 		super.bindAttrib(0, "position");
-		super.bindAttrib(1, "textureCoords");
+		super.bindAttrib(1, "textureCoord");
+		super.bindAttrib(2, "normal");
 	}
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
-		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		location_viewMatrix = super.getUniformLocation("viewMatrix");
+		transformationMatrixLocation = super.getUniformLocation("transformationMatrix");
+		projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
+		viewMatrixLocation = super.getUniformLocation("viewMatrix");
+		lightPositionLocation = super.getUniformLocation("lightPosition");
+		lightColorLocation = super.getUniformLocation("lightColor");
 	}
 
 }
