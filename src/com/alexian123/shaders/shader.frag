@@ -19,7 +19,7 @@ void main(void) {
 
 	// diffuse light
 	float brightness = dot(unitSurfaceNormal, unitToLightVector);
-	brightness = max(brightness, 0.0);
+	brightness = max(brightness, 0.2);	// minimum value = ambient light
 	vec3 diffuse = brightness * lightColor;
 
 	// specular light

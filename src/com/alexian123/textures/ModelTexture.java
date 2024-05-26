@@ -2,23 +2,23 @@ package com.alexian123.textures;
 
 public class ModelTexture {
 	
-	private int textureID;
+	private int id;
 	
 	private float shineDamper = 1;
 	private float reflectivity = 0;
 	
 	public ModelTexture(int textureID) {
-		this.textureID = textureID;
+		this.id = textureID;
 	}
 
-	public ModelTexture(int textureID, float shineDamper, float reflectivity) {
-		this.textureID = textureID;
+	public ModelTexture(int id, float shineDamper, float reflectivity) {
+		this.id = id;
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
 	}
 
-	public int getTextureID() {
-		return textureID;
+	public int getID() {
+		return id;
 	}
 
 	public float getShineDamper() {
