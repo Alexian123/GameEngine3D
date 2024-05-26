@@ -34,9 +34,17 @@ public class RenderingManager {
 	private Map<TexturedModel, List<Entity>> entities;
 	private List<Terrain> terrains;
 	
-	public RenderingManager() {
+	public static void enableCulling() {
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
+	}
+	
+	public static void disableCulling() {
+		GL11.glDisable(GL11.GL_CULL_FACE);
+	}
+	
+	public RenderingManager() {
+		enableCulling();
 		this.projectionMatrix = createProjectionMatrix();
 		this.staticShader = new StaticShader();
 		this.entityRenderer = new EntityRenderer(staticShader, projectionMatrix);
