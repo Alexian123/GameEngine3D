@@ -11,6 +11,7 @@ import com.alexian123.entities.Entity;
 import com.alexian123.models.RawModel;
 import com.alexian123.models.TexturedModel;
 import com.alexian123.shaders.StaticShader;
+import com.alexian123.textures.ModelTexture;
 import com.alexian123.utils.Maths;
 
 public class Renderer {
@@ -37,13 +38,17 @@ public class Renderer {
 	public void render(Entity entity, StaticShader shader) {
 		TexturedModel texturedModel = entity.getModel();
 		RawModel model = texturedModel.getModel();
+		ModelTexture texture = texturedModel.getTexture();
+		Matrix4f matrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
+		
 		GL30.glBindVertexArray(model.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		
-		Matrix4f matrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		shader.loadTransformationMatrix(matrix);
+		shader.loadShineParameters(texture.getShineDamper(), texture.getReflectivity());
+		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturedModel.getTexture().getTextureID());
 		GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
