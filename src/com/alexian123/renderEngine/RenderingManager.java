@@ -8,6 +8,7 @@ import java.util.Map;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
@@ -22,6 +23,7 @@ public class RenderingManager {
 	private static final float FOV = 70.0f;
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000.0f;
+	private static final Vector3f SKY_COLOR = new Vector3f(0.5f, 0.5f, 0.5f);
 	
 	private final Matrix4f projectionMatrix;
 	
@@ -86,11 +88,12 @@ public class RenderingManager {
 	private void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(0, 194.0f / 255.0f, 1, 1);
+		GL11.glClearColor(SKY_COLOR.x, SKY_COLOR.y, SKY_COLOR.z, 1.0f);
 	}
 	
 	private void renderEntities(Light sun, Camera camera) {
 		staticShader.start();
+		staticShader.loadSkyColor(SKY_COLOR);
 		staticShader.loadLight(sun);
 		staticShader.loadViewMatrix(camera);
 		entityRenderer.render(entities);
@@ -99,6 +102,7 @@ public class RenderingManager {
 	
 	private void renderTerrains(Light sun, Camera camera) {
 		terrainShader.start();
+		terrainShader.loadSkyColor(SKY_COLOR);
 		terrainShader.loadLight(sun);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);

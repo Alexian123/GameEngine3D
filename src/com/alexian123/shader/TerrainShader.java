@@ -1,6 +1,7 @@
 package com.alexian123.shader;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Light;
@@ -18,6 +19,7 @@ public class TerrainShader extends ShaderProgram {
 	private int lightColorLocation;
 	private int shineDamperLocation;
 	private int reflectivityLocation;
+	private int skyColorLocation;
 	
 	public TerrainShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -45,6 +47,10 @@ public class TerrainShader extends ShaderProgram {
 		super.loadFLoat(reflectivityLocation, reflectivity);
 	}
 	
+	public void loadSkyColor(Vector3f skyColor) {
+		super.loadVector3f(skyColorLocation, skyColor);
+	}
+	
 	@Override
 	protected void bindAttributes() {
 		super.bindAttrib(0, "position");
@@ -61,5 +67,6 @@ public class TerrainShader extends ShaderProgram {
 		lightColorLocation = super.getUniformLocation("lightColor");
 		shineDamperLocation = super.getUniformLocation("shineDamper");
 		reflectivityLocation = super.getUniformLocation("reflectivity");
+		skyColorLocation = super.getUniformLocation("skyColor");
 	}
 }

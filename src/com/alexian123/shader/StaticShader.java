@@ -1,6 +1,7 @@
 package com.alexian123.shader;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Light;
@@ -19,6 +20,7 @@ public class StaticShader extends ShaderProgram {
 	private int shineDamperLocation;
 	private int reflectivityLocation;
 	private int useFakeLightingLocation;
+	private int skyColorLocation;
 
 	public StaticShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -50,6 +52,10 @@ public class StaticShader extends ShaderProgram {
 		super.loadBoolean(useFakeLightingLocation, useFakeLighting);
 	}
 	
+	public void loadSkyColor(Vector3f skyColor) {
+		super.loadVector3f(skyColorLocation, skyColor);
+	}
+	
 	@Override
 	protected void bindAttributes() {
 		super.bindAttrib(0, "position");
@@ -67,6 +73,7 @@ public class StaticShader extends ShaderProgram {
 		shineDamperLocation = super.getUniformLocation("shineDamper");
 		reflectivityLocation = super.getUniformLocation("reflectivity");
 		useFakeLightingLocation = super.getUniformLocation("useFakeLighting");
+		skyColorLocation = super.getUniformLocation("skyColor");
 	}
 
 }

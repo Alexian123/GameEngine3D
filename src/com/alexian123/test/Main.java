@@ -11,9 +11,10 @@ import com.alexian123.entity.Entity;
 import com.alexian123.entity.Light;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
+import com.alexian123.objConverter.ModelData;
+import com.alexian123.objConverter.OBJFileLoader;
 import com.alexian123.renderEngine.DisplayManager;
 import com.alexian123.renderEngine.Loader;
-import com.alexian123.renderEngine.OBJLoader;
 import com.alexian123.renderEngine.RenderingManager;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.ModelTexture;
@@ -25,6 +26,7 @@ public class Main {
 		Loader loader = new Loader();
 		RenderingManager rendManager = new RenderingManager();
 		
+		ModelData modelData;
 		RawModel rawModel;
 		ModelTexture texture;
 		TexturedModel texturedModel;
@@ -32,7 +34,8 @@ public class Main {
 		List<Entity> entities = new ArrayList<>();
 		
 		// trees
-		rawModel = OBJLoader.loadObjModel("tree", loader);
+		modelData = OBJFileLoader.loadOBJ("tree");
+		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 		texture = new ModelTexture(loader.loadTexture("tree"), 1, 0);
 		texturedModel = new TexturedModel(rawModel, texture);
 		for (int i = 0; i < 1000; ++i) {
@@ -42,7 +45,8 @@ public class Main {
 		}
 		
 		// grass
-		rawModel = OBJLoader.loadObjModel("grassModel", loader);
+		modelData = OBJFileLoader.loadOBJ("grassModel");
+		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 		texture = new ModelTexture(loader.loadTexture("grassEntity"), 1, 0, true, true);
 		texturedModel = new TexturedModel(rawModel, texture);
 		for (int i = 0; i < 1000; ++i) {
@@ -53,7 +57,8 @@ public class Main {
 		
 		
 		// ferns
-		rawModel = OBJLoader.loadObjModel("fern", loader);
+		modelData = OBJFileLoader.loadOBJ("fern");
+		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 		texture = new ModelTexture(loader.loadTexture("fern"), 1, 0, true, true);
 		texturedModel = new TexturedModel(rawModel, texture);
 		for (int i = 0; i < 500; ++i) {
@@ -64,7 +69,8 @@ public class Main {
 		
 		
 		// flowers
-		rawModel = OBJLoader.loadObjModel("grassModel", loader);
+		modelData = OBJFileLoader.loadOBJ("grassModel");
+		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 		texture = new ModelTexture(loader.loadTexture("flower"), 1, 0, true, true);
 		texturedModel = new TexturedModel(rawModel, texture);
 		for (int i = 0; i < 250; ++i) {
