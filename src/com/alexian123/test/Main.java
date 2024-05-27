@@ -86,7 +86,7 @@ public class Main {
 		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 		texture = new ModelTexture(loader.loadTexture("playerTexture"));
 		texturedModel = new TexturedModel(rawModel, texture);
-		Player player = new Player(texturedModel, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
+		Player player = new Player(texturedModel, new Vector3f(100, 0, -50), new Vector3f(0, 180, 0), 0.6f);
 		entities.add(player);
 		
 		
@@ -105,7 +105,7 @@ public class Main {
 		
 		Light sun = new Light(new Vector3f(0, 100, -50), new Vector3f(1, 1, 1));
 		
-		Camera camera = new Camera(new Vector3f(0, 10, 0), 10, 0, 0);
+		Camera camera = new Camera(player);
 		
 		while (!DisplayManager.displayShouldClose()) {
 			camera.move();
