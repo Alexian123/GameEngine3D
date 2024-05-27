@@ -7,30 +7,27 @@ public class Camera {
 	
 	private static final float CAMERA_STEP = 0.5f;
 	
-	private Vector3f position = new Vector3f(0, 2, 0);
+	private Vector3f position;
 	private float pitch; // high/low
 	private float yaw; // left/right
 	private float roll; // tilt
 	
+	public Camera() {
+		this.position = new Vector3f(0, 0, 0);
+		this.pitch = 0;
+		this.yaw = 0;
+		this.roll = 0;
+	}
+	
+	public Camera(Vector3f position, float pitch, float yaw, float roll) {
+		this.position = position;
+		this.pitch = pitch;
+		this.yaw = yaw;
+		this.roll = roll;
+	}
+	
 	public void move() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			position.z -= CAMERA_STEP;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			position.x -= CAMERA_STEP;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			position.z += CAMERA_STEP;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			position.x += CAMERA_STEP;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			position.y += CAMERA_STEP;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			position.y -= CAMERA_STEP;
-		}
+		
 	}
 	
 	public Vector3f getPosition() {

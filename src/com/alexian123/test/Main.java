@@ -9,6 +9,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
 import com.alexian123.entity.Light;
+import com.alexian123.entity.Player;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.objConverter.ModelData;
@@ -81,6 +82,13 @@ public class Main {
 			entities.add(new Entity(texturedModel, new Vector3f(x, 0, z), new Vector3f(0, 0, 0), 5));
 		}
 		
+		modelData = OBJFileLoader.loadOBJ("person");
+		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
+		texture = new ModelTexture(loader.loadTexture("playerTexture"));
+		texturedModel = new TexturedModel(rawModel, texture);
+		Player player = new Player(texturedModel, new Vector3f(0, 0, -5), new Vector3f(0, 0, 0), 1);
+		entities.add(player);
+		
 		
 		// terrain
 		Texture bgTexture = new Texture(loader.loadTexture("grass2"));
@@ -97,10 +105,11 @@ public class Main {
 		
 		Light sun = new Light(new Vector3f(0, 100, -50), new Vector3f(1, 1, 1));
 		
-		Camera camera = new Camera();
+		Camera camera = new Camera(new Vector3f(0, 10, 0), 10, 0, 0);
 		
 		while (!DisplayManager.displayShouldClose()) {
 			camera.move();
+			player.move();
 			
 			for (Entity entity : entities) {
 				rendManager.processEntity(entity);
