@@ -3,22 +3,46 @@ package com.alexian123.terrain;
 import com.alexian123.model.RawModel;
 import com.alexian123.renderEngine.Loader;
 import com.alexian123.texture.ModelTexture;
+import com.alexian123.texture.TerrainTexturePack;
+import com.alexian123.texture.Texture;
 
 public class Terrain {
 
-	public static final float SIZE = 800;
+	private static final float SIZE = 800;
 	private static final int VERTEX_COUNT = 128;
 	
-	private float x;
-	private float z;
-	private RawModel model;
-	private ModelTexture texture;
+	private final float x;
+	private final float z;
+	private final RawModel model;
+	private final TerrainTexturePack texturePack;
+	private final Texture blendMap;
 	
-	public Terrain(int gridX, int gridZ, Loader loader, ModelTexture texture) {
-		this.texture = texture;
+	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, Texture blendMap) {
+		this.texturePack = texturePack;
+		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
 		this.model = generateTerrain(loader);
+	}
+	
+	public float getX() {
+		return x;
+	}
+
+	public float getZ() {
+		return z;
+	}
+
+	public RawModel getModel() {
+		return model;
+	}
+
+	public TerrainTexturePack getTexturePack() {
+		return texturePack;
+	}
+	
+	public Texture getBlendMap() {
+		return blendMap;
 	}
 	
 	private RawModel generateTerrain(Loader loader){
@@ -57,21 +81,5 @@ public class Terrain {
 			}
 		}
 		return loader.loadToVao(vertices, textureCoords, normals, indices);
-	}
-
-	public float getX() {
-		return x;
-	}
-
-	public float getZ() {
-		return z;
-	}
-
-	public RawModel getModel() {
-		return model;
-	}
-
-	public ModelTexture getTexture() {
-		return texture;
 	}
 }

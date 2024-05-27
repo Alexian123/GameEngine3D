@@ -18,6 +18,8 @@ import com.alexian123.renderEngine.Loader;
 import com.alexian123.renderEngine.RenderingManager;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.ModelTexture;
+import com.alexian123.texture.TerrainTexturePack;
+import com.alexian123.texture.Texture;
 
 public class Main {
 
@@ -81,11 +83,17 @@ public class Main {
 		
 		
 		// terrain
+		Texture bgTexture = new Texture(loader.loadTexture("grass2"));
+		Texture rTexture = new Texture(loader.loadTexture("dirt"));
+		Texture gTexture = new Texture(loader.loadTexture("flowers"));
+		Texture bTexture = new Texture(loader.loadTexture("path"));
+		Texture blendMap = new Texture(loader.loadTexture("blendMap"));
+		TerrainTexturePack texturePack = new TerrainTexturePack(bgTexture, rTexture, gTexture, bTexture);
 		List<Terrain> terrains = new ArrayList<>();
-		terrains.add(new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("grass2"))));
-		terrains.add(new Terrain(-1, 0, loader, new ModelTexture(loader.loadTexture("grass2"))));
-		terrains.add(new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("grass2"))));
-		terrains.add(new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grass2"))));
+		terrains.add(new Terrain(0, 0, loader, texturePack, blendMap));
+		terrains.add(new Terrain(-1, 0, loader, texturePack, blendMap));
+		terrains.add(new Terrain(0, -1, loader, texturePack, blendMap));
+		terrains.add(new Terrain(-1, -1, loader, texturePack, blendMap));
 		
 		Light sun = new Light(new Vector3f(0, 100, -50), new Vector3f(1, 1, 1));
 		

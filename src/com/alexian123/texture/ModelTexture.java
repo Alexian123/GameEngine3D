@@ -1,34 +1,28 @@
 package com.alexian123.texture;
 
-public class ModelTexture {
-	
-	private int id;
+public class ModelTexture extends Texture {
 	
 	private float shineDamper = 1;
 	private float reflectivity = 0;
 	private boolean transparency = false;
 	private boolean fakeLighting = false;
 	
-	public ModelTexture(int textureID) {
-		this.id = textureID;
+	public ModelTexture(int id) {
+		super(id);
 	}
 
 	public ModelTexture(int id, float shineDamper, float reflectivity) {
-		this.id = id;
+		super(id);
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
 	}
 	
 	public ModelTexture(int id, float shineDamper, float reflectivity, boolean transparency, boolean fakeLighting) {
-		this.id = id;
+		super(id);
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
 		this.transparency = transparency;
 		this.fakeLighting = fakeLighting;
-	}
-
-	public int getID() {
-		return id;
 	}
 
 	public float getShineDamper() {

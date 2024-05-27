@@ -64,6 +64,10 @@ public abstract class ShaderProgram {
 		GL20.glUniform1f(location, val);
 	}
 	
+	protected void loadInt(int location, int val) {
+		GL20.glUniform1i(location, val);
+	}
+	
 	protected void loadBoolean(int location, boolean val) {
 		GL20.glUniform1f(location, val ? 1.0f : 0.0f);
 	}
