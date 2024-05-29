@@ -6,12 +6,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.model.RawModel;
 import com.alexian123.renderEngine.Loader;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
+import com.alexian123.util.Maths;
 import com.alexian123.texture.TerrainTexture;
 
 public class Terrain {
@@ -25,6 +27,8 @@ public class Terrain {
 	private final RawModel model;
 	private final TerrainTexturePack texturePack;
 	private final TerrainTexture blendMap;
+	
+	private float heights[][];
 	
 	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightmapFile) {
 		this.texturePack = texturePack;
@@ -54,6 +58,32 @@ public class Terrain {
 		return blendMap;
 	}
 	
+	public float getHeightAtPosition(float worldX, float worldZ) {
+		float terrainX = worldX - this.x;
+		float terrainZ = worldZ - this.z;
+		float gridTileSize = SIZE / ((float) heights.length - 1);
+		int gridX = (int) Math.floor(terrainX / gridTileSize);
+		int gridZ = (int) Math.floor(terrainZ / gridTileSize);
+		if (gridX < 0 || gridX >= heights.length - 1 || gridZ < 0 || gridZ >= heights.length - 1) { // check if tile is invalid
+			return 0.0f;
+		}
+		float xCoord = (terrainX % gridTileSize) / gridTileSize;
+		float zCoord = (terrainZ % gridTileSize) / gridTileSize;
+		float height = 0.0f;
+		if (xCoord <= (1-zCoord)) { // check which triangle the position is in
+			height = Maths.barryCentric(new Vector3f(0, heights[gridX][gridZ], 0), 
+										new Vector3f(1,heights[gridX + 1][gridZ], 0), 
+										new Vector3f(0, heights[gridX][gridZ + 1], 1), 
+										new Vector2f(xCoord, zCoord));
+		} else {
+			height = Maths.barryCentric(new Vector3f(1, heights[gridX + 1][gridZ], 0),
+										new Vector3f(1,heights[gridX + 1][gridZ + 1], 1), 
+										new Vector3f(0,heights[gridX][gridZ + 1], 1), 
+										new Vector2f(xCoord, zCoord));
+		}
+		return height;
+	}
+	
 	private RawModel generateTerrain(Loader loader, String heightmapFile){
 		BufferedImage heightmap = null;
 		try {
@@ -63,7 +93,7 @@ public class Terrain {
 			System.err.println("Error reading heightmap: " + heightmapFile);
 		}
 		int vertexCount = heightmap.getHeight();
-		
+		heights = new float[vertexCount][vertexCount];
 		int count = vertexCount * vertexCount;
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
@@ -73,7 +103,8 @@ public class Terrain {
 		for (int i = 0; i < vertexCount; ++i) {
 			for (int j = 0; j < vertexCount; ++j){
 				vertices[vertexPointer * 3] = (float) j / ((float) vertexCount - 1) * SIZE;
-				vertices[vertexPointer * 3 + 1] = getHeight(j, i, heightmap);
+				heights[j][i] = getHeight(j, i, heightmap);
+				vertices[vertexPointer * 3 + 1] = heights[j][i];
 				vertices[vertexPointer * 3 + 2] = (float) i / ((float) vertexCount - 1) * SIZE;
 				
 				Vector3f normal = getNormal(j, i, heightmap);

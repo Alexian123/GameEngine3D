@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.model.TexturedModel;
 import com.alexian123.renderEngine.DisplayManager;
+import com.alexian123.terrain.Terrain;
 
 public class Player extends Entity {
 	
@@ -12,7 +13,6 @@ public class Player extends Entity {
 	private static final float TURN_SPEED = 160.0f;	// degrees/s
 	private static final float GRAVITY = -50.0f;
 	private static final float JUMP_POWER = 20.0f;
-	private static final float TERRAIN_HEIGHT = 0.0f;
 	
 	private float currentRunSpeed = 0;
 	private float currentTurnSpeed = 0;
@@ -24,7 +24,7 @@ public class Player extends Entity {
 		super(model, position, rotation, scale);
 	}
 	
-	public void move() {
+	public void move(Terrain terrain) {
 		getKeyboardInput();
 		rotation.y += currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
 		float distance = currentRunSpeed * DisplayManager.getFrameTimeSeconds();
@@ -34,8 +34,9 @@ public class Player extends Entity {
 		position.z += dz;
 		currrentYSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 		position.y += currrentYSpeed * DisplayManager.getFrameTimeSeconds();
-		if (position.y < TERRAIN_HEIGHT) {
-			position.y = TERRAIN_HEIGHT;
+		float terrainHeight = terrain.getHeightAtPosition(position.x, position.z);
+		if (position.y < terrainHeight) {
+			position.y = terrainHeight;
 			currrentYSpeed = 0;
 			isAirborne = false;
 		}

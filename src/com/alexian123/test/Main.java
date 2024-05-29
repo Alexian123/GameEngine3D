@@ -99,9 +99,9 @@ public class Main {
 		TerrainTexturePack texturePack = new TerrainTexturePack(bgTexture, rTexture, gTexture, bTexture);
 		List<Terrain> terrains = new ArrayList<>();
 		terrains.add(new Terrain(0, 0, loader, texturePack, blendMap, "heightmap"));
-		terrains.add(new Terrain(-1, 0, loader, texturePack, blendMap, "heightmap"));
-		terrains.add(new Terrain(0, -1, loader, texturePack, blendMap, "heightmap"));
-		terrains.add(new Terrain(-1, -1, loader, texturePack, blendMap, "heightmap"));
+		//terrains.add(new Terrain(-1, 0, loader, texturePack, blendMap, "heightmap"));
+		//terrains.add(new Terrain(0, -1, loader, texturePack, blendMap, "heightmap"));
+		//terrains.add(new Terrain(-1, -1, loader, texturePack, blendMap, "heightmap"));
 		
 		Light sun = new Light(new Vector3f(0, 100, -50), new Vector3f(1, 1, 1));
 		
@@ -109,7 +109,7 @@ public class Main {
 		
 		while (!DisplayManager.displayShouldClose()) {
 			camera.move();
-			player.move();
+			player.move(terrains.get(0));
 			
 			for (Entity entity : entities) {
 				rendManager.processEntity(entity);
