@@ -11,16 +11,16 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.model.RawModel;
 import com.alexian123.renderEngine.Loader;
-import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.Maths;
 import com.alexian123.texture.TerrainTexture;
 
 public class Terrain {
 
-	private static final float SIZE = 800.0f;
 	private static final float MAX_HEIGHT = 40.0f;
 	private static final float MAX_PIXEL_COLOR = 256 * 256 * 256;
+	
+	protected static final float SIZE = 800.0f;
 	
 	private final float x;
 	private final float z;

@@ -1,11 +1,14 @@
 package com.alexian123.entity;
 
+import java.util.List;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.model.TexturedModel;
 import com.alexian123.renderEngine.DisplayManager;
 import com.alexian123.terrain.Terrain;
+import com.alexian123.terrain.TerrainGrid;
 
 public class Player extends Entity {
 	
@@ -24,7 +27,7 @@ public class Player extends Entity {
 		super(model, position, rotation, scale);
 	}
 	
-	public void move(Terrain terrain) {
+	public void move(TerrainGrid terrainGrid) {
 		getKeyboardInput();
 		rotation.y += currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
 		float distance = currentRunSpeed * DisplayManager.getFrameTimeSeconds();
@@ -34,14 +37,17 @@ public class Player extends Entity {
 		position.z += dz;
 		currrentYSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 		position.y += currrentYSpeed * DisplayManager.getFrameTimeSeconds();
-		float terrainHeight = terrain.getHeightAtPosition(position.x, position.z);
+		float terrainHeight = 0.0f;
+		Terrain terrain = terrainGrid.getTerrainAt(position.x, position.z);
+		if (terrain != null) {
+			terrainHeight = terrain.getHeightAtPosition(position.x, position.z);
+		}
 		if (position.y < terrainHeight) {
 			position.y = terrainHeight;
 			currrentYSpeed = 0;
 			isAirborne = false;
 		}
 	}
-	
 	
 	private void getKeyboardInput() {
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
