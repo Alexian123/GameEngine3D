@@ -50,14 +50,14 @@ public class Camera {
 	}
 	
 	private void calculatePitch() {
-		if (Mouse.isButtonDown(1)) { // right button
+		if (Mouse.isButtonDown(1)) {
 			float pitchChange = Mouse.getDY() * 0.1f;
 			pitch -= pitchChange;
 		}
 	}
 	
 	private void calculateAngleAroundPlayer() {
-		if (Mouse.isButtonDown(1)) { // left button
+		if (Mouse.isButtonDown(1)) {
 			float angleChange = Mouse.getDX() * 0.3f;
 			angleAroundPlayer -= angleChange;
 		}

@@ -4,7 +4,7 @@ import com.alexian123.model.RawModel;
 import com.alexian123.renderEngine.Loader;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
-import com.alexian123.texture.Texture;
+import com.alexian123.texture.TerrainTexture;
 
 public class Terrain {
 
@@ -15,9 +15,9 @@ public class Terrain {
 	private final float z;
 	private final RawModel model;
 	private final TerrainTexturePack texturePack;
-	private final Texture blendMap;
+	private final TerrainTexture blendMap;
 	
-	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, Texture blendMap) {
+	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
@@ -41,7 +41,7 @@ public class Terrain {
 		return texturePack;
 	}
 	
-	public Texture getBlendMap() {
+	public TerrainTexture getBlendMap() {
 		return blendMap;
 	}
 	

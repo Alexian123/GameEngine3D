@@ -1,10 +1,10 @@
 package com.alexian123.texture;
 
-public class Texture {
+public class TerrainTexture {
 	
 	private int id;
 
-	public Texture(int id) {
+	public TerrainTexture(int id) {
 		this.id = id;
 	}
 	

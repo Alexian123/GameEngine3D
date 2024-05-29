@@ -20,7 +20,7 @@ import com.alexian123.renderEngine.RenderingManager;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
-import com.alexian123.texture.Texture;
+import com.alexian123.texture.TerrainTexture;
 
 public class Main {
 
@@ -91,11 +91,11 @@ public class Main {
 		
 		
 		// terrain
-		Texture bgTexture = new Texture(loader.loadTexture("grass2"));
-		Texture rTexture = new Texture(loader.loadTexture("dirt"));
-		Texture gTexture = new Texture(loader.loadTexture("flowers"));
-		Texture bTexture = new Texture(loader.loadTexture("path"));
-		Texture blendMap = new Texture(loader.loadTexture("blendMap"));
+		TerrainTexture bgTexture = new TerrainTexture(loader.loadTexture("grass2"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("flowers"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 		TerrainTexturePack texturePack = new TerrainTexturePack(bgTexture, rTexture, gTexture, bTexture);
 		List<Terrain> terrains = new ArrayList<>();
 		terrains.add(new Terrain(0, 0, loader, texturePack, blendMap));

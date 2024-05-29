@@ -2,31 +2,31 @@ package com.alexian123.texture;
 
 public class TerrainTexturePack {
 
-	private final Texture backgroundTexture;
-	private final Texture redTexture;
-	private final Texture greenTexture;
-	private final Texture blueTexture;
+	private final TerrainTexture backgroundTexture;
+	private final TerrainTexture redTexture;
+	private final TerrainTexture greenTexture;
+	private final TerrainTexture blueTexture;
 	
-	public TerrainTexturePack(Texture backgroundTexture, Texture redTexture, Texture greenTexture, Texture blueTexture) {
+	public TerrainTexturePack(TerrainTexture backgroundTexture, TerrainTexture redTexture, TerrainTexture greenTexture, TerrainTexture blueTexture) {
 		this.backgroundTexture = backgroundTexture;
 		this.redTexture = redTexture;
 		this.greenTexture = greenTexture;
 		this.blueTexture = blueTexture;
 	}
 
-	public Texture getBackgroundTexture() {
+	public TerrainTexture getBackgroundTexture() {
 		return backgroundTexture;
 	}
 
-	public Texture getRedTexture() {
+	public TerrainTexture getRedTexture() {
 		return redTexture;
 	}
 
-	public Texture getGreenTexture() {
+	public TerrainTexture getGreenTexture() {
 		return greenTexture;
 	}
 
-	public Texture getBlueTexture() {
+	public TerrainTexture getBlueTexture() {
 		return blueTexture;
 	}
 }
