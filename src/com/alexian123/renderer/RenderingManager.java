@@ -13,58 +13,48 @@ import org.lwjgl.util.vector.Vector3f;
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
 import com.alexian123.entity.Light;
+import com.alexian123.loader.Loader;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.StaticShader;
 import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
+import com.alexian123.texture.GUITexture;
 
 public class RenderingManager {
+	
+	public static final Vector3f SKY_COLOR = new Vector3f(0.5f, 0.5f, 0.5f);
 	
 	private static final float FOV = 70.0f;
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000.0f;
-	private static final Vector3f SKY_COLOR = new Vector3f(0.5f, 0.5f, 0.5f);
 	
-	private final Matrix4f projectionMatrix;
+	private static final Matrix4f projectionMatrix = createProjectionMatrix();
+	private static final IRenderer3D entityRenderer = new EntityRenderer(projectionMatrix);
+	private static final IRenderer3D terrainRenderer = new TerrainRenderer(projectionMatrix);
 	
-	private final StaticShader staticShader;
-	private final EntityRenderer entityRenderer;
+	private static final Map<TexturedModel, List<Entity>> entities = new HashMap<>();
+	private static final List<Terrain> terrains = new ArrayList<>();
 	
-	private final TerrainShader terrainShader;
-	private final TerrainRenderer terrainRenderer;
+	private static GUIRenderer guiRenderer;
 	
-	private Map<TexturedModel, List<Entity>> entities;
-	private List<Terrain> terrains;
-	
-	public static void enableCulling() {
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
-	}
-	
-	public static void disableCulling() {
-		GL11.glDisable(GL11.GL_CULL_FACE);
-	}
-	
-	public RenderingManager() {
+	public static void init(Loader loader) {
+		if (guiRenderer != null) {
+			guiRenderer.cleanup();
+		}
+		guiRenderer = new GUIRenderer(loader);
 		enableCulling();
-		this.projectionMatrix = createProjectionMatrix();
-		this.staticShader = new StaticShader();
-		this.entityRenderer = new EntityRenderer(staticShader, projectionMatrix);
-		this.terrainShader = new TerrainShader();
-		this.terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-		this.entities = new HashMap<>();
-		this.terrains = new ArrayList<>();
 	}
 	
-	public void renderScene(Light sun, Camera camera) {
+	public static void renderScene(Light sun, Camera camera, List<GUITexture> guis) {
 		prepare();
-		renderEntities(sun, camera);
-		renderTerrains(sun, camera);
+		entityRenderer.render(sun, camera);
+		terrainRenderer.render(sun, camera);
+		guiRenderer.render(guis);
 		entities.clear();
 		terrains.clear();
 	}
 	
-	public void processEntity(Entity entity) {
+	public static void processEntity(Entity entity) {
 		TexturedModel model = entity.getModel();
 		List<Entity> batch = entities.get(model);
 		if (batch == null) {
@@ -76,37 +66,37 @@ public class RenderingManager {
 		}
 	}
 	
-	public void processTerrain(Terrain terrain) {
+	public static void processTerrain(Terrain terrain) {
 		terrains.add(terrain);
 	}
 	
-	public void cleanup() {
-		staticShader.cleanup();
-		terrainShader.cleanup();
+	public static void cleanup() {
+		entityRenderer.cleanup();
+		terrainRenderer.cleanup();
+		guiRenderer.cleanup();
 	}
 	
-	private void prepare() {
+	public static void enableCulling() {
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
+	}
+	
+	public static void disableCulling() {
+		GL11.glDisable(GL11.GL_CULL_FACE);
+	}
+	
+	static Map<TexturedModel, List<Entity>> getEntities() {
+		return entities;
+	}
+	
+	static List<Terrain> getTerrains() {
+		return terrains;
+	}
+	
+	private static void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glClearColor(SKY_COLOR.x, SKY_COLOR.y, SKY_COLOR.z, 1.0f);
-	}
-	
-	private void renderEntities(Light sun, Camera camera) {
-		staticShader.start();
-		staticShader.loadSkyColor(SKY_COLOR);
-		staticShader.loadLight(sun);
-		staticShader.loadViewMatrix(camera);
-		entityRenderer.render(entities);
-		staticShader.stop();
-	}
-	
-	private void renderTerrains(Light sun, Camera camera) {
-		terrainShader.start();
-		terrainShader.loadSkyColor(SKY_COLOR);
-		terrainShader.loadLight(sun);
-		terrainShader.loadViewMatrix(camera);
-		terrainRenderer.render(terrains);
-		terrainShader.stop();
 	}
 	
 	private static Matrix4f createProjectionMatrix() {

@@ -31,7 +31,7 @@ public class Main {
 	public static void main(String[] args) {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
-		RenderingManager rendManager = new RenderingManager();
+		RenderingManager.init(loader);
 		
 		// terrain
 		TerrainTexture bgTexture = new TerrainTexture(loader.loadTexture("grass2"));
@@ -87,7 +87,6 @@ public class Main {
 		Camera camera = new Camera(player);
 		
 		// GUI
-		GUIRenderer guiRenderer = new GUIRenderer(loader);
 		List<GUITexture> guis = new ArrayList<>();
 		GUITexture gui = new GUITexture(loader.loadTexture("health"), new Vector2f(-0.75f, -0.9f), new Vector2f(0.25f, 0.35f));
 		guis.add(gui);
@@ -97,20 +96,18 @@ public class Main {
 			player.move(terrainGrid.getTerrainAt(player.getPosition().x, player.getPosition().z));
 			
 			for (Entity entity : entities) {
-				rendManager.processEntity(entity);
+				RenderingManager.processEntity(entity);
 			}
 			
 			for (Terrain terrain : terrainGrid.getTerrains()) {
-				rendManager.processTerrain(terrain);
+				RenderingManager.processTerrain(terrain);
 			}
 			
-			rendManager.renderScene(sun, camera);
-			guiRenderer.render(guis);
+			RenderingManager.renderScene(sun, camera, guis);
 			DisplayManager.updateDisplay();
 		}
 		
-		guiRenderer.cleanup();
-		rendManager.cleanup();
+		RenderingManager.cleanup();
 		loader.cleanup();
 		DisplayManager.closeDisplay();
 	}

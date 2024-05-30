@@ -9,6 +9,8 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.entity.Camera;
+import com.alexian123.entity.Light;
 import com.alexian123.model.RawModel;
 import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
@@ -16,25 +18,36 @@ import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.Maths;
 
-public class TerrainRenderer {
+public class TerrainRenderer implements IRenderer3D {
 	
-	private TerrainShader shader;
+	private TerrainShader shader = new TerrainShader();
 	
-	public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix) {
-		this.shader = shader;
+	public TerrainRenderer(Matrix4f projectionMatrix) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.connectTextureUnits();
 		shader.stop();
 	}
 	
-	public void render(List<Terrain> terrains) {
+	@Override
+	public void render(Light sun, Camera camera) {
+		shader.start();
+		shader.loadSkyColor(RenderingManager.SKY_COLOR);
+		shader.loadLight(sun);
+		shader.loadViewMatrix(camera);
+		List<Terrain> terrains = RenderingManager.getTerrains();
 		for (Terrain terrain : terrains) {
 			prepareTerrain(terrain);
 			loadModelMatrix(terrain);
 			GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			unbindTerraindModel();
 		}
+		shader.stop();
+	}
+	
+	@Override
+	public void cleanup() {
+		shader.cleanup();
 	}
 	
 	private void prepareTerrain(Terrain terrain) {
@@ -72,5 +85,4 @@ public class TerrainRenderer {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(new Vector3f(terrain.getX(), 0, terrain.getZ()), new Vector3f(0, 0, 0), 1);
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
-
 }

@@ -20,7 +20,7 @@ public class GUIRenderer {
 	private final GUIShader shader;
 	
 	public GUIRenderer(Loader loader) {
-		float[] positions = { -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f };
+		final float[] positions = { -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f };
 		quad = loader.loadToVao(positions);
 		shader = new GUIShader();
 	}

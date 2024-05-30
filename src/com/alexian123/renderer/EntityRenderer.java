@@ -3,32 +3,38 @@ package com.alexian123.renderer;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
+import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
+import com.alexian123.entity.Light;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.StaticShader;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.util.Maths;
 
-public class EntityRenderer {
+public class EntityRenderer implements IRenderer3D {
 	
-	private final StaticShader shader;
+	private final StaticShader shader = new StaticShader();
 	
-	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
-		this.shader = shader;
+	public EntityRenderer(Matrix4f projectionMatrix) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 	
-	public void render(Map<TexturedModel, List<Entity>> entities) {
+	@Override
+	public void render(Light sun, Camera camera) {
+		shader.start();
+		shader.loadSkyColor(RenderingManager.SKY_COLOR);
+		shader.loadLight(sun);
+		shader.loadViewMatrix(camera);
+		Map<TexturedModel, List<Entity>> entities = RenderingManager.getEntities();
 		for (TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
 			for (Entity entity : entities.get(model)) {
@@ -37,6 +43,12 @@ public class EntityRenderer {
 			}
 			unbindTexturedModel();
 		}
+		shader.stop();
+	}
+	
+	@Override
+	public void cleanup() {
+		shader.cleanup();
 	}
 	
 	private void prepareTexturedModel(TexturedModel model) {
