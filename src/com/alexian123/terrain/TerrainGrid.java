@@ -3,7 +3,7 @@ package com.alexian123.terrain;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.alexian123.renderer.Loader;
+import com.alexian123.loader.Loader;
 import com.alexian123.texture.TerrainTexture;
 import com.alexian123.texture.TerrainTexturePack;
 

@@ -1,4 +1,4 @@
-package com.alexian123.objConverter;
+package com.alexian123.loader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+
+import com.alexian123.util.Vertex;
 
 public class OBJFileLoader {
 	

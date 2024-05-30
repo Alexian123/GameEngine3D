@@ -1,4 +1,4 @@
-package com.alexian123.renderer;
+package com.alexian123.loader;
 
 import java.io.FileInputStream;
 import java.nio.FloatBuffer;
@@ -31,6 +31,13 @@ public class Loader {
 		storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
+	}
+	
+	public RawModel loadToVao(float[] positions) {
+		int vaoID = createVAO();
+		this.storeDataInAttributeList(0, 2, positions);
+		unbindVAO();
+		return new RawModel(vaoID, positions.length / 2);
 	}
 	
 	public int loadTexture(String fileName) {

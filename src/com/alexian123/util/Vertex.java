@@ -1,4 +1,4 @@
-package com.alexian123.objConverter;
+package com.alexian123.util;
 
 import org.lwjgl.util.vector.Vector3f;
 

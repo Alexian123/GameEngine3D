@@ -4,21 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
 import com.alexian123.entity.Light;
 import com.alexian123.entity.Player;
+import com.alexian123.loader.Loader;
+import com.alexian123.loader.ModelData;
+import com.alexian123.loader.OBJFileLoader;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
-import com.alexian123.objConverter.ModelData;
-import com.alexian123.objConverter.OBJFileLoader;
 import com.alexian123.renderer.DisplayManager;
-import com.alexian123.renderer.Loader;
+import com.alexian123.renderer.GUIRenderer;
 import com.alexian123.renderer.RenderingManager;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.TerrainGrid;
+import com.alexian123.texture.GUITexture;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.texture.TerrainTexture;
@@ -72,6 +75,7 @@ public class Main {
 			entities.add(new Entity(texturedModel, random.nextInt(4), new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z), z), new Vector3f(0, 0, 0), 1));
 		}
 		
+		// player
 		modelData = OBJFileLoader.loadOBJ("person");
 		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 		texture = new ModelTexture(loader.loadTexture("playerTexture"));
@@ -80,9 +84,14 @@ public class Main {
 		entities.add(player);
 		
 		Light sun = new Light(new Vector3f(0, 100, -50), new Vector3f(1, 1, 1));
-		
 		Camera camera = new Camera(player);
 		
+		// GUI
+		GUIRenderer guiRenderer = new GUIRenderer(loader);
+		List<GUITexture> guis = new ArrayList<>();
+		GUITexture gui = new GUITexture(loader.loadTexture("health"), new Vector2f(-0.75f, -0.9f), new Vector2f(0.25f, 0.35f));
+		guis.add(gui);
+			
 		while (!DisplayManager.displayShouldClose()) {
 			camera.move();
 			player.move(terrainGrid.getTerrainAt(player.getPosition().x, player.getPosition().z));
@@ -96,9 +105,11 @@ public class Main {
 			}
 			
 			rendManager.renderScene(sun, camera);
+			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}
 		
+		guiRenderer.cleanup();
 		rendManager.cleanup();
 		loader.cleanup();
 		DisplayManager.closeDisplay();

@@ -1,4 +1,4 @@
-package com.alexian123.objConverter;
+package com.alexian123.loader;
 
 public class ModelData {
 

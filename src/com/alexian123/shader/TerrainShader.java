@@ -9,8 +9,8 @@ import com.alexian123.util.Maths;
 
 public class TerrainShader extends ShaderProgram {
 
-	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/terrainShader.vert";
-	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/terrainShader.frag";
+	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/terrain_shader.vert";
+	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/terrain_shader.frag";
 
 	private int transformationMatrixLocation;
 	private int projectionMatrixLocation;
