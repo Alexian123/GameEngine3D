@@ -1,6 +1,7 @@
 package com.alexian123.shader;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
@@ -21,26 +22,28 @@ public class StaticShader extends ShaderProgram {
 	private int reflectivityLocation;
 	private int useFakeLightingLocation;
 	private int skyColorLocation;
+	private int atlasDimensionLocation;
+	private int atlasOffsetLocation;
 
 	public StaticShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {
-		super.loadMatrix4f(transformationMatrixLocation, matrix);
+		super.loadMatrix(transformationMatrixLocation, matrix);
 	}
 	
 	public void loadProjectionMatrix(Matrix4f matrix) {
-		super.loadMatrix4f(projectionMatrixLocation, matrix);
+		super.loadMatrix(projectionMatrixLocation, matrix);
 	}
 	
 	public void loadViewMatrix(Camera camera) {
-		super.loadMatrix4f(viewMatrixLocation, Maths.createViewMatrix(camera));
+		super.loadMatrix(viewMatrixLocation, Maths.createViewMatrix(camera));
 	}
 	
 	public void loadLight(Light light) {
-		super.loadVector3f(lightPositionLocation, light.getPosition());
-		super.loadVector3f(lightColorLocation, light.getColor());
+		super.loadVector(lightPositionLocation, light.getPosition());
+		super.loadVector(lightColorLocation, light.getColor());
 	}
 	
 	public void loadShineParameters(float shineDamper, float reflectivity) {
@@ -53,7 +56,15 @@ public class StaticShader extends ShaderProgram {
 	}
 	
 	public void loadSkyColor(Vector3f skyColor) {
-		super.loadVector3f(skyColorLocation, skyColor);
+		super.loadVector(skyColorLocation, skyColor);
+	}
+	
+	public void loadAtlasDimension(float atlasDimension) {
+		super.loadFLoat(atlasDimensionLocation, atlasDimension);
+	}
+	
+	public void loadAtlasOffset(float offsetX, float offsetY) {
+		super.loadVector(atlasOffsetLocation, new Vector2f(offsetX, offsetY));
 	}
 	
 	@Override
@@ -74,6 +85,8 @@ public class StaticShader extends ShaderProgram {
 		reflectivityLocation = super.getUniformLocation("reflectivity");
 		useFakeLightingLocation = super.getUniformLocation("useFakeLighting");
 		skyColorLocation = super.getUniformLocation("skyColor");
+		atlasDimensionLocation = super.getUniformLocation("atlasDimension");
+		atlasOffsetLocation = super.getUniformLocation("atlasOffset");
 	}
 
 }

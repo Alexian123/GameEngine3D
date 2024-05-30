@@ -1,4 +1,4 @@
-package com.alexian123.renderEngine;
+package com.alexian123.renderer;
 
 import java.util.List;
 import java.util.Map;
@@ -46,6 +46,7 @@ public class EntityRenderer {
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
+		shader.loadAtlasDimension(texture.getAtlasDimension());
 		if (texture.isTransparency()) {
 			RenderingManager.disableCulling();
 		}
@@ -66,5 +67,6 @@ public class EntityRenderer {
 	private void prepareEntity(Entity entity) {
 		Matrix4f matrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		shader.loadTransformationMatrix(matrix);
+		shader.loadAtlasOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
 	}
 }

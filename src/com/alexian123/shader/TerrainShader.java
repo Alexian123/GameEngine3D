@@ -31,20 +31,20 @@ public class TerrainShader extends ShaderProgram {
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {
-		super.loadMatrix4f(transformationMatrixLocation, matrix);
+		super.loadMatrix(transformationMatrixLocation, matrix);
 	}
 	
 	public void loadProjectionMatrix(Matrix4f matrix) {
-		super.loadMatrix4f(projectionMatrixLocation, matrix);
+		super.loadMatrix(projectionMatrixLocation, matrix);
 	}
 	
 	public void loadViewMatrix(Camera camera) {
-		super.loadMatrix4f(viewMatrixLocation, Maths.createViewMatrix(camera));
+		super.loadMatrix(viewMatrixLocation, Maths.createViewMatrix(camera));
 	}
 	
 	public void loadLight(Light light) {
-		super.loadVector3f(lightPositionLocation, light.getPosition());
-		super.loadVector3f(lightColorLocation, light.getColor());
+		super.loadVector(lightPositionLocation, light.getPosition());
+		super.loadVector(lightColorLocation, light.getColor());
 	}
 	
 	public void loadShineParameters(float shineDamper, float reflectivity) {
@@ -53,7 +53,7 @@ public class TerrainShader extends ShaderProgram {
 	}
 	
 	public void loadSkyColor(Vector3f skyColor) {
-		super.loadVector3f(skyColorLocation, skyColor);
+		super.loadVector(skyColorLocation, skyColor);
 	}
 	
 	public void connectTextureUnits() {

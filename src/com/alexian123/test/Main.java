@@ -14,9 +14,9 @@ import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.objConverter.ModelData;
 import com.alexian123.objConverter.OBJFileLoader;
-import com.alexian123.renderEngine.DisplayManager;
-import com.alexian123.renderEngine.Loader;
-import com.alexian123.renderEngine.RenderingManager;
+import com.alexian123.renderer.DisplayManager;
+import com.alexian123.renderer.Loader;
+import com.alexian123.renderer.RenderingManager;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.TerrainGrid;
 import com.alexian123.texture.ModelTexture;
@@ -54,7 +54,7 @@ public class Main {
 		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 		texture = new ModelTexture(loader.loadTexture("tree"), 1, 0);
 		texturedModel = new TexturedModel(rawModel, texture);
-		for (int i = 0; i < 2000; ++i) {
+		for (int i = 0; i < 1000; ++i) {
 			float x = random.nextFloat() * 1600 - 800; 
 			float z = random.nextFloat() * 1600 - 800;
 			entities.add(new Entity(texturedModel, new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z) - 0.5f, z), new Vector3f(0, 0, 0), 10));
@@ -63,12 +63,13 @@ public class Main {
 		// ferns
 		modelData = OBJFileLoader.loadOBJ("fern");
 		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
-		texture = new ModelTexture(loader.loadTexture("fern"), 1, 0, true, true);
+		texture = new ModelTexture(loader.loadTexture("fern_atlas"), 1, 0, true, true);
+		texture.setAtlasDimension(2);
 		texturedModel = new TexturedModel(rawModel, texture);
-		for (int i = 0; i < 1000; ++i) {
+		for (int i = 0; i < 2000; ++i) {
 			float x = random.nextFloat() * 1600 - 800; 
 			float z = random.nextFloat() * 1600 - 800;
-			entities.add(new Entity(texturedModel, new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z), z), new Vector3f(0, 0, 0), 1));
+			entities.add(new Entity(texturedModel, random.nextInt(4), new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z), z), new Vector3f(0, 0, 0), 1));
 		}
 		
 		modelData = OBJFileLoader.loadOBJ("person");
@@ -84,7 +85,7 @@ public class Main {
 		
 		while (!DisplayManager.displayShouldClose()) {
 			camera.move();
-			player.move(terrainGrid);
+			player.move(terrainGrid.getTerrainAt(player.getPosition().x, player.getPosition().z));
 			
 			for (Entity entity : entities) {
 				rendManager.processEntity(entity);

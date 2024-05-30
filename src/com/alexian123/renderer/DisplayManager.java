@@ -1,4 +1,4 @@
-package com.alexian123.renderEngine;
+package com.alexian123.renderer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;

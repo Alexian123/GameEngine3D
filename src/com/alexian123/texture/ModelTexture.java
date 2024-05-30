@@ -8,6 +8,7 @@ public class ModelTexture {
 	private float reflectivity = 0;
 	private boolean transparency = false;
 	private boolean fakeLighting = false;
+	private int atlasDimension = 1;
 	
 	public ModelTexture(int id) {
 		this.id = id;
@@ -61,5 +62,13 @@ public class ModelTexture {
 
 	public void setFakeLighting(boolean fakeLighting) {
 		this.fakeLighting = fakeLighting;
+	}
+
+	public int getAtlasDimension() {
+		return atlasDimension;
+	}
+
+	public void setAtlasDimension(int atlasDimension) {
+		this.atlasDimension = atlasDimension;
 	}
 }

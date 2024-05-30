@@ -10,7 +10,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.model.RawModel;
-import com.alexian123.renderEngine.Loader;
+import com.alexian123.renderer.Loader;
 import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.Maths;
 import com.alexian123.texture.TerrainTexture;

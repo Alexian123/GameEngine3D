@@ -15,6 +15,8 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition;
 uniform float useFakeLighting;
+uniform float atlasDimension;
+uniform vec2 atlasOffset;
 
 const float fogDensity = 0.0035;
 const float fogGradient = 5.0;
@@ -23,7 +25,7 @@ void main(void) {
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
 	vec4 positionRelativeToCamera = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCamera;
-	passTextureCoord = textureCoord;
+	passTextureCoord = (textureCoord / atlasDimension) + atlasOffset;
 
 	vec3 actualNormal = normal;
 	if (useFakeLighting > 0.5) {

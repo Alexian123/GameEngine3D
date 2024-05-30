@@ -6,7 +6,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.model.TexturedModel;
-import com.alexian123.renderEngine.DisplayManager;
+import com.alexian123.renderer.DisplayManager;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.TerrainGrid;
 
@@ -27,7 +27,7 @@ public class Player extends Entity {
 		super(model, position, rotation, scale);
 	}
 	
-	public void move(TerrainGrid terrainGrid) {
+	public void move(Terrain terrain) {
 		getKeyboardInput();
 		rotation.y += currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
 		float distance = currentRunSpeed * DisplayManager.getFrameTimeSeconds();
@@ -38,7 +38,6 @@ public class Player extends Entity {
 		currrentYSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 		position.y += currrentYSpeed * DisplayManager.getFrameTimeSeconds();
 		float terrainHeight = 0.0f;
-		Terrain terrain = terrainGrid.getTerrainAt(position.x, position.z);
 		if (terrain != null) {
 			terrainHeight = terrain.getHeightAtPosition(position.x, position.z);
 		}
