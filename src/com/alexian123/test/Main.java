@@ -24,6 +24,7 @@ import com.alexian123.terrain.TerrainGrid;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
+import com.alexian123.util.Clock;
 import com.alexian123.texture.TerrainTexture;
 
 public class Main {
@@ -31,7 +32,8 @@ public class Main {
 	public static void main(String[] args) {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
-		RenderingManager.init(loader);
+		Clock clock = new Clock(1000.0f);
+		RenderingManager.init(loader, clock);
 		
 		// terrain
 		TerrainTexture bgTexture = new TerrainTexture(loader.loadTexture("grass2"));
@@ -106,6 +108,8 @@ public class Main {
 		guis.add(gui);
 			
 		while (!DisplayManager.displayShouldClose()) {
+			clock.tick();
+			
 			camera.move();
 			player.move(terrainGrid.getTerrainAt(player.getPosition().x, player.getPosition().z));
 			

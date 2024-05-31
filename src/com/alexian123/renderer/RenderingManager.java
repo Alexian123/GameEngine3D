@@ -16,10 +16,9 @@ import com.alexian123.light.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.IShader3D;
-import com.alexian123.shader.EntityShader;
-import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.GUITexture;
+import com.alexian123.util.Clock;
 
 public class RenderingManager {
 		
@@ -38,11 +37,11 @@ public class RenderingManager {
 	
 	private static boolean isInitialized = false;
 	
-	public static void init(Loader loader) {
+	public static void init(Loader loader, Clock clock) {
 		if (!isInitialized) {
 			renderers3D.add(new EntityRenderer(projectionMatrix));
 			renderers3D.add(new TerrainRenderer(projectionMatrix));
-			SkyBoxRenderer.init(loader, projectionMatrix);
+			SkyBoxRenderer.init(loader, projectionMatrix, clock);
 			GUIRenderer.init(loader);
 			enableCulling();
 			isInitialized = true;
@@ -54,13 +53,13 @@ public class RenderingManager {
 		for (IRenderer3D renderer : renderers3D) {
 			IShader3D shader = renderer.getShader3D();
 			shader.start();
-			shader.loadSkyColor(RenderingManager.SKY_COLOR);
+			shader.loadSkyColor(SKY_COLOR);
 			shader.loadLights(lights);
 			shader.loadViewMatrix(camera);
 			renderer.render();
 			shader.stop();
 		}
-		SkyBoxRenderer.render(camera);
+		SkyBoxRenderer.render(camera, SKY_COLOR);
 		GUIRenderer.render(guis);
 		entities.clear();
 		terrains.clear();

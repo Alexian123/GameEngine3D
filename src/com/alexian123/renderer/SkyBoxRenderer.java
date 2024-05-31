@@ -5,11 +5,14 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.shader.SkyBoxShader;
+import com.alexian123.util.Clock;
+import com.alexian123.util.TimeOfDay;
 
 public class SkyBoxRenderer {
 	
@@ -59,40 +62,57 @@ public class SkyBoxRenderer {
 		     SIZE, -SIZE,  SIZE
 	};
 	
-	private static final String TEXTURE_DIR = "skybox/";
-	private static final String[] TEXTURE_FILE_NAMES = { 
-			TEXTURE_DIR + "right", 
-			TEXTURE_DIR + "left", 
-			TEXTURE_DIR + "top", 
-			TEXTURE_DIR + "bottom", 
-			TEXTURE_DIR + "back", 
-			TEXTURE_DIR + "front" 
+	private static final String DAY_TEXTURE_DIR = "skybox/day/";
+	private static final String[] DAY_TEXTURE_FILES = { 
+			DAY_TEXTURE_DIR + "right", 
+			DAY_TEXTURE_DIR + "left", 
+			DAY_TEXTURE_DIR + "top", 
+			DAY_TEXTURE_DIR + "bottom", 
+			DAY_TEXTURE_DIR + "back", 
+			DAY_TEXTURE_DIR + "front" 
+	};
+	
+	private static final String NIGHT_TEXTURE_DIR = "skybox/night/";
+	private static final String[] NIGHT_TEXTURE_FILES = { 
+			NIGHT_TEXTURE_DIR + "right", 
+			NIGHT_TEXTURE_DIR + "left", 
+			NIGHT_TEXTURE_DIR + "top", 
+			NIGHT_TEXTURE_DIR + "bottom", 
+			NIGHT_TEXTURE_DIR + "back", 
+			NIGHT_TEXTURE_DIR + "front" 
 	};
 	
 	private static final SkyBoxShader shader = new SkyBoxShader();
 	
 	private static RawModel cube;
-	private static int textureID;
+	private static int dayTextureID, nightTextureID;
+	private static Clock clock;
 	private static boolean isInitalized = false;
 	
-	public static void init(Loader loader, Matrix4f projectionMatrix) {
+	private static int texture0, texture1;
+	private static float blendFactor;
+	
+	public static void init(Loader loader, Matrix4f projectionMatrix, Clock clock) {
 		if (!isInitalized) {
 			cube = loader.loadToVao(VERTICES, 3);
-			textureID = loader.loadCubeMap(TEXTURE_FILE_NAMES);
+			dayTextureID = loader.loadCubeMap(DAY_TEXTURE_FILES);
+			nightTextureID = loader.loadCubeMap(NIGHT_TEXTURE_FILES);
+			SkyBoxRenderer.clock = clock;
 			shader.start();
 			shader.loadProjectionMatrix(projectionMatrix);
+			shader.connectTextureUnits();
 			shader.stop();
 			isInitalized = true;
 		}
 	}
 	
-	public static void render(Camera camera) {
+	public static void render(Camera camera, Vector3f fogColor) {
 		shader.start();
 		shader.loadViewMatrix(camera);
+		shader.loadFogColor(fogColor);
 		GL30.glBindVertexArray(cube.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, textureID);
+		bindTextures();
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
@@ -101,5 +121,53 @@ public class SkyBoxRenderer {
 
 	public static void cleanup() {
 		shader.cleanup();
+	}
+	
+	private static void bindTextures() {
+		setTexturesBasedOnTime();
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture0);
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture1);
+		shader.loadBlendFactor(blendFactor);
+	}
+	
+	private static void setTexturesBasedOnTime() {
+		float preciseTime = clock.getPreciseTime();
+		switch (clock.tellTime()) {
+			case DAWN:
+				texture0 = nightTextureID;
+				texture1 = dayTextureID;
+				blendFactor = (preciseTime - TimeOfDay.DAWN.getValue()) / (TimeOfDay.MORNING.getValue() - TimeOfDay.DAWN.getValue());
+				break;
+			case MORNING:
+				texture0 = dayTextureID;
+				texture1 = dayTextureID;
+				blendFactor = (preciseTime - TimeOfDay.MORNING.getValue()) / (TimeOfDay.NOON.getValue() - TimeOfDay.MORNING.getValue());
+				break;
+			case NOON:
+				texture0 = dayTextureID;
+				texture1 = dayTextureID;
+				blendFactor = (preciseTime - TimeOfDay.NOON.getValue()) / (TimeOfDay.AFTERNOON.getValue() - TimeOfDay.NOON.getValue());
+				break;
+			case AFTERNOON:
+				texture0 = dayTextureID;
+				texture1 = dayTextureID;
+				blendFactor = (preciseTime - TimeOfDay.AFTERNOON.getValue()) / (TimeOfDay.EVENING.getValue() - TimeOfDay.AFTERNOON.getValue());
+				break;
+			case EVENING:
+				texture0 = dayTextureID;
+				texture1 = nightTextureID;
+				blendFactor = (preciseTime - TimeOfDay.EVENING.getValue()) / (TimeOfDay.NIGHT.getValue() - TimeOfDay.EVENING.getValue());
+				break;
+			case NIGHT:
+				texture0 = nightTextureID;
+				texture1 = nightTextureID;
+				blendFactor = preciseTime / TimeOfDay.MORNING.getValue();
+				break;
+			case MAX_TIME:
+			default:
+				break;
+		}
 	}
 }
