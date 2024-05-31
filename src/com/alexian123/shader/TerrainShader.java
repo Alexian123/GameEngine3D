@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
-import com.alexian123.entity.Light;
+import com.alexian123.light.Light;
 import com.alexian123.util.Maths;
 
 public class TerrainShader extends ShaderProgram implements IShader3D {
@@ -19,6 +19,7 @@ public class TerrainShader extends ShaderProgram implements IShader3D {
 	private int viewMatrixLocation;
 	private int lightPositionLocations[];
 	private int lightColorLocations[];
+	private int attenuationLocations[];
 	private int shineDamperLocation;
 	private int reflectivityLocation;
 	private int skyColorLocation;
@@ -44,9 +45,11 @@ public class TerrainShader extends ShaderProgram implements IShader3D {
 				Light light = lights.get(i);
 				super.loadVector(lightPositionLocations[i], light.getPosition());
 				super.loadVector(lightColorLocations[i], light.getColor());
+				super.loadVector(attenuationLocations[i], light.getAttenuation());
 			} else {
 				super.loadVector(lightPositionLocations[i], new Vector3f(0, 0, 0));
 				super.loadVector(lightColorLocations[i], new Vector3f(0, 0, 0));
+				super.loadVector(attenuationLocations[i], new Vector3f(1, 0, 0));
 			}
 		}
 	}
@@ -91,6 +94,7 @@ public class TerrainShader extends ShaderProgram implements IShader3D {
 		viewMatrixLocation = super.getUniformLocation("viewMatrix");
 		lightPositionLocations = new int[MAX_LIGHTS];
 		lightColorLocations = new int[MAX_LIGHTS];
+		attenuationLocations = new int[MAX_LIGHTS];
 		shineDamperLocation = super.getUniformLocation("shineDamper");
 		reflectivityLocation = super.getUniformLocation("reflectivity");
 		skyColorLocation = super.getUniformLocation("skyColor");
@@ -103,6 +107,7 @@ public class TerrainShader extends ShaderProgram implements IShader3D {
 		for (int i = 0; i < MAX_LIGHTS; ++i) {
 			lightPositionLocations[i] = super.getUniformLocation("lightPosition[" + i + "]");
 			lightColorLocations[i] = super.getUniformLocation("lightColor[" + i + "]");
+			attenuationLocations[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
 	}
 }

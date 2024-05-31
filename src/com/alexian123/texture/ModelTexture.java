@@ -20,12 +20,27 @@ public class ModelTexture {
 		this.reflectivity = reflectivity;
 	}
 	
+	public ModelTexture(int id, boolean transparency, boolean fakeLighting) {
+		this.id = id;
+		this.transparency = transparency;
+		this.fakeLighting = fakeLighting;
+	}
+	
 	public ModelTexture(int id, float shineDamper, float reflectivity, boolean transparency, boolean fakeLighting) {
 		this.id = id;
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
 		this.transparency = transparency;
 		this.fakeLighting = fakeLighting;
+	}
+	
+	public ModelTexture(int id, float shineDamper, float reflectivity, boolean transparency, boolean fakeLighting, int atlasDimension) {
+		this.id = id;
+		this.shineDamper = shineDamper;
+		this.reflectivity = reflectivity;
+		this.transparency = transparency;
+		this.fakeLighting = fakeLighting;
+		this.atlasDimension = atlasDimension;
 	}
 	
 	public int getID() {

@@ -13,6 +13,7 @@ out vec4 outColor;
 uniform sampler2D textureSampler;
 
 uniform vec3 lightColor[MAX_LIGHTS];
+uniform vec3 attenuation[MAX_LIGHTS];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
@@ -24,12 +25,14 @@ void main(void) {
 	vec3 diffuse = vec3(0.0);
 	vec3 specular = vec3(0.0);
 	for (int i = 0; i < MAX_LIGHTS; ++i) {
+		float distanceToLight = length(toLightVector[i]);
+		float attenuationFactor = attenuation[i].x + attenuation[i].y * distanceToLight + attenuation[i].z * distanceToLight * distanceToLight;
 		vec3 unitToLightVector = normalize(toLightVector[i]);
 
 		// diffuse light
 		float brightness = dot(unitSurfaceNormal, unitToLightVector);
 		brightness = max(brightness, 0.0);
-		diffuse += brightness * lightColor[i];
+		diffuse += brightness * lightColor[i] / attenuationFactor;
 
 		// specular light
 		vec3 lightDirection = -unitToLightVector;
@@ -37,7 +40,7 @@ void main(void) {
 		float specularFactor = dot(reflectedLightDirection, unitToCameraVector);
 		specularFactor = max(specularFactor, 0.0);
 		float dampedFactor = pow(specularFactor, shineDamper);
-		specular += dampedFactor * reflectivity * lightColor[i];
+		specular += dampedFactor * reflectivity * lightColor[i] / attenuationFactor;
 	}
 	diffuse = max(diffuse, 0.2); // minimum value = ambient light
 

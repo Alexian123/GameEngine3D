@@ -9,8 +9,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
-import com.alexian123.entity.Light;
 import com.alexian123.entity.Player;
+import com.alexian123.light.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.loader.ModelData;
 import com.alexian123.loader.OBJFileLoader;
@@ -45,7 +45,6 @@ public class Main {
 				new TerrainTexture[] {blendMap, blendMap, blendMap, blendMap}, 
 				new String[] {"heightmap", "heightmap", "heightmap", "heightmap"});
 		
-		ModelData modelData;
 		RawModel rawModel;
 		ModelTexture texture;
 		TexturedModel texturedModel;
@@ -53,45 +52,49 @@ public class Main {
 		List<Entity> entities = new ArrayList<>();
 		
 		// trees
-		modelData = OBJFileLoader.loadOBJ("tree");
-		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
+		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("tree"));
 		texture = new ModelTexture(loader.loadTexture("tree"), 1, 0);
 		texturedModel = new TexturedModel(rawModel, texture);
-		for (int i = 0; i < 1000; ++i) {
+		for (int i = 0; i < 100; ++i) {
 			float x = random.nextFloat() * 1600 - 800; 
 			float z = random.nextFloat() * 1600 - 800;
 			entities.add(new Entity(texturedModel, new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z) - 0.5f, z), new Vector3f(0, 0, 0), 10));
 		}
 		
 		// ferns
-		modelData = OBJFileLoader.loadOBJ("fern");
-		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
-		texture = new ModelTexture(loader.loadTexture("fern_atlas"), 1, 0, true, true);
-		texture.setAtlasDimension(2);
+		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("fern"));
+		texture = new ModelTexture(loader.loadTexture("fern_atlas"), 1, 0, true, true, 2);
 		texturedModel = new TexturedModel(rawModel, texture);
-		for (int i = 0; i < 2000; ++i) {
+		for (int i = 0; i < 500; ++i) {
 			float x = random.nextFloat() * 1600 - 800; 
 			float z = random.nextFloat() * 1600 - 800;
 			entities.add(new Entity(texturedModel, random.nextInt(4), new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z), z), new Vector3f(0, 0, 0), 1));
 		}
 		
 		// player
-		modelData = OBJFileLoader.loadOBJ("person");
-		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
+		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("person"));
 		texture = new ModelTexture(loader.loadTexture("playerTexture"));
 		texturedModel = new TexturedModel(rawModel, texture);
-		Player player = new Player(texturedModel, new Vector3f(5, 0, -10), new Vector3f(0, 180, 0), 0.6f);
+		Player player = new Player(texturedModel, new Vector3f(153, 5, -274), new Vector3f(0, 100, 0), 0.6f);
 		entities.add(player);
 		
 		// camera
 		Camera camera = new Camera(player);
 		
+		// lamps
+		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("lamp"));
+		texture = new ModelTexture(loader.loadTexture("lamp"), false, true);
+		texturedModel = new TexturedModel(rawModel, texture);
+		entities.add(new Entity(texturedModel, new Vector3f(185, -4.7f, -293), new Vector3f(0, 0, 0), 1));
+		entities.add(new Entity(texturedModel, new Vector3f(370, 4.2f, -300), new Vector3f(0, 0, 0), 1));
+		entities.add(new Entity(texturedModel, new Vector3f(293, -6.8f, -305), new Vector3f(0, 0, 0), 1));
+		
 		// lights
 		List<Light> lights = new ArrayList<>();
-		Light sun = new Light(new Vector3f(0, 1000, -50), new Vector3f(0.5f, 0.5f, 0.5f));
-		Light redLight = new Light(new Vector3f(0, 1f, -5), new Vector3f(1, 0, 0));
-		Light greenLight = new Light(new Vector3f(0, 1f, -10), new Vector3f(0, 1, 0));
-		Light blueLight = new Light(new Vector3f(0, 1f, -15), new Vector3f(0, 0, 1));
+		Light sun = new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.5f, 0.5f, 0.5f));
+		Light redLight = new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f));
+		Light greenLight = new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 0), new Vector3f(1, 0.01f, 0.002f));
+		Light blueLight = new Light(new Vector3f(293, 7, -305), new Vector3f(0, 0, 2), new Vector3f(1, 0.01f, 0.002f));
 		lights.add(sun);
 		lights.add(redLight);
 		lights.add(greenLight);
