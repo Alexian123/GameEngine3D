@@ -16,7 +16,7 @@ import com.alexian123.light.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.IShader3D;
-import com.alexian123.shader.StaticShader;
+import com.alexian123.shader.EntityShader;
 import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.GUITexture;
@@ -27,7 +27,7 @@ public class RenderingManager {
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000.0f;
 	
-	private static final Vector3f SKY_COLOR = new Vector3f(0.5f, 0.5f, 0.5f);
+	private static final Vector3f SKY_COLOR = new Vector3f(0.5444f, 0.62f, 0.69f);
 	
 	private static final Matrix4f projectionMatrix = createProjectionMatrix();
 	
@@ -36,19 +36,17 @@ public class RenderingManager {
 	private static final Map<TexturedModel, List<Entity>> entities = new HashMap<>();
 	private static final List<Terrain> terrains = new ArrayList<>();
 	
-	private static GUIRenderer guiRenderer;
+	private static boolean isInitialized = false;
 	
 	public static void init(Loader loader) {
-		if (!renderers3D.isEmpty()) {
-			renderers3D.clear();
+		if (!isInitialized) {
+			renderers3D.add(new EntityRenderer(projectionMatrix));
+			renderers3D.add(new TerrainRenderer(projectionMatrix));
+			SkyBoxRenderer.init(loader, projectionMatrix);
+			GUIRenderer.init(loader);
+			enableCulling();
+			isInitialized = true;
 		}
-		renderers3D.add(new EntityRenderer(projectionMatrix));
-		renderers3D.add(new TerrainRenderer(projectionMatrix));
-		if (guiRenderer != null) {
-			guiRenderer.cleanup();
-		}
-		guiRenderer = new GUIRenderer(loader);
-		enableCulling();
 	}
 	
 	public static void renderScene(List<Light> lights, Camera camera, List<GUITexture> guis) {
@@ -62,7 +60,8 @@ public class RenderingManager {
 			renderer.render();
 			shader.stop();
 		}
-		guiRenderer.render(guis);
+		SkyBoxRenderer.render(camera);
+		GUIRenderer.render(guis);
 		entities.clear();
 		terrains.clear();
 	}
@@ -87,7 +86,8 @@ public class RenderingManager {
 		for (IRenderer3D renderer3D : renderers3D) {
 			renderer3D.cleanup();
 		}
-		guiRenderer.cleanup();
+		SkyBoxRenderer.cleanup();
+		GUIRenderer.cleanup();
 	}
 	
 	public static void enableCulling() {

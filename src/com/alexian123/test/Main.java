@@ -12,8 +12,8 @@ import com.alexian123.entity.Entity;
 import com.alexian123.entity.Player;
 import com.alexian123.light.Light;
 import com.alexian123.loader.Loader;
-import com.alexian123.loader.ModelData;
 import com.alexian123.loader.OBJFileLoader;
+import com.alexian123.model.ModelData;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.renderer.DisplayManager;
@@ -102,7 +102,7 @@ public class Main {
 		
 		// GUI
 		List<GUITexture> guis = new ArrayList<>();
-		GUITexture gui = new GUITexture(loader.loadTexture("health"), new Vector2f(-0.75f, -0.9f), new Vector2f(0.25f, 0.35f));
+		GUITexture gui = new GUITexture(loader.loadTexture("GUI/health"), new Vector2f(-0.75f, -0.9f), new Vector2f(0.25f, 0.35f));
 		guis.add(gui);
 			
 		while (!DisplayManager.displayShouldClose()) {
@@ -121,8 +121,8 @@ public class Main {
 			DisplayManager.updateDisplay();
 		}
 		
-		RenderingManager.cleanup();
 		loader.cleanup();
+		RenderingManager.cleanup();
 		DisplayManager.closeDisplay();
 	}
 

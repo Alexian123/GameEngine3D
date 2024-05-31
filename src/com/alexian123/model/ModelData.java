@@ -1,12 +1,12 @@
-package com.alexian123.loader;
+package com.alexian123.model;
 
 public class ModelData {
 
-	private float[] vertices;
-	private float[] textureCoords;
-	private float[] normals;
-	private int[] indices;
-	private float furthestPoint;
+	private final float[] vertices;
+	private final float[] textureCoords;
+	private final float[] normals;
+	private final int[] indices;
+	private final float furthestPoint;
 
 	public ModelData(float[] vertices, float[] textureCoords, float[] normals, int[] indices,
 			float furthestPoint) {

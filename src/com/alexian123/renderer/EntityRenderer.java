@@ -15,13 +15,13 @@ import com.alexian123.light.Light;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.IShader3D;
-import com.alexian123.shader.StaticShader;
+import com.alexian123.shader.EntityShader;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.util.Maths;
 
 public class EntityRenderer implements IRenderer3D {
 	
-	private final StaticShader shader = new StaticShader();
+	private final EntityShader shader = new EntityShader();
 	
 	public EntityRenderer(Matrix4f projectionMatrix) {
 		shader.start();

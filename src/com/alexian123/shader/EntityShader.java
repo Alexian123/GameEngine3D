@@ -10,7 +10,7 @@ import com.alexian123.entity.Camera;
 import com.alexian123.light.Light;
 import com.alexian123.util.Maths;
 
-public class StaticShader extends ShaderProgram implements IShader3D {
+public class EntityShader extends ShaderProgram implements IShader3D {
 	
 	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/entity_shader.vert";
 	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/entity_shader.frag";
@@ -28,7 +28,7 @@ public class StaticShader extends ShaderProgram implements IShader3D {
 	private int atlasDimensionLocation;
 	private int atlasOffsetLocation;
 
-	public StaticShader() {
+	public EntityShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 	}
 	
