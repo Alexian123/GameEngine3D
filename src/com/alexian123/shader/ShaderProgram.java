@@ -16,9 +16,9 @@ public abstract class ShaderProgram {
 	
 	private static FloatBuffer matrix4fBuffer = BufferUtils.createFloatBuffer(16);
 	
-	private int programID;
-	private int vertexShaderID;
-	private int fragmentShaderID;
+	private final int programID;
+	private final int vertexShaderID;
+	private final int fragmentShaderID;
 	
 	public ShaderProgram(String vertexShader, String fragmentShader) {
 		vertexShaderID = loadShader(vertexShader, GL20.GL_VERTEX_SHADER);
@@ -99,7 +99,7 @@ public abstract class ShaderProgram {
 			}
 			reader.close();
 		} catch (IOException e) {
-			System.err.println("Error loading " + SHADER_TYPE_NAME + " shader");
+			System.err.println("Error loading " + SHADER_TYPE_NAME + " shader: " + fileName);
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -108,7 +108,7 @@ public abstract class ShaderProgram {
 		GL20.glCompileShader(shaderID);
 		if (GL20.glGetShader(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
-			System.err.println("Error compiling " + SHADER_TYPE_NAME + " shader");
+			System.err.println("Error compiling " + SHADER_TYPE_NAME + " shader: " + fileName);
 			System.exit(-1);
 		}
 		return shaderID;

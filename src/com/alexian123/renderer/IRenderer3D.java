@@ -1,12 +1,12 @@
 package com.alexian123.renderer;
 
-import com.alexian123.entity.Camera;
-import com.alexian123.entity.Light;
+import com.alexian123.shader.IShader3D;
 
 public interface IRenderer3D {
 	
-	public void render(Light sun, Camera camera);
+	void render();
 	
-	public void cleanup();
+	void cleanup();
 
+	IShader3D getShader3D();
 }

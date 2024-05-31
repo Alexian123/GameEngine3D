@@ -15,22 +15,23 @@ import com.alexian123.entity.Entity;
 import com.alexian123.entity.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.TexturedModel;
+import com.alexian123.shader.IShader3D;
 import com.alexian123.shader.StaticShader;
 import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.GUITexture;
 
 public class RenderingManager {
-	
-	public static final Vector3f SKY_COLOR = new Vector3f(0.5f, 0.5f, 0.5f);
-	
+		
 	private static final float FOV = 70.0f;
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000.0f;
 	
+	private static final Vector3f SKY_COLOR = new Vector3f(0.5f, 0.5f, 0.5f);
+	
 	private static final Matrix4f projectionMatrix = createProjectionMatrix();
-	private static final IRenderer3D entityRenderer = new EntityRenderer(projectionMatrix);
-	private static final IRenderer3D terrainRenderer = new TerrainRenderer(projectionMatrix);
+	
+	private static final List<IRenderer3D> renderers3D = new ArrayList<>();
 	
 	private static final Map<TexturedModel, List<Entity>> entities = new HashMap<>();
 	private static final List<Terrain> terrains = new ArrayList<>();
@@ -38,6 +39,11 @@ public class RenderingManager {
 	private static GUIRenderer guiRenderer;
 	
 	public static void init(Loader loader) {
+		if (!renderers3D.isEmpty()) {
+			renderers3D.clear();
+		}
+		renderers3D.add(new EntityRenderer(projectionMatrix));
+		renderers3D.add(new TerrainRenderer(projectionMatrix));
 		if (guiRenderer != null) {
 			guiRenderer.cleanup();
 		}
@@ -45,10 +51,17 @@ public class RenderingManager {
 		enableCulling();
 	}
 	
-	public static void renderScene(Light sun, Camera camera, List<GUITexture> guis) {
+	public static void renderScene(List<Light> lights, Camera camera, List<GUITexture> guis) {
 		prepare();
-		entityRenderer.render(sun, camera);
-		terrainRenderer.render(sun, camera);
+		for (IRenderer3D renderer : renderers3D) {
+			IShader3D shader = renderer.getShader3D();
+			shader.start();
+			shader.loadSkyColor(RenderingManager.SKY_COLOR);
+			shader.loadLights(lights);
+			shader.loadViewMatrix(camera);
+			renderer.render();
+			shader.stop();
+		}
 		guiRenderer.render(guis);
 		entities.clear();
 		terrains.clear();
@@ -71,8 +84,9 @@ public class RenderingManager {
 	}
 	
 	public static void cleanup() {
-		entityRenderer.cleanup();
-		terrainRenderer.cleanup();
+		for (IRenderer3D renderer3D : renderers3D) {
+			renderer3D.cleanup();
+		}
 		guiRenderer.cleanup();
 	}
 	

@@ -12,6 +12,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Light;
 import com.alexian123.model.RawModel;
+import com.alexian123.shader.IShader3D;
 import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.ModelTexture;
@@ -30,11 +31,7 @@ public class TerrainRenderer implements IRenderer3D {
 	}
 	
 	@Override
-	public void render(Light sun, Camera camera) {
-		shader.start();
-		shader.loadSkyColor(RenderingManager.SKY_COLOR);
-		shader.loadLight(sun);
-		shader.loadViewMatrix(camera);
+	public void render() {
 		List<Terrain> terrains = RenderingManager.getTerrains();
 		for (Terrain terrain : terrains) {
 			prepareTerrain(terrain);
@@ -42,12 +39,16 @@ public class TerrainRenderer implements IRenderer3D {
 			GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			unbindTerraindModel();
 		}
-		shader.stop();
 	}
 	
 	@Override
 	public void cleanup() {
 		shader.cleanup();
+	}
+	
+	@Override
+	public IShader3D getShader3D() {
+		return shader;
 	}
 	
 	private void prepareTerrain(Terrain terrain) {

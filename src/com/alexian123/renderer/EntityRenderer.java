@@ -14,6 +14,7 @@ import com.alexian123.entity.Entity;
 import com.alexian123.entity.Light;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
+import com.alexian123.shader.IShader3D;
 import com.alexian123.shader.StaticShader;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.util.Maths;
@@ -29,11 +30,7 @@ public class EntityRenderer implements IRenderer3D {
 	}
 	
 	@Override
-	public void render(Light sun, Camera camera) {
-		shader.start();
-		shader.loadSkyColor(RenderingManager.SKY_COLOR);
-		shader.loadLight(sun);
-		shader.loadViewMatrix(camera);
+	public void render() {
 		Map<TexturedModel, List<Entity>> entities = RenderingManager.getEntities();
 		for (TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
@@ -43,12 +40,16 @@ public class EntityRenderer implements IRenderer3D {
 			}
 			unbindTexturedModel();
 		}
-		shader.stop();
 	}
 	
 	@Override
 	public void cleanup() {
 		shader.cleanup();
+	}
+	
+	@Override
+	public IShader3D getShader3D() {
+		return shader;
 	}
 	
 	private void prepareTexturedModel(TexturedModel model) {

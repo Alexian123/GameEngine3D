@@ -1,5 +1,7 @@
 package com.alexian123.shader;
 
+import java.util.List;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -8,7 +10,7 @@ import com.alexian123.entity.Camera;
 import com.alexian123.entity.Light;
 import com.alexian123.util.Maths;
 
-public class StaticShader extends ShaderProgram {
+public class StaticShader extends ShaderProgram implements IShader3D {
 	
 	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/entity_shader.vert";
 	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/entity_shader.frag";
@@ -16,8 +18,8 @@ public class StaticShader extends ShaderProgram {
 	private int transformationMatrixLocation;
 	private int projectionMatrixLocation;
 	private int viewMatrixLocation;
-	private int lightPositionLocation;
-	private int lightColorLocation;
+	private int lightPositionLocations[];
+	private int lightColorLocations[];
 	private int shineDamperLocation;
 	private int reflectivityLocation;
 	private int useFakeLightingLocation;
@@ -29,21 +31,36 @@ public class StaticShader extends ShaderProgram {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 	}
 	
+	@Override
+	public void loadSkyColor(Vector3f skyColor) {
+		super.loadVector(skyColorLocation, skyColor);
+	}
+	
+	@Override
+	public void loadLights(List<Light> lights) {
+		for (int i = 0; i < MAX_LIGHTS; ++i) {
+			if (i < lights.size()) {
+				Light light = lights.get(i);
+				super.loadVector(lightPositionLocations[i], light.getPosition());
+				super.loadVector(lightColorLocations[i], light.getColor());
+			} else {
+				super.loadVector(lightPositionLocations[i], new Vector3f(0, 0, 0));
+				super.loadVector(lightColorLocations[i], new Vector3f(0, 0, 0));
+			}
+		}
+	}
+	
+	@Override
+	public void loadViewMatrix(Camera camera) {
+		super.loadMatrix(viewMatrixLocation, Maths.createViewMatrix(camera));
+	}
+	
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(transformationMatrixLocation, matrix);
 	}
 	
 	public void loadProjectionMatrix(Matrix4f matrix) {
 		super.loadMatrix(projectionMatrixLocation, matrix);
-	}
-	
-	public void loadViewMatrix(Camera camera) {
-		super.loadMatrix(viewMatrixLocation, Maths.createViewMatrix(camera));
-	}
-	
-	public void loadLight(Light light) {
-		super.loadVector(lightPositionLocation, light.getPosition());
-		super.loadVector(lightColorLocation, light.getColor());
 	}
 	
 	public void loadShineParameters(float shineDamper, float reflectivity) {
@@ -53,10 +70,6 @@ public class StaticShader extends ShaderProgram {
 	
 	public void loadUseFakeLighting(boolean useFakeLighting) {
 		super.loadBoolean(useFakeLightingLocation, useFakeLighting);
-	}
-	
-	public void loadSkyColor(Vector3f skyColor) {
-		super.loadVector(skyColorLocation, skyColor);
 	}
 	
 	public void loadAtlasDimension(float atlasDimension) {
@@ -79,14 +92,19 @@ public class StaticShader extends ShaderProgram {
 		transformationMatrixLocation = super.getUniformLocation("transformationMatrix");
 		projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
 		viewMatrixLocation = super.getUniformLocation("viewMatrix");
-		lightPositionLocation = super.getUniformLocation("lightPosition");
-		lightColorLocation = super.getUniformLocation("lightColor");
+		lightPositionLocations = new int[MAX_LIGHTS];
+		lightColorLocations = new int[MAX_LIGHTS];
 		shineDamperLocation = super.getUniformLocation("shineDamper");
 		reflectivityLocation = super.getUniformLocation("reflectivity");
 		useFakeLightingLocation = super.getUniformLocation("useFakeLighting");
 		skyColorLocation = super.getUniformLocation("skyColor");
 		atlasDimensionLocation = super.getUniformLocation("atlasDimension");
 		atlasOffsetLocation = super.getUniformLocation("atlasOffset");
+		
+		for (int i = 0; i < MAX_LIGHTS; ++i) {
+			lightPositionLocations[i] = super.getUniformLocation("lightPosition[" + i + "]");
+			lightColorLocations[i] = super.getUniformLocation("lightColor[" + i + "]");
+		}
 	}
 
 }

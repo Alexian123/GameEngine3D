@@ -80,11 +80,22 @@ public class Main {
 		rawModel = loader.loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 		texture = new ModelTexture(loader.loadTexture("playerTexture"));
 		texturedModel = new TexturedModel(rawModel, texture);
-		Player player = new Player(texturedModel, new Vector3f(100, 0, -50), new Vector3f(0, 180, 0), 0.6f);
+		Player player = new Player(texturedModel, new Vector3f(5, 0, -10), new Vector3f(0, 180, 0), 0.6f);
 		entities.add(player);
 		
-		Light sun = new Light(new Vector3f(0, 100, -50), new Vector3f(1, 1, 1));
+		// camera
 		Camera camera = new Camera(player);
+		
+		// lights
+		List<Light> lights = new ArrayList<>();
+		Light sun = new Light(new Vector3f(0, 1000, -50), new Vector3f(0.5f, 0.5f, 0.5f));
+		Light redLight = new Light(new Vector3f(0, 1f, -5), new Vector3f(1, 0, 0));
+		Light greenLight = new Light(new Vector3f(0, 1f, -10), new Vector3f(0, 1, 0));
+		Light blueLight = new Light(new Vector3f(0, 1f, -15), new Vector3f(0, 0, 1));
+		lights.add(sun);
+		lights.add(redLight);
+		lights.add(greenLight);
+		lights.add(blueLight);
 		
 		// GUI
 		List<GUITexture> guis = new ArrayList<>();
@@ -103,7 +114,7 @@ public class Main {
 				RenderingManager.processTerrain(terrain);
 			}
 			
-			RenderingManager.renderScene(sun, camera, guis);
+			RenderingManager.renderScene(lights, camera, guis);
 			DisplayManager.updateDisplay();
 		}
 		
