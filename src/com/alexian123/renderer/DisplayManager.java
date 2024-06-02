@@ -17,17 +17,17 @@ public class DisplayManager {
 	private static long lastFrameTime;
 	private static float timeDelta;
 	
-	public static void createDisplay() {
+	public static void createDisplay(String title, int width, int height) {
 		ContextAttribs attribs = new ContextAttribs(3, 2).withForwardCompatible(true).withProfileCore(true);
 		try {
-			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
+			Display.setDisplayMode(new DisplayMode(width, height));
 			Display.create(new PixelFormat(), attribs);
-			Display.setTitle("GameEngine3D");
+			Display.setTitle(title);
 		} catch (LWJGLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		GL11.glViewport(0, 0, WIDTH, HEIGHT);
+		GL11.glViewport(0, 0, width, height);
 		lastFrameTime = getCurrentTime();
 	}
 	

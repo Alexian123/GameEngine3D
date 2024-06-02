@@ -22,7 +22,7 @@ public class TerrainShader extends ShaderProgram implements IShader3D {
 	private int attenuationLocations[];
 	private int shineDamperLocation;
 	private int reflectivityLocation;
-	private int skyColorLocation;
+	private int fogColorLocation;
 	private int bgTextureLocation;
 	private int rTextureLocation;
 	private int gTextureLocation;
@@ -34,8 +34,8 @@ public class TerrainShader extends ShaderProgram implements IShader3D {
 	}
 	
 	@Override
-	public void loadSkyColor(Vector3f skyColor) {
-		super.loadVector(skyColorLocation, skyColor);
+	public void loadFogColor(Vector3f fogColor) {
+		super.loadVector(fogColorLocation, fogColor);
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class TerrainShader extends ShaderProgram implements IShader3D {
 		attenuationLocations = new int[MAX_LIGHTS];
 		shineDamperLocation = super.getUniformLocation("shineDamper");
 		reflectivityLocation = super.getUniformLocation("reflectivity");
-		skyColorLocation = super.getUniformLocation("skyColor");
+		fogColorLocation = super.getUniformLocation("fogColor");
 		bgTextureLocation = super.getUniformLocation("bgTexture");
 		rTextureLocation = super.getUniformLocation("rTexture");
 		gTextureLocation = super.getUniformLocation("gTexture");

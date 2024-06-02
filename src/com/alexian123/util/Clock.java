@@ -5,13 +5,12 @@ import com.alexian123.renderer.DisplayManager;
 public class Clock {
 
 	private float timeSpeed;
-	private float timeVal;
+	private float timeVal = TimeOfDay.MORNING.getValue();
 	
 	public Clock(float timeSpeed) {
 		this.timeSpeed = timeSpeed;
-		this.timeVal = TimeOfDay.MORNING.getValue();
 	}
-	
+
 	public void tick() {
 		timeVal += DisplayManager.getFrameTimeSeconds() * timeSpeed;
 		timeVal %= TimeOfDay.MAX_TIME.getValue();

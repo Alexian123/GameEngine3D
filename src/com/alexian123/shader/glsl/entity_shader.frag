@@ -16,7 +16,7 @@ uniform vec3 lightColor[MAX_LIGHTS];
 uniform vec3 attenuation[MAX_LIGHTS];
 uniform float shineDamper;
 uniform float reflectivity;
-uniform vec3 skyColor;
+uniform vec3 fogColor;
 
 void main(void) {
 	vec3 unitSurfaceNormal = normalize(surfaceNormal);
@@ -50,5 +50,5 @@ void main(void) {
 	}
 
 	outColor = vec4(diffuse, 1.0) * textureColor + vec4(specular, 1.0);
-	outColor = mix(vec4(skyColor, 1.0), outColor, visibility);
+	outColor = mix(vec4(fogColor, 1.0), outColor, visibility);
 }

@@ -24,7 +24,7 @@ public class EntityShader extends ShaderProgram implements IShader3D {
 	private int shineDamperLocation;
 	private int reflectivityLocation;
 	private int useFakeLightingLocation;
-	private int skyColorLocation;
+	private int fogColorLocation;
 	private int atlasDimensionLocation;
 	private int atlasOffsetLocation;
 
@@ -33,8 +33,8 @@ public class EntityShader extends ShaderProgram implements IShader3D {
 	}
 	
 	@Override
-	public void loadSkyColor(Vector3f skyColor) {
-		super.loadVector(skyColorLocation, skyColor);
+	public void loadFogColor(Vector3f fogColor) {
+		super.loadVector(fogColorLocation, fogColor);
 	}
 	
 	@Override
@@ -101,7 +101,7 @@ public class EntityShader extends ShaderProgram implements IShader3D {
 		shineDamperLocation = super.getUniformLocation("shineDamper");
 		reflectivityLocation = super.getUniformLocation("reflectivity");
 		useFakeLightingLocation = super.getUniformLocation("useFakeLighting");
-		skyColorLocation = super.getUniformLocation("skyColor");
+		fogColorLocation = super.getUniformLocation("fogColor");
 		atlasDimensionLocation = super.getUniformLocation("atlasDimension");
 		atlasOffsetLocation = super.getUniformLocation("atlasOffset");
 		

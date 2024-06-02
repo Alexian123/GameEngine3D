@@ -25,12 +25,13 @@ import com.alexian123.texture.GUITexture;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.Clock;
+import com.alexian123.util.MousePicker;
 import com.alexian123.texture.TerrainTexture;
 
 public class Main {
 
 	public static void main(String[] args) {
-		DisplayManager.createDisplay();
+		DisplayManager.createDisplay("GameEngine3D", 1600, 900);
 		Loader loader = new Loader();
 		Clock clock = new Clock(1000.0f);
 		RenderingManager.init(loader, clock);
@@ -106,12 +107,19 @@ public class Main {
 		List<GUITexture> guis = new ArrayList<>();
 		GUITexture gui = new GUITexture(loader.loadTexture("GUI/health"), new Vector2f(-0.75f, -0.9f), new Vector2f(0.25f, 0.35f));
 		guis.add(gui);
+		
+		// Mouse picker
+		MousePicker mousePicker = new MousePicker(RenderingManager.getProjectionMatrix(), camera);
 			
 		while (!DisplayManager.displayShouldClose()) {
 			clock.tick();
 			
-			camera.move();
+			mousePicker.update();
+			System.out.println(mousePicker.getCurrentRay());
+			
 			player.move(terrainGrid.getTerrainAt(player.getPosition().x, player.getPosition().z));
+			camera.move();
+			
 			
 			for (Entity entity : entities) {
 				RenderingManager.processEntity(entity);

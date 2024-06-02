@@ -1,6 +1,6 @@
 package com.alexian123.terrain;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.alexian123.loader.Loader;
@@ -10,21 +10,24 @@ import com.alexian123.texture.TerrainTexturePack;
 public class TerrainGrid {
 	
 	private final int size;
-	private final List<Terrain> terrains;
+	private final Terrain[] terrains;
 	
 	public TerrainGrid(int startX, int startZ, int size, Loader loader, 
 			TerrainTexturePack[] texturePacks, TerrainTexture[] blendMaps, String[] heightmapFiles) 
-					throws ArrayIndexOutOfBoundsException {
+					throws RuntimeException {
+		if (size <= 0) {
+			throw new RuntimeException("Gird size must be greater than 0");
+		}
 		if (texturePacks.length < size*size || blendMaps.length < size*size || heightmapFiles.length < size*size) {
-			throw new ArrayIndexOutOfBoundsException("All arrays must have a size of at least " + size*size);
+			throw new RuntimeException("All arrays must have a size of at least " + size*size);
 		}
 		this.size = size;
-		this.terrains = new ArrayList<>();
-		int arraysPtr = 0;
+		this.terrains = new Terrain[size * size];
+		int terrainPtr = 0;
 		for (int x = startX; x < (startX + size); ++x) {
 			for (int z = startZ; z < (startZ + size); ++z) {
-				terrains.add(new Terrain(x, z, loader, texturePacks[arraysPtr], blendMaps[arraysPtr], heightmapFiles[arraysPtr]));
-				++arraysPtr;
+				terrains[terrainPtr] = new Terrain(x, z, loader, texturePacks[terrainPtr], blendMaps[terrainPtr], heightmapFiles[terrainPtr]);
+				++terrainPtr;
 			}
 		}
 	}
@@ -34,7 +37,7 @@ public class TerrainGrid {
 	}
 	
 	public List<Terrain> getTerrains() {
-		return terrains;
+		return Arrays.asList(terrains);
 	}
 	
 	public Terrain getTerrainAt(float worldX, float worldZ) {

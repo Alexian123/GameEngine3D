@@ -53,7 +53,7 @@ public class RenderingManager {
 		for (IRenderer3D renderer : renderers3D) {
 			IShader3D shader = renderer.getShader3D();
 			shader.start();
-			shader.loadSkyColor(SKY_COLOR);
+			shader.loadFogColor(SKY_COLOR);
 			shader.loadLights(lights);
 			shader.loadViewMatrix(camera);
 			renderer.render();
@@ -96,6 +96,10 @@ public class RenderingManager {
 	
 	public static void disableCulling() {
 		GL11.glDisable(GL11.GL_CULL_FACE);
+	}
+	
+	public static Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
 	}
 	
 	static Map<TexturedModel, List<Entity>> getEntities() {

@@ -12,7 +12,7 @@ public interface IShader3D {
 
 	void start();
 	
-	void loadSkyColor(Vector3f skyColor);
+	void loadFogColor(Vector3f fogColor);
 	
 	void loadLights(List<Light> lights);
 	
