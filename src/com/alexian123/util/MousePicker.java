@@ -8,28 +8,47 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Camera;
+import com.alexian123.terrain.Terrain;
+import com.alexian123.terrain.TerrainGrid;
 
 public class MousePicker {
 	
+	private static final int RECURSION_COUNT = 200;
+	private static final float RAY_RANGE = 600;
+	
 	private final Matrix4f projectionMatrix;
 	private final Camera camera;
-
-	private Vector3f currentRay;
-	private Matrix4f viewMatrix;
+	private final TerrainGrid terrainGrid;
 	
-	public MousePicker(Matrix4f projectionMatrix, Camera camera) {
+	private Matrix4f viewMatrix;
+	private Vector3f currentRay;
+	private Vector3f currentTerrainPoint;
+	
+	
+	public MousePicker(Matrix4f projectionMatrix, Camera camera, TerrainGrid terrainGrid) {
 		this.projectionMatrix = projectionMatrix;
 		this.camera = camera;
+		this.terrainGrid = terrainGrid;
 		this.viewMatrix = Maths.createViewMatrix(camera);
+		this.currentRay = new Vector3f();
 	}
 
 	public Vector3f getCurrentRay() {
 		return currentRay;
 	}
 	
+	public Vector3f getCurrentTerrainPoint() {
+		return currentTerrainPoint;
+	}
+	
 	public void update() {
 		viewMatrix = Maths.createViewMatrix(camera);
 		currentRay = calculateMouseRay();
+		if (intersectionInRange(0, RAY_RANGE, currentRay)) {
+			currentTerrainPoint = binarySearch(0, 0, RAY_RANGE, currentRay);
+		} else {
+			currentTerrainPoint = null;
+		}
 	}
 	
 	
@@ -61,5 +80,45 @@ public class MousePicker {
 		Matrix4f inverseViewMatrix = Matrix4f.invert(viewMatrix, null);
 		Vector4f worldCoords = Matrix4f.transform(inverseViewMatrix, eyeCoords, null);
 		return worldCoords;
+	}
+	
+	private Vector3f getPointOnRay(Vector3f ray, float distance) {
+		Vector3f camPos = camera.getPosition();
+		Vector3f start = new Vector3f(camPos.x, camPos.y, camPos.z);
+		Vector3f scaledRay = new Vector3f(ray.x * distance, ray.y * distance, ray.z * distance);
+		return Vector3f.add(start, scaledRay, null);
+	}
+	
+	private Vector3f binarySearch(int count, float start, float finish, Vector3f ray) {
+		float half = start + ((finish - start) / 2f);
+		if (count >= RECURSION_COUNT) {
+			Vector3f endPoint = getPointOnRay(ray, half);
+			Terrain terrain = terrainGrid.getTerrainAt(endPoint.getX(), endPoint.getZ());
+			if (terrain != null) {
+				return endPoint;
+			} else {
+				return null;
+			}
+		}
+		if (intersectionInRange(start, half, ray)) {
+			return binarySearch(count + 1, start, half, ray);
+		} else {
+			return binarySearch(count + 1, half, finish, ray);
+		}
+	}
+
+	private boolean intersectionInRange(float start, float finish, Vector3f ray) {
+		Vector3f startPoint = getPointOnRay(ray, start);
+		Vector3f endPoint = getPointOnRay(ray, finish);
+		return !isUnderGround(startPoint) && isUnderGround(endPoint);
+	}
+
+	private boolean isUnderGround(Vector3f testPoint) {
+		Terrain terrain = terrainGrid.getTerrainAt(testPoint.getX(), testPoint.getZ());
+		float height = 0;
+		if (terrain != null) {
+			height = terrain.getHeightAtPosition(testPoint.getX(), testPoint.getZ());
+		}
+		return testPoint.y < height;
 	}
 }

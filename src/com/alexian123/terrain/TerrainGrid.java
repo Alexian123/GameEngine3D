@@ -42,6 +42,7 @@ public class TerrainGrid {
 	
 	public Terrain getTerrainAt(float worldX, float worldZ) {
 		for (Terrain terrain : terrains) {
+			
 			if (worldX >= terrain.getX() && worldX < terrain.getX() + Terrain.SIZE
 					&& worldZ >= terrain.getZ() && worldZ < terrain.getZ() + Terrain.SIZE) {
 				return terrain;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -58,10 +59,12 @@ public class Main {
 		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("tree"));
 		texture = new ModelTexture(loader.loadTexture("tree"), 1, 0);
 		texturedModel = new TexturedModel(rawModel, texture);
+		Entity tree = null;
 		for (int i = 0; i < 100; ++i) {
 			float x = random.nextFloat() * 1600 - 800; 
 			float z = random.nextFloat() * 1600 - 800;
-			entities.add(new Entity(texturedModel, new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z) - 0.5f, z), new Vector3f(0, 0, 0), 10));
+			tree = new Entity(texturedModel, new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z) - 0.5f, z), new Vector3f(0, 0, 0), 10);
+			entities.add(tree);
 		}
 		
 		// ferns
@@ -109,13 +112,16 @@ public class Main {
 		guis.add(gui);
 		
 		// Mouse picker
-		MousePicker mousePicker = new MousePicker(RenderingManager.getProjectionMatrix(), camera);
+		MousePicker mousePicker = new MousePicker(RenderingManager.getProjectionMatrix(), camera, terrainGrid);
 			
 		while (!DisplayManager.displayShouldClose()) {
 			clock.tick();
 			
 			mousePicker.update();
-			System.out.println(mousePicker.getCurrentRay());
+			Vector3f terrainPoint = mousePicker.getCurrentTerrainPoint();
+			if (terrainPoint != null && Mouse.isButtonDown(0)) {
+				tree.setPosition(terrainPoint);
+			}
 			
 			player.move(terrainGrid.getTerrainAt(player.getPosition().x, player.getPosition().z));
 			camera.move();
