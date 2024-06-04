@@ -21,10 +21,8 @@ public class WaterRenderer {
 	
 	private RawModel quad;
 	private WaterShader shader = new WaterShader();
-	private WaterFrameBuffers fbos;
 	
-	public WaterRenderer(Loader loader, Matrix4f projectionMatrix, WaterFrameBuffers fbos) {
-		this.fbos = fbos;
+	public WaterRenderer(Loader loader, Matrix4f projectionMatrix) {
 		shader.start();
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -33,14 +31,14 @@ public class WaterRenderer {
 	}
 
 	public void render(List<Water> waters, Camera camera) {
-		prepareRender(camera);
 		for (Water water : waters) {
+			prepareRender(camera, water.getFbos());
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
 					new Vector3f(water.getX(), water.getHeight(), water.getZ()), new Vector3f(0, 0, 0), Water.TILE_SIZE);
 			shader.loadModelMatrix(modelMatrix);
 			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, quad.getVertexCount());
+			unbind();
 		}
-		unbind();
 	}
 
 	public void cleanup() {
@@ -53,7 +51,7 @@ public class WaterRenderer {
 		shader.stop();
 	}
 
-	private void prepareRender(Camera camera) {
+	private void prepareRender(Camera camera, WaterFrameBuffers fbos) {
 		shader.start();
 		shader.loadViewMatrix(camera);
 		GL30.glBindVertexArray(quad.getVaoID());

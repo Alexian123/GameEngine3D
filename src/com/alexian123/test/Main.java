@@ -110,7 +110,8 @@ public class Main {
 		lights.add(blueLight);
 		
 		List<Water> waters = new ArrayList<>();
-		waters.add(new Water(153, -200, terrainGrid.getTerrainAt(153, -200).getHeightAtPosition(153, -200) - 1f));
+		waters.add(new Water(165, -175, terrainGrid.getTerrainAt(165, -175).getHeightAtPosition(165, -175) - 1f));
+		waters.add(new Water(304, -360, terrainGrid.getTerrainAt(304, -360).getHeightAtPosition(304, -360) + 3f));
 		
 		// scene
 		Scene scene = new Scene(entities, terrainGrid.getTerrains(), waters, lights);
@@ -134,6 +135,8 @@ public class Main {
 			
 			player.move(terrainGrid.getTerrainAt(player.getPosition().x, player.getPosition().z));
 			camera.move();
+			
+			System.out.println(player.getPosition());
 			
 			renderingManager.render(scene, camera, guis);
 			DisplayManager.updateDisplay();

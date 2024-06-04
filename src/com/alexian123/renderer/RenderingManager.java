@@ -35,8 +35,6 @@ public class RenderingManager {
 	
 	private static final Matrix4f PROJECTION_MATRIX = createProjectionMatrix();
 	
-	private final WaterFrameBuffers fbos;
-	
 	private final EntityRenderer entityRenderer;
 	private final TerrainRenderer terrainRenderer;
 	private final WaterRenderer waterRenderer;
@@ -47,10 +45,9 @@ public class RenderingManager {
 	
 	public RenderingManager(Loader loader, Clock clock) {
 		enableCulling();
-		this.fbos = new WaterFrameBuffers();
 		this.entityRenderer = new EntityRenderer(PROJECTION_MATRIX);
 		this.terrainRenderer = new TerrainRenderer(PROJECTION_MATRIX);
-		this.waterRenderer = new WaterRenderer(loader, PROJECTION_MATRIX, fbos);
+		this.waterRenderer = new WaterRenderer(loader, PROJECTION_MATRIX);
 		this.skyBoxRenderer = new SkyBoxRenderer(loader, PROJECTION_MATRIX, clock);
 		this.guiRenderer = new GUIRenderer(loader);
 		this.entities = new HashMap<>();
@@ -64,7 +61,6 @@ public class RenderingManager {
 	}
 	
 	public void cleanup() {
-		fbos.cleanup();
 		entityRenderer.cleanup();
 		terrainRenderer.cleanup();
 		waterRenderer.cleanup();
@@ -72,13 +68,10 @@ public class RenderingManager {
 		guiRenderer.cleanup();
 	}
 	
-	public WaterFrameBuffers getFbos() {
-		return fbos;
-	}
-	
 	private void renderWaterFX(Scene scene, Camera camera) {
 		GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 		for (Water water : scene.getWaters()) {
+			WaterFrameBuffers fbos = water.getFbos();
 			float distance = 2f * (camera.getPosition().y - water.getHeight());
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
@@ -88,9 +81,9 @@ public class RenderingManager {
 			camera.invertPitch();
 			fbos.bindRefractionFrameBuffer();
 			renderScene(scene, camera, new Vector4f(0, -1, 0, water.getHeight()));
+			fbos.unbindCurrentFrameBuffer();
 		}
 		GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
-		fbos.unbindCurrentFrameBuffer();
 	}
 	
 	private void renderScene(Scene scene, Camera camera, Vector4f clipPlane) {
