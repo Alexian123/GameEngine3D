@@ -144,6 +144,9 @@ public class Main {
 		
 		loader.cleanup();
 		renderingManager.cleanup();
+		for (Water water : waters) {
+			water.getFbos().cleanup();
+		}
 		DisplayManager.closeDisplay();
 	}
 

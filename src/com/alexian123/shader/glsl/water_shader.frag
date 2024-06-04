@@ -2,6 +2,7 @@
 
 in vec4 clipSpace;
 in vec2 textureCoord;
+in vec3 toCameraVector;
 
 out vec4 outColor;
 
@@ -31,6 +32,10 @@ void main(void) {
 	vec4 reflectionColor = texture(reflectionTexture, reflectionTextureCoord);
 	vec4 refractionColor = texture(refractionTexture, refractionTextureCoord);
 
-	outColor = mix(reflectionColor, refractionColor, 0.5);
+	vec3 unitToCameraVector = normalize(toCameraVector);
+	float fresnelFactor = dot(unitToCameraVector, vec3(0.0, 1.0, 0.0));
+	fresnelFactor = pow(fresnelFactor, 2.0);
+
+	outColor = mix(reflectionColor, refractionColor, fresnelFactor);
 	outColor = mix(outColor, vec4(0.0, 0.3, 0.5, 1.0), 0.2);
 }

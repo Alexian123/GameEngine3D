@@ -17,6 +17,7 @@ public class WaterShader extends ShaderProgram {
 	private int refractionTextureLocation;
 	private int dudvMapLocation;
 	private int moveFactorLocation;
+	private int cameraPosLocation;
 
 	public WaterShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -24,6 +25,7 @@ public class WaterShader extends ShaderProgram {
 	
 	public void loadViewMatrix(Camera camera) {
 		super.loadMatrix(viewMatrixLocation, Maths.createViewMatrix(camera));
+		super.loadVector(cameraPosLocation, camera.getPosition());
 	}
 	
 	public void loadProjectionMatrix(Matrix4f projectionMatrix) {
@@ -58,6 +60,7 @@ public class WaterShader extends ShaderProgram {
 		refractionTextureLocation = super.getUniformLocation("refractionTexture");
 		dudvMapLocation = super.getUniformLocation("dudvMap");
 		moveFactorLocation = super.getUniformLocation("moveFactor");
+		cameraPosLocation = super.getUniformLocation("cameraPos");
 	}
 
 }

@@ -24,12 +24,12 @@ public class WaterFrameBuffers {
 	private int refractionTexture;
 	private int refractionDepthTexture;
 
-	public WaterFrameBuffers() {//call when loading the game
+	public WaterFrameBuffers() { // call when loading the game
 		initialiseReflectionFrameBuffer();
 		initialiseRefractionFrameBuffer();
 	}
 
-	public void cleanup() {//call when closing the game
+	public void cleanup() { // call when closing the game
 		GL30.glDeleteFramebuffers(reflectionFrameBuffer);
 		GL11.glDeleteTextures(reflectionTexture);
 		GL30.glDeleteRenderbuffers(reflectionDepthBuffer);
@@ -38,24 +38,24 @@ public class WaterFrameBuffers {
 		GL11.glDeleteTextures(refractionDepthTexture);
 	}
 
-	public void bindReflectionFrameBuffer() { //call before rendering to this FBO
-		bindFrameBuffer(reflectionFrameBuffer, REFLECTION_WIDTH,REFLECTION_HEIGHT);
+	public void bindReflectionFrameBuffer() { // call before rendering to this FBO
+		bindFrameBuffer(reflectionFrameBuffer, REFLECTION_WIDTH, REFLECTION_HEIGHT);
 	}
 	
-	public void bindRefractionFrameBuffer() { //call before rendering to this FBO
-		bindFrameBuffer(refractionFrameBuffer, REFRACTION_WIDTH,REFRACTION_HEIGHT);
+	public void bindRefractionFrameBuffer() { // call before rendering to this FBO
+		bindFrameBuffer(refractionFrameBuffer, REFRACTION_WIDTH, REFRACTION_HEIGHT);
 	}
 	
-	public void unbindCurrentFrameBuffer() { //call to switch to default frame buffer
+	public void unbindCurrentFrameBuffer() { // call to switch to default frame buffer
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
 		GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 	}
 
-	public int getReflectionTexture() { //get the resulting texture
+	public int getReflectionTexture() { // get the resulting texture
 		return reflectionTexture;
 	}
 	
-	public int getRefractionTexture() { //get the resulting texture
+	public int getRefractionTexture() { // get the resulting texture
 		return refractionTexture;
 	}
 	
@@ -65,31 +65,31 @@ public class WaterFrameBuffers {
 
 	private void initialiseReflectionFrameBuffer() {
 		reflectionFrameBuffer = createFrameBuffer();
-		reflectionTexture = createTextureAttachment(REFLECTION_WIDTH,REFLECTION_HEIGHT);
-		reflectionDepthBuffer = createDepthBufferAttachment(REFLECTION_WIDTH,REFLECTION_HEIGHT);
+		reflectionTexture = createTextureAttachment(REFLECTION_WIDTH, REFLECTION_HEIGHT);
+		reflectionDepthBuffer = createDepthBufferAttachment(REFLECTION_WIDTH, REFLECTION_HEIGHT);
 		unbindCurrentFrameBuffer();
 	}
 	
 	private void initialiseRefractionFrameBuffer() {
 		refractionFrameBuffer = createFrameBuffer();
-		refractionTexture = createTextureAttachment(REFRACTION_WIDTH,REFRACTION_HEIGHT);
-		refractionDepthTexture = createDepthTextureAttachment(REFRACTION_WIDTH,REFRACTION_HEIGHT);
+		refractionTexture = createTextureAttachment(REFRACTION_WIDTH, REFRACTION_HEIGHT);
+		refractionDepthTexture = createDepthTextureAttachment(REFRACTION_WIDTH, REFRACTION_HEIGHT);
 		unbindCurrentFrameBuffer();
 	}
 	
 	private void bindFrameBuffer(int frameBuffer, int width, int height){
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0); //To make sure the texture isn't bound
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0); // To make sure the texture isn't bound
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
 		GL11.glViewport(0, 0, width, height);
 	}
 
 	private int createFrameBuffer() {
 		int frameBuffer = GL30.glGenFramebuffers();
-		//generate name for frame buffer
+		// generate name for frame buffer
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-		//create the framebuffer
+		// create the framebuffer
 		GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
-		//indicate that we will always render to color attachment 0
+		// indicate that we will always render to color attachment 0
 		return frameBuffer;
 	}
 

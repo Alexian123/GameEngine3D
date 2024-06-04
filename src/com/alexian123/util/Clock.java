@@ -5,7 +5,7 @@ import com.alexian123.renderer.DisplayManager;
 public class Clock {
 
 	private float timeSpeed;
-	private float timeVal = TimeOfDay.MORNING.getValue();
+	private float timeVal = TimeOfDay.NOON.getValue();
 	
 	public Clock(float timeSpeed) {
 		this.timeSpeed = timeSpeed;
