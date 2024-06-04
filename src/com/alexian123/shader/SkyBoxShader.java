@@ -12,7 +12,7 @@ public class SkyBoxShader extends ShaderProgram{
 	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/skybox_shader.vert";
 	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/skybox_shader.frag";
 	
-	private static final float ROTATION_INCREMENT = 1.0f;
+	private static final float ROTATION_INCREMENT = 0.1f;
 	
 	private int projectionMatrixLocation;
 	private int viewMatrixLocation;
