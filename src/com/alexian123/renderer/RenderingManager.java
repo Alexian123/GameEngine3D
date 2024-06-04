@@ -7,16 +7,21 @@ import java.util.Map;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
 import com.alexian123.light.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.TexturedModel;
-import com.alexian123.shader.IShader3D;
+import com.alexian123.shader.EntityShader;
+import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
+import com.alexian123.terrain.Water;
+import com.alexian123.terrain.WaterFrameBuffers;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.util.Clock;
 
@@ -28,44 +33,78 @@ public class RenderingManager {
 	
 	private static final Vector3f SKY_COLOR = new Vector3f(0.5444f, 0.62f, 0.69f);
 	
-	private static final Matrix4f projectionMatrix = createProjectionMatrix();
+	private static final Matrix4f PROJECTION_MATRIX = createProjectionMatrix();
 	
-	private static final List<IRenderer3D> renderers3D = new ArrayList<>();
+	private final WaterFrameBuffers fbos;
 	
-	private static final Map<TexturedModel, List<Entity>> entities = new HashMap<>();
-	private static final List<Terrain> terrains = new ArrayList<>();
+	private final EntityRenderer entityRenderer;
+	private final TerrainRenderer terrainRenderer;
+	private final WaterRenderer waterRenderer;
+	private final SkyBoxRenderer skyBoxRenderer;
+	private final GUIRenderer guiRenderer;
 	
-	private static boolean isInitialized = false;
+	private final Map<TexturedModel, List<Entity>> entities;
 	
-	public static void init(Loader loader, Clock clock) {
-		if (!isInitialized) {
-			renderers3D.add(new EntityRenderer(projectionMatrix));
-			renderers3D.add(new TerrainRenderer(projectionMatrix));
-			SkyBoxRenderer.init(loader, projectionMatrix, clock);
-			GUIRenderer.init(loader);
-			enableCulling();
-			isInitialized = true;
-		}
+	public RenderingManager(Loader loader, Clock clock) {
+		enableCulling();
+		this.fbos = new WaterFrameBuffers();
+		this.entityRenderer = new EntityRenderer(PROJECTION_MATRIX);
+		this.terrainRenderer = new TerrainRenderer(PROJECTION_MATRIX);
+		this.waterRenderer = new WaterRenderer(loader, PROJECTION_MATRIX, fbos);
+		this.skyBoxRenderer = new SkyBoxRenderer(loader, PROJECTION_MATRIX, clock);
+		this.guiRenderer = new GUIRenderer(loader);
+		this.entities = new HashMap<>();
 	}
 	
-	public static void renderScene(List<Light> lights, Camera camera, List<GUITexture> guis) {
+	public void render(Scene scene, Camera camera, List<GUITexture> guis) {
+		renderWaterFX(scene, camera);
+		renderScene(scene, camera, new Vector4f(0, -1, 0, 1000));
+		waterRenderer.render(scene.getWaters(), camera);
+		guiRenderer.render(guis);
+	}
+	
+	public void cleanup() {
+		fbos.cleanup();
+		entityRenderer.cleanup();
+		terrainRenderer.cleanup();
+		waterRenderer.cleanup();
+		skyBoxRenderer.cleanup();
+		guiRenderer.cleanup();
+	}
+	
+	public WaterFrameBuffers getFbos() {
+		return fbos;
+	}
+	
+	private void renderWaterFX(Scene scene, Camera camera) {
+		GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
+		for (Water water : scene.getWaters()) {
+			float distance = 2f * (camera.getPosition().y - water.getHeight());
+			camera.getPosition().y -= distance;
+			camera.invertPitch();
+			fbos.bindReflectionFrameBuffer();
+			renderScene(scene, camera, new Vector4f(0, 1, 0, -water.getHeight()));
+			camera.getPosition().y += distance;
+			camera.invertPitch();
+			fbos.bindRefractionFrameBuffer();
+			renderScene(scene, camera, new Vector4f(0, -1, 0, water.getHeight()));
+		}
+		GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
+		fbos.unbindCurrentFrameBuffer();
+	}
+	
+	private void renderScene(Scene scene, Camera camera, Vector4f clipPlane) {
 		prepare();
-		for (IRenderer3D renderer : renderers3D) {
-			IShader3D shader = renderer.getShader3D();
-			shader.start();
-			shader.loadFogColor(SKY_COLOR);
-			shader.loadLights(lights);
-			shader.loadViewMatrix(camera);
-			renderer.render();
-			shader.stop();
+		for (Entity entity : scene.getEntities()) {
+			processEntity(entity);
 		}
-		SkyBoxRenderer.render(camera, SKY_COLOR);
-		GUIRenderer.render(guis);
+		renderEntities(scene.getLights(), camera, clipPlane);
+		renderTerrains(scene.getTerrains(), scene.getLights(), camera, clipPlane);
+		skyBoxRenderer.render(camera, SKY_COLOR);
 		entities.clear();
-		terrains.clear();
 	}
 	
-	public static void processEntity(Entity entity) {
+	private void processEntity(Entity entity) {
 		TexturedModel model = entity.getModel();
 		List<Entity> batch = entities.get(model);
 		if (batch == null) {
@@ -77,16 +116,31 @@ public class RenderingManager {
 		}
 	}
 	
-	public static void processTerrain(Terrain terrain) {
-		terrains.add(terrain);
+	private void renderEntities(List<Light> lights, Camera camera, Vector4f clipPlane) {
+		EntityShader shader = entityRenderer.getShader();
+		shader.start();
+		shader.loadClipPlane(clipPlane);
+		shader.loadFogColor(SKY_COLOR);
+		shader.loadLights(lights);
+		shader.loadViewMatrix(camera);
+		entityRenderer.render(entities);
+		shader.stop();
 	}
 	
-	public static void cleanup() {
-		for (IRenderer3D renderer3D : renderers3D) {
-			renderer3D.cleanup();
-		}
-		SkyBoxRenderer.cleanup();
-		GUIRenderer.cleanup();
+	private void renderTerrains(List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane) {
+		TerrainShader shader = terrainRenderer.getShader();
+		shader.start();
+		shader.loadClipPlane(clipPlane);
+		shader.loadFogColor(SKY_COLOR);
+		shader.loadLights(lights);
+		shader.loadViewMatrix(camera);
+		terrainRenderer.render(terrains);
+		shader.stop();
+	}
+	
+	/* Static Methods */
+	public static Matrix4f getProjectionMatrix() {
+		return PROJECTION_MATRIX;
 	}
 	
 	public static void enableCulling() {
@@ -96,18 +150,6 @@ public class RenderingManager {
 	
 	public static void disableCulling() {
 		GL11.glDisable(GL11.GL_CULL_FACE);
-	}
-	
-	public static Matrix4f getProjectionMatrix() {
-		return projectionMatrix;
-	}
-	
-	static Map<TexturedModel, List<Entity>> getEntities() {
-		return entities;
-	}
-	
-	static List<Terrain> getTerrains() {
-		return terrains;
 	}
 	
 	private static void prepare() {
@@ -130,5 +172,5 @@ public class RenderingManager {
 		projectionMatrix.m33 = 0;
 		return projectionMatrix;
 	}
-
+	/* -------------- */
 }

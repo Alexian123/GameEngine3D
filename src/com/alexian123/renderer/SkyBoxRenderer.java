@@ -82,31 +82,27 @@ public class SkyBoxRenderer {
 			NIGHT_TEXTURE_DIR + "front" 
 	};
 	
-	private static final SkyBoxShader shader = new SkyBoxShader();
+	private final SkyBoxShader shader = new SkyBoxShader();
 	
-	private static RawModel cube;
-	private static int dayTextureID, nightTextureID;
-	private static Clock clock;
-	private static boolean isInitalized = false;
+	private RawModel cube;
+	private int dayTextureID, nightTextureID;
+	private Clock clock;
 	
-	private static int texture0, texture1;
-	private static float blendFactor;
+	private int texture0, texture1;
+	private float blendFactor;
 	
-	public static void init(Loader loader, Matrix4f projectionMatrix, Clock clock) {
-		if (!isInitalized) {
-			cube = loader.loadToVao(VERTICES, 3);
-			dayTextureID = loader.loadCubeMap(DAY_TEXTURE_FILES);
-			nightTextureID = loader.loadCubeMap(NIGHT_TEXTURE_FILES);
-			SkyBoxRenderer.clock = clock;
-			shader.start();
-			shader.loadProjectionMatrix(projectionMatrix);
-			shader.connectTextureUnits();
-			shader.stop();
-			isInitalized = true;
-		}
+	public SkyBoxRenderer(Loader loader, Matrix4f projectionMatrix, Clock clock) {
+		this.cube = loader.loadToVao(VERTICES, 3);
+		this.dayTextureID = loader.loadCubeMap(DAY_TEXTURE_FILES);
+		this.nightTextureID = loader.loadCubeMap(NIGHT_TEXTURE_FILES);
+		this.clock = clock;
+		shader.start();
+		shader.loadProjectionMatrix(projectionMatrix);
+		shader.connectTextureUnits();
+		shader.stop();
 	}
 	
-	public static void render(Camera camera, Vector3f fogColor) {
+	public void render(Camera camera, Vector3f fogColor) {
 		shader.start();
 		shader.loadViewMatrix(camera);
 		shader.loadFogColor(fogColor);
@@ -119,11 +115,11 @@ public class SkyBoxRenderer {
 		shader.stop();
 	}
 
-	public static void cleanup() {
+	public void cleanup() {
 		shader.cleanup();
 	}
 	
-	private static void bindTextures() {
+	private void bindTextures() {
 		setTexturesBasedOnTime();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture0);
@@ -132,7 +128,7 @@ public class SkyBoxRenderer {
 		shader.loadBlendFactor(blendFactor);
 	}
 	
-	private static void setTexturesBasedOnTime() {
+	private void setTexturesBasedOnTime() {
 		float preciseTime = clock.getPreciseTime();
 		switch (clock.tellTime()) {
 			case DAWN:

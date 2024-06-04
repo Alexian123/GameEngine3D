@@ -20,8 +20,11 @@ import com.alexian123.model.TexturedModel;
 import com.alexian123.renderer.DisplayManager;
 import com.alexian123.renderer.GUIRenderer;
 import com.alexian123.renderer.RenderingManager;
+import com.alexian123.renderer.Scene;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.TerrainGrid;
+import com.alexian123.terrain.Water;
+import com.alexian123.terrain.WaterFrameBuffers;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
@@ -34,8 +37,8 @@ public class Main {
 	public static void main(String[] args) {
 		DisplayManager.createDisplay("GameEngine3D", 1600, 900);
 		Loader loader = new Loader();
-		Clock clock = new Clock(1000.0f);
-		RenderingManager.init(loader, clock);
+		Clock clock = new Clock(0.0f);
+		RenderingManager renderingManager = new RenderingManager(loader, clock);
 		
 		// terrain
 		TerrainTexture bgTexture = new TerrainTexture(loader.loadTexture("grass2"));
@@ -106,14 +109,20 @@ public class Main {
 		lights.add(greenLight);
 		lights.add(blueLight);
 		
+		List<Water> waters = new ArrayList<>();
+		waters.add(new Water(153, -200, terrainGrid.getTerrainAt(153, -200).getHeightAtPosition(153, -200) - 1f));
+		
+		// scene
+		Scene scene = new Scene(entities, terrainGrid.getTerrains(), waters, lights);
+		
 		// GUI
-		List<GUITexture> guis = new ArrayList<>();
 		GUITexture gui = new GUITexture(loader.loadTexture("GUI/health"), new Vector2f(-0.75f, -0.9f), new Vector2f(0.25f, 0.35f));
+		List<GUITexture> guis = new ArrayList<>();
 		guis.add(gui);
 		
 		// Mouse picker
 		MousePicker mousePicker = new MousePicker(RenderingManager.getProjectionMatrix(), camera, terrainGrid);
-			
+		
 		while (!DisplayManager.displayShouldClose()) {
 			clock.tick();
 			
@@ -126,21 +135,12 @@ public class Main {
 			player.move(terrainGrid.getTerrainAt(player.getPosition().x, player.getPosition().z));
 			camera.move();
 			
-			
-			for (Entity entity : entities) {
-				RenderingManager.processEntity(entity);
-			}
-			
-			for (Terrain terrain : terrainGrid.getTerrains()) {
-				RenderingManager.processTerrain(terrain);
-			}
-			
-			RenderingManager.renderScene(lights, camera, guis);
+			renderingManager.render(scene, camera, guis);
 			DisplayManager.updateDisplay();
 		}
 		
 		loader.cleanup();
-		RenderingManager.cleanup();
+		renderingManager.cleanup();
 		DisplayManager.closeDisplay();
 	}
 

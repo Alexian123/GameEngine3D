@@ -43,6 +43,10 @@ public class Camera {
 	public float getRoll() {
 		return roll;
 	}
+	
+	public void invertPitch() {
+		this.pitch = -pitch;
+	}
 
 	private void calculateZoom() {
 		float zoomLevel = Mouse.getDWheel() * 0.1f;

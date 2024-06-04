@@ -19,12 +19,16 @@ uniform vec3 lightPosition[MAX_LIGHTS];
 uniform float useFakeLighting;
 uniform float atlasDimension;
 uniform vec2 atlasOffset;
+uniform vec4 clipPlane;
 
 const float fogDensity = 0.0035;
 const float fogGradient = 5.0;
 
 void main(void) {
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
+
+	gl_ClipDistance[0] = dot(worldPosition, clipPlane);
+
 	vec4 positionRelativeToCamera = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCamera;
 	passTextureCoord = (textureCoord / atlasDimension) + atlasOffset;

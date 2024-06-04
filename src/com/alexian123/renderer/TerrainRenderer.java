@@ -9,17 +9,13 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.entity.Camera;
-import com.alexian123.light.Light;
 import com.alexian123.model.RawModel;
-import com.alexian123.shader.IShader3D;
 import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
-import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.Maths;
 
-public class TerrainRenderer implements IRenderer3D {
+public class TerrainRenderer {
 	
 	private TerrainShader shader = new TerrainShader();
 	
@@ -30,25 +26,28 @@ public class TerrainRenderer implements IRenderer3D {
 		shader.stop();
 	}
 	
-	@Override
-	public void render() {
-		List<Terrain> terrains = RenderingManager.getTerrains();
+	public void render(List<Terrain> terrains) {
 		for (Terrain terrain : terrains) {
 			prepareTerrain(terrain);
 			loadModelMatrix(terrain);
 			GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-			unbindTerraindModel();
+			unbind();
 		}
 	}
 	
-	@Override
 	public void cleanup() {
 		shader.cleanup();
 	}
 	
-	@Override
-	public IShader3D getShader3D() {
+	public TerrainShader getShader() {
 		return shader;
+	}
+	
+	private void unbind() {
+		GL20.glDisableVertexAttribArray(0);
+		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(2);
+		GL30.glBindVertexArray(0);
 	}
 	
 	private void prepareTerrain(Terrain terrain) {
@@ -73,13 +72,6 @@ public class TerrainRenderer implements IRenderer3D {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getBlueTexture().getID());
 		GL13.glActiveTexture(GL13.GL_TEXTURE4);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlendMap().getID());
-	}
-	
-	private void unbindTerraindModel() {
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
-		GL30.glBindVertexArray(0);
 	}
 	
 	private void loadModelMatrix(Terrain terrain) {

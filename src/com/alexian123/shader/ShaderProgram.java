@@ -11,14 +11,19 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 public abstract class ShaderProgram {
+	
+	protected static final int MAX_LIGHTS = 4;
 	
 	private static FloatBuffer matrix4fBuffer = BufferUtils.createFloatBuffer(16);
 	
 	private final int programID;
 	private final int vertexShaderID;
 	private final int fragmentShaderID;
+	
+	private boolean isRunning = false;
 	
 	public ShaderProgram(String vertexShader, String fragmentShader) {
 		vertexShaderID = loadShader(vertexShader, GL20.GL_VERTEX_SHADER);
@@ -33,11 +38,17 @@ public abstract class ShaderProgram {
 	}
 	
 	public void start() {
-		GL20.glUseProgram(programID);
+		if (!isRunning) {
+			GL20.glUseProgram(programID);
+			isRunning = true;
+		}
 	}
 	
 	public void stop() {
-		GL20.glUseProgram(0);
+		if (isRunning) {
+			GL20.glUseProgram(0);
+			isRunning = false;
+		}
 	}
 	
 	public void cleanup() {
@@ -79,6 +90,10 @@ public abstract class ShaderProgram {
 	
 	protected void loadVector(int location, Vector3f vec) {
 		GL20.glUniform3f(location, vec.x, vec.y, vec.z);
+	}
+	
+	protected void loadVector(int location, Vector4f vec) {
+		GL20.glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
 	}
 	
 	protected void loadMatrix(int location, Matrix4f mat) {

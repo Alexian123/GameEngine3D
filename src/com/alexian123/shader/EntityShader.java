@@ -5,12 +5,13 @@ import java.util.List;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.light.Light;
 import com.alexian123.util.Maths;
 
-public class EntityShader extends ShaderProgram implements IShader3D {
+public class EntityShader extends ShaderProgram {
 	
 	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/entity_shader.vert";
 	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/entity_shader.frag";
@@ -27,17 +28,16 @@ public class EntityShader extends ShaderProgram implements IShader3D {
 	private int fogColorLocation;
 	private int atlasDimensionLocation;
 	private int atlasOffsetLocation;
+	private int clipPlaneLocation;
 
 	public EntityShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 	}
 	
-	@Override
 	public void loadFogColor(Vector3f fogColor) {
 		super.loadVector(fogColorLocation, fogColor);
 	}
 	
-	@Override
 	public void loadLights(List<Light> lights) {
 		for (int i = 0; i < MAX_LIGHTS; ++i) {
 			if (i < lights.size()) {
@@ -53,7 +53,6 @@ public class EntityShader extends ShaderProgram implements IShader3D {
 		}
 	}
 	
-	@Override
 	public void loadViewMatrix(Camera camera) {
 		super.loadMatrix(viewMatrixLocation, Maths.createViewMatrix(camera));
 	}
@@ -83,6 +82,10 @@ public class EntityShader extends ShaderProgram implements IShader3D {
 		super.loadVector(atlasOffsetLocation, new Vector2f(offsetX, offsetY));
 	}
 	
+	public void loadClipPlane(Vector4f clipPlane) {
+		super.loadVector(clipPlaneLocation, clipPlane);
+	}
+	
 	@Override
 	protected void bindAttributes() {
 		super.bindAttrib(0, "position");
@@ -104,6 +107,7 @@ public class EntityShader extends ShaderProgram implements IShader3D {
 		fogColorLocation = super.getUniformLocation("fogColor");
 		atlasDimensionLocation = super.getUniformLocation("atlasDimension");
 		atlasOffsetLocation = super.getUniformLocation("atlasOffset");
+		clipPlaneLocation = super.getUniformLocation("clipPlane");
 		
 		for (int i = 0; i < MAX_LIGHTS; ++i) {
 			lightPositionLocations[i] = super.getUniformLocation("lightPosition[" + i + "]");

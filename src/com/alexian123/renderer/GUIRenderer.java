@@ -16,19 +16,15 @@ import com.alexian123.util.Maths;
 
 public class GUIRenderer {
 	
-	private static final GUIShader shader = new GUIShader();
+	private final GUIShader shader = new GUIShader();
 	
-	private static RawModel quad = null;
-	private static boolean isInitalized = false;
+	private RawModel quad = null;
 	
-	public static void init(Loader loader) {
-		if (!isInitalized) {
-			quad = loader.loadToVao(new float[] { -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f }, 2);
-			isInitalized = true;
-		}
+	public GUIRenderer(Loader loader) {
+		quad = loader.loadToVao(new float[] { -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f }, 2);
 	}
 	
-	public static void render(List<GUITexture> guis) {
+	public void render(List<GUITexture> guis) {
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -49,7 +45,7 @@ public class GUIRenderer {
 		shader.stop();
 	}
 
-	public static void cleanup() {
+	public void cleanup() {
 		shader.cleanup();
 	}
 }

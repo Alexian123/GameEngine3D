@@ -14,12 +14,11 @@ import com.alexian123.entity.Entity;
 import com.alexian123.light.Light;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
-import com.alexian123.shader.IShader3D;
 import com.alexian123.shader.EntityShader;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.util.Maths;
 
-public class EntityRenderer implements IRenderer3D {
+public class EntityRenderer {
 	
 	private final EntityShader shader = new EntityShader();
 	
@@ -29,27 +28,31 @@ public class EntityRenderer implements IRenderer3D {
 		shader.stop();
 	}
 	
-	@Override
-	public void render() {
-		Map<TexturedModel, List<Entity>> entities = RenderingManager.getEntities();
+	public void render(Map<TexturedModel, List<Entity>> entities) {
 		for (TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
 			for (Entity entity : entities.get(model)) {
 				prepareEntity(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);	
 			}
-			unbindTexturedModel();
+			unbind();
 		}
 	}
 	
-	@Override
 	public void cleanup() {
 		shader.cleanup();
 	}
 	
-	@Override
-	public IShader3D getShader3D() {
+	public EntityShader getShader() {
 		return shader;
+	}
+	
+	private void unbind() {
+		RenderingManager.enableCulling();
+		GL20.glDisableVertexAttribArray(0);
+		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(2);
+		GL30.glBindVertexArray(0);
 	}
 	
 	private void prepareTexturedModel(TexturedModel model) {
@@ -67,14 +70,6 @@ public class EntityRenderer implements IRenderer3D {
 		shader.loadShineParameters(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
-	}
-	
-	private void unbindTexturedModel() {
-		RenderingManager.enableCulling();
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
-		GL30.glBindVertexArray(0);
 	}
 	
 	private void prepareEntity(Entity entity) {
