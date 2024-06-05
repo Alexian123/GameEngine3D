@@ -56,7 +56,7 @@ public class RenderingManager {
 	public void render(Scene scene, Camera camera, List<GUITexture> guis) {
 		renderWaterFX(scene, camera);
 		renderScene(scene, camera, new Vector4f(0, -1, 0, 1000));
-		waterRenderer.render(scene.getWaters(), camera, scene.getLights().get(0));
+		waterRenderer.render(scene.getWaters(), camera, scene.getLights());
 		guiRenderer.render(guis);
 	}
 	

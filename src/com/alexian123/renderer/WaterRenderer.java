@@ -42,11 +42,11 @@ public class WaterRenderer {
 		setUpVAO(loader);
 	}
 
-	public void render(List<Water> waters, Camera camera, Light sun) {
+	public void render(List<Water> waters, Camera camera, List<Light> lights) {
 		moveFactor += WAVE_SPEED * DisplayManager.getFrameTimeSeconds();
 		moveFactor %= 1;
 		for (Water water : waters) {
-			prepareRender(camera, water.getFbos(), sun);
+			prepareRender(camera, water.getFbos(), lights);
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
 					new Vector3f(water.getX(), water.getHeight(), water.getZ()), new Vector3f(0, 0, 0), Water.TILE_SIZE);
 			shader.loadModelMatrix(modelMatrix);
@@ -65,11 +65,12 @@ public class WaterRenderer {
 		shader.stop();
 	}
 
-	private void prepareRender(Camera camera, WaterFrameBuffers fbos, Light sun) {
+	private void prepareRender(Camera camera, WaterFrameBuffers fbos, List<Light> lights) {
 		shader.start();
 		shader.loadViewMatrix(camera);
 		shader.loadMoveFactor(moveFactor);
-		shader.loadLight(sun);
+		shader.loadLights(lights);
+		shader.loadShineParameters(10f, 0.6f);	// shineDamper, reflectivity
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);

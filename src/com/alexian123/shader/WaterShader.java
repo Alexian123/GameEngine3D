@@ -1,6 +1,9 @@
 package com.alexian123.shader;
 
+import java.util.List;
+
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.util.Maths;
 import com.alexian123.entity.Camera;
@@ -20,8 +23,11 @@ public class WaterShader extends ShaderProgram {
 	private int normalMapLocation;
 	private int moveFactorLocation;
 	private int cameraPositionLocation;
-	private int lightPositionLocation;
-	private int lightColorLocation;
+	private int lightPositionLocations[];
+	private int lightColorLocations[];
+	private int attenuationLocations[];
+	private int shineDamperLocation;
+	private int reflectivityLocation;
 
 	public WaterShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -51,9 +57,24 @@ public class WaterShader extends ShaderProgram {
 		super.loadFLoat(moveFactorLocation, moveFactor);
 	}
 	
-	public void loadLight(Light sun) {
-		super.loadVector(lightPositionLocation, sun.getPosition());
-		super.loadVector(lightColorLocation, sun.getColor());
+	public void loadLights(List<Light> lights) {
+		for (int i = 0; i < MAX_LIGHTS; ++i) {
+			if (i < lights.size()) {
+				Light light = lights.get(i);
+				super.loadVector(lightPositionLocations[i], light.getPosition());
+				super.loadVector(lightColorLocations[i], light.getColor());
+				super.loadVector(attenuationLocations[i], light.getAttenuation());
+			} else {
+				super.loadVector(lightPositionLocations[i], new Vector3f(0, 0, 0));
+				super.loadVector(lightColorLocations[i], new Vector3f(0, 0, 0));
+				super.loadVector(attenuationLocations[i], new Vector3f(1, 0, 0));
+			}
+		}
+	}
+	
+	public void loadShineParameters(float shineDamper, float reflectivity) {
+		super.loadFLoat(shineDamperLocation, shineDamper);
+		super.loadFLoat(reflectivityLocation, reflectivity);
 	}
 	
 	@Override
@@ -72,9 +93,17 @@ public class WaterShader extends ShaderProgram {
 		normalMapLocation = super.getUniformLocation("normalMap");
 		moveFactorLocation = super.getUniformLocation("moveFactor");
 		cameraPositionLocation = super.getUniformLocation("cameraPosition");
+		lightPositionLocations = new int[MAX_LIGHTS];
+		lightColorLocations = new int[MAX_LIGHTS];
+		attenuationLocations = new int[MAX_LIGHTS];
+		shineDamperLocation = super.getUniformLocation("shineDamper");
+		reflectivityLocation = super.getUniformLocation("reflectivity");
 		
-		lightPositionLocation = super.getUniformLocation("lightPosition");
-		lightColorLocation = super.getUniformLocation("lightColor");
+		for (int i = 0; i < MAX_LIGHTS; ++i) {
+			lightPositionLocations[i] = super.getUniformLocation("lightPosition[" + i + "]");
+			lightColorLocations[i] = super.getUniformLocation("lightColor[" + i + "]");
+			attenuationLocations[i] = super.getUniformLocation("attenuation[" + i + "]");
+		}
 	}
 
 }
