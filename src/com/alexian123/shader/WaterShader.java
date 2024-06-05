@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import com.alexian123.util.Maths;
 import com.alexian123.entity.Camera;
+import com.alexian123.light.Light;
 
 public class WaterShader extends ShaderProgram {
 
@@ -16,8 +17,11 @@ public class WaterShader extends ShaderProgram {
 	private int reflectionTextureLocation;
 	private int refractionTextureLocation;
 	private int dudvMapLocation;
+	private int normalMapLocation;
 	private int moveFactorLocation;
-	private int cameraPosLocation;
+	private int cameraPositionLocation;
+	private int lightPositionLocation;
+	private int lightColorLocation;
 
 	public WaterShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -25,7 +29,7 @@ public class WaterShader extends ShaderProgram {
 	
 	public void loadViewMatrix(Camera camera) {
 		super.loadMatrix(viewMatrixLocation, Maths.createViewMatrix(camera));
-		super.loadVector(cameraPosLocation, camera.getPosition());
+		super.loadVector(cameraPositionLocation, camera.getPosition());
 	}
 	
 	public void loadProjectionMatrix(Matrix4f projectionMatrix) {
@@ -40,10 +44,16 @@ public class WaterShader extends ShaderProgram {
 		super.loadInt(reflectionTextureLocation, 0);
 		super.loadInt(refractionTextureLocation, 1);
 		super.loadInt(dudvMapLocation, 2);
+		super.loadInt(normalMapLocation, 3);
 	}
 	
 	public void loadMoveFactor(float moveFactor) {
 		super.loadFLoat(moveFactorLocation, moveFactor);
+	}
+	
+	public void loadLight(Light sun) {
+		super.loadVector(lightPositionLocation, sun.getPosition());
+		super.loadVector(lightColorLocation, sun.getColor());
 	}
 	
 	@Override
@@ -59,8 +69,12 @@ public class WaterShader extends ShaderProgram {
 		reflectionTextureLocation = super.getUniformLocation("reflectionTexture");
 		refractionTextureLocation = super.getUniformLocation("refractionTexture");
 		dudvMapLocation = super.getUniformLocation("dudvMap");
+		normalMapLocation = super.getUniformLocation("normalMap");
 		moveFactorLocation = super.getUniformLocation("moveFactor");
-		cameraPosLocation = super.getUniformLocation("cameraPos");
+		cameraPositionLocation = super.getUniformLocation("cameraPosition");
+		
+		lightPositionLocation = super.getUniformLocation("lightPosition");
+		lightColorLocation = super.getUniformLocation("lightColor");
 	}
 
 }
