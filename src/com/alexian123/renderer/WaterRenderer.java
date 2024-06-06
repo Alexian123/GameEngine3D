@@ -38,6 +38,8 @@ public class WaterRenderer {
 		shader.start();
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadShineParameters(20f, 0.5f);	// shineDamper, reflectivity
+		shader.loadViewPlanes(RenderingManager.NEAR_PLANE, RenderingManager.FAR_PLANE);
 		shader.stop();
 		setUpVAO(loader);
 	}
@@ -60,6 +62,7 @@ public class WaterRenderer {
 	}
 	
 	private void unbind() {
+		GL11.glDisable(GL11.GL_BLEND);
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 		shader.stop();
@@ -70,7 +73,6 @@ public class WaterRenderer {
 		shader.loadViewMatrix(camera);
 		shader.loadMoveFactor(moveFactor);
 		shader.loadLights(lights);
-		shader.loadShineParameters(10f, 0.6f);	// shineDamper, reflectivity
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -81,6 +83,10 @@ public class WaterRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, dudvTexture);
 		GL13.glActiveTexture(GL13.GL_TEXTURE3);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalTexture);
+		GL13.glActiveTexture(GL13.GL_TEXTURE4);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionDepthTexture());
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 	private void setUpVAO(Loader loader) {

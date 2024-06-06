@@ -26,10 +26,11 @@ import com.alexian123.texture.GUITexture;
 import com.alexian123.util.Clock;
 
 public class RenderingManager {
+	
+	public static final float NEAR_PLANE = 0.1f;
+	public static final float FAR_PLANE = 1000.0f;
 		
 	private static final float FOV = 70.0f;
-	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 1000.0f;
 	
 	private static final Vector3f SKY_COLOR = new Vector3f(0.5444f, 0.62f, 0.69f);
 	
@@ -76,12 +77,12 @@ public class RenderingManager {
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
 			fbos.bindReflectionFrameBuffer();
-			renderScene(scene, camera, new Vector4f(0, 1, 0, -water.getHeight()));
+			renderScene(scene, camera, new Vector4f(0, 1, 0, -water.getHeight() + 1f));
 			camera.getPosition().y += distance;
 			camera.invertPitch();
 			fbos.bindRefractionFrameBuffer();
-			renderScene(scene, camera, new Vector4f(0, -1, 0, water.getHeight()));
-			fbos.unbindCurrentFrameBuffer();
+			renderScene(scene, camera, new Vector4f(0, -1, 0, water.getHeight() + 0.5f));
+			fbos.unbindCurrentFrameBuffer(); 
 		}
 		GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 	}

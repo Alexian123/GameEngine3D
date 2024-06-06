@@ -21,6 +21,9 @@ public class WaterShader extends ShaderProgram {
 	private int refractionTextureLocation;
 	private int dudvMapLocation;
 	private int normalMapLocation;
+	private int depthMapLocation;
+	private int nearPlaneLocation;
+	private int farPlaneLocation;
 	private int moveFactorLocation;
 	private int cameraPositionLocation;
 	private int lightPositionLocations[];
@@ -51,6 +54,12 @@ public class WaterShader extends ShaderProgram {
 		super.loadInt(refractionTextureLocation, 1);
 		super.loadInt(dudvMapLocation, 2);
 		super.loadInt(normalMapLocation, 3);
+		super.loadInt(depthMapLocation, 4);
+	}
+	
+	public void loadViewPlanes(float nearPlane, float farPlane) {
+		super.loadFLoat(nearPlaneLocation, nearPlane);
+		super.loadFLoat(farPlaneLocation, farPlane);
 	}
 	
 	public void loadMoveFactor(float moveFactor) {
@@ -91,6 +100,9 @@ public class WaterShader extends ShaderProgram {
 		refractionTextureLocation = super.getUniformLocation("refractionTexture");
 		dudvMapLocation = super.getUniformLocation("dudvMap");
 		normalMapLocation = super.getUniformLocation("normalMap");
+		depthMapLocation = super.getUniformLocation("depthMap");
+		nearPlaneLocation = super.getUniformLocation("nearPlane");
+		farPlaneLocation = super.getUniformLocation("farPlane");
 		moveFactorLocation = super.getUniformLocation("moveFactor");
 		cameraPositionLocation = super.getUniformLocation("cameraPosition");
 		lightPositionLocations = new int[MAX_LIGHTS];

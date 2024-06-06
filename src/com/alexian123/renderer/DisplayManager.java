@@ -10,8 +10,6 @@ import org.lwjgl.opengl.PixelFormat;
 
 public class DisplayManager {
 	
-	private static final int WIDTH = 1280;
-	private static final int HEIGHT = 720;
 	private static final int FPS_CAP = 144;
 	
 	private static long lastFrameTime;
@@ -21,11 +19,12 @@ public class DisplayManager {
 		ContextAttribs attribs = new ContextAttribs(3, 2).withForwardCompatible(true).withProfileCore(true);
 		try {
 			Display.setDisplayMode(new DisplayMode(width, height));
-			Display.create(new PixelFormat(), attribs);
+			Display.create(new PixelFormat().withDepthBits(24), attribs);
 			Display.setTitle(title);
 		} catch (LWJGLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.err.println("Error creating display");
+			System.exit(-1);
 		}	
 		GL11.glViewport(0, 0, width, height);
 		lastFrameTime = getCurrentTime();

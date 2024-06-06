@@ -101,9 +101,9 @@ public class Main {
 		// lights
 		List<Light> lights = new ArrayList<>();
 		Light sun = new Light(new Vector3f(0, 1000, -1000), new Vector3f(0.5f, 0.5f, 0.5f));
-		Light light1 = new Light(new Vector3f(185, 10, -293), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f));
-		Light light2 = new Light(new Vector3f(370, 17, -300), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f));
-		Light light3 = new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f));
+		Light light1 = new Light(new Vector3f(185, 10, -293), new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
+		Light light2 = new Light(new Vector3f(370, 17, -300), new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
+		Light light3 = new Light(new Vector3f(293, 7, -305), new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
 		lights.add(sun);
 		lights.add(light1);
 		lights.add(light2);
