@@ -6,6 +6,7 @@ in vec4 clipSpace;
 in vec2 textureCoord;
 in vec3 toCameraVector;
 in vec3 fromLightVector[MAX_LIGHTS];
+in float visibility;
 
 out vec4 outColor;
 
@@ -17,12 +18,12 @@ uniform sampler2D depthMap;
 uniform float nearPlane;
 uniform float farPlane;
 uniform float moveFactor;
+uniform float waveStrength;
 uniform vec3 lightColor[MAX_LIGHTS];
 uniform vec3 attenuation[MAX_LIGHTS];
 uniform float shineDamper;
 uniform float reflectivity;
-
-const float waveStrength = 0.04;
+uniform vec3 fogColor;
 
 void main(void) {
 	vec2 ndc = (clipSpace.xy / clipSpace.w) / 2.0 + 0.5;
@@ -70,4 +71,6 @@ void main(void) {
 	outColor = mix(reflectionColor, refractionColor, fresnelFactor);
 	outColor = mix(outColor, vec4(0.0, 0.3, 0.5, 1.0), 0.2) + vec4(specular, 0.0);
 	outColor.a = clamp(waterDepth / 5.0, 0.0, 1.0);
+
+	outColor = mix(vec4(fogColor, 1.0), outColor, visibility);
 }

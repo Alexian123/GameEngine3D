@@ -23,6 +23,8 @@ public class TerrainShader extends ShaderProgram {
 	private int attenuationLocations[];
 	private int shineDamperLocation;
 	private int reflectivityLocation;
+	private int fogDensityLocation;
+	private int fogGradientLocation;
 	private int fogColorLocation;
 	private int bgTextureLocation;
 	private int rTextureLocation;
@@ -35,8 +37,10 @@ public class TerrainShader extends ShaderProgram {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 	}
 	
-	public void loadFogColor(Vector3f fogColor) {
-		super.loadVector(fogColorLocation, fogColor);
+	public void loadFog(float density, float gradient, Vector3f color) {
+		super.loadFLoat(fogDensityLocation, density);
+		super.loadFLoat(fogGradientLocation, gradient);
+		super.loadVector(fogColorLocation, color);
 	}
 	
 	public void loadLights(List<Light> lights) {
@@ -100,6 +104,8 @@ public class TerrainShader extends ShaderProgram {
 		attenuationLocations = new int[MAX_LIGHTS];
 		shineDamperLocation = super.getUniformLocation("shineDamper");
 		reflectivityLocation = super.getUniformLocation("reflectivity");
+		fogDensityLocation = super.getUniformLocation("fogDensity");
+		fogGradientLocation = super.getUniformLocation("fogGradient");
 		fogColorLocation = super.getUniformLocation("fogColor");
 		bgTextureLocation = super.getUniformLocation("bgTexture");
 		rTextureLocation = super.getUniformLocation("rTexture");

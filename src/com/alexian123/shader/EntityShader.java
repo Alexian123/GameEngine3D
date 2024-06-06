@@ -25,6 +25,8 @@ public class EntityShader extends ShaderProgram {
 	private int shineDamperLocation;
 	private int reflectivityLocation;
 	private int useFakeLightingLocation;
+	private int fogDensityLocation;
+	private int fogGradientLocation;
 	private int fogColorLocation;
 	private int atlasDimensionLocation;
 	private int atlasOffsetLocation;
@@ -34,8 +36,10 @@ public class EntityShader extends ShaderProgram {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 	}
 	
-	public void loadFogColor(Vector3f fogColor) {
-		super.loadVector(fogColorLocation, fogColor);
+	public void loadFog(float density, float gradient, Vector3f color) {
+		super.loadFLoat(fogDensityLocation, density);
+		super.loadFLoat(fogGradientLocation, gradient);
+		super.loadVector(fogColorLocation, color);
 	}
 	
 	public void loadLights(List<Light> lights) {
@@ -104,6 +108,8 @@ public class EntityShader extends ShaderProgram {
 		shineDamperLocation = super.getUniformLocation("shineDamper");
 		reflectivityLocation = super.getUniformLocation("reflectivity");
 		useFakeLightingLocation = super.getUniformLocation("useFakeLighting");
+		fogDensityLocation = super.getUniformLocation("fogDensity");
+		fogGradientLocation = super.getUniformLocation("fogGradient");
 		fogColorLocation = super.getUniformLocation("fogColor");
 		atlasDimensionLocation = super.getUniformLocation("atlasDimension");
 		atlasOffsetLocation = super.getUniformLocation("atlasOffset");

@@ -25,12 +25,17 @@ public class WaterShader extends ShaderProgram {
 	private int nearPlaneLocation;
 	private int farPlaneLocation;
 	private int moveFactorLocation;
+	private int waveStrengthLocation;
 	private int cameraPositionLocation;
 	private int lightPositionLocations[];
 	private int lightColorLocations[];
 	private int attenuationLocations[];
 	private int shineDamperLocation;
 	private int reflectivityLocation;
+	private int tilingFactorLocation;
+	private int fogDensityLocation;
+	private int fogGradientLocation;
+	private int fogColorLocation;
 
 	public WaterShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -66,6 +71,10 @@ public class WaterShader extends ShaderProgram {
 		super.loadFLoat(moveFactorLocation, moveFactor);
 	}
 	
+	public void loadWaveStrength(float waveStrength) {
+		super.loadFLoat(waveStrengthLocation, waveStrength);
+	}
+	
 	public void loadLights(List<Light> lights) {
 		for (int i = 0; i < MAX_LIGHTS; ++i) {
 			if (i < lights.size()) {
@@ -86,6 +95,16 @@ public class WaterShader extends ShaderProgram {
 		super.loadFLoat(reflectivityLocation, reflectivity);
 	}
 	
+	public void loadTilingFactor(float tilingFactor) {
+		super.loadFLoat(tilingFactorLocation, tilingFactor);
+	}
+	
+	public void loadFog(float density, float gradient, Vector3f color) {
+		super.loadFLoat(fogDensityLocation, density);
+		super.loadFLoat(fogGradientLocation, gradient);
+		super.loadVector(fogColorLocation, color);
+	}
+	
 	@Override
 	protected void bindAttributes() {
 		super.bindAttrib(0, "position");
@@ -104,12 +123,17 @@ public class WaterShader extends ShaderProgram {
 		nearPlaneLocation = super.getUniformLocation("nearPlane");
 		farPlaneLocation = super.getUniformLocation("farPlane");
 		moveFactorLocation = super.getUniformLocation("moveFactor");
+		waveStrengthLocation = super.getUniformLocation("waveStrength");
 		cameraPositionLocation = super.getUniformLocation("cameraPosition");
 		lightPositionLocations = new int[MAX_LIGHTS];
 		lightColorLocations = new int[MAX_LIGHTS];
 		attenuationLocations = new int[MAX_LIGHTS];
 		shineDamperLocation = super.getUniformLocation("shineDamper");
 		reflectivityLocation = super.getUniformLocation("reflectivity");
+		tilingFactorLocation = super.getUniformLocation("tilingFactor");
+		fogDensityLocation = super.getUniformLocation("fogDensity");
+		fogGradientLocation = super.getUniformLocation("fogGradient");
+		fogColorLocation = super.getUniformLocation("fogColor");
 		
 		for (int i = 0; i < MAX_LIGHTS; ++i) {
 			lightPositionLocations[i] = super.getUniformLocation("lightPosition[" + i + "]");

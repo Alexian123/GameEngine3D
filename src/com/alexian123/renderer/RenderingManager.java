@@ -29,10 +29,11 @@ public class RenderingManager {
 	
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000.0f;
-		
-	private static final float FOV = 70.0f;
+	public static final float FOV = 70.0f;
 	
-	private static final Vector3f SKY_COLOR = new Vector3f(0.5444f, 0.62f, 0.69f);
+	public static final Vector3f FOG_COLOR = new Vector3f(0.5444f, 0.62f, 0.69f);
+	public static final float FOG_DENSITY = 0.0035f;
+	public static final float FOG_GRADIENT = 5.0f;
 	
 	private static final Matrix4f PROJECTION_MATRIX = createProjectionMatrix();
 	
@@ -94,7 +95,7 @@ public class RenderingManager {
 		}
 		renderEntities(scene.getLights(), camera, clipPlane);
 		renderTerrains(scene.getTerrains(), scene.getLights(), camera, clipPlane);
-		skyBoxRenderer.render(camera, SKY_COLOR);
+		skyBoxRenderer.render(camera, FOG_COLOR);
 		entities.clear();
 	}
 	
@@ -114,7 +115,7 @@ public class RenderingManager {
 		EntityShader shader = entityRenderer.getShader();
 		shader.start();
 		shader.loadClipPlane(clipPlane);
-		shader.loadFogColor(SKY_COLOR);
+		shader.loadFog(FOG_DENSITY, FOG_GRADIENT, FOG_COLOR);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		entityRenderer.render(entities);
@@ -125,7 +126,7 @@ public class RenderingManager {
 		TerrainShader shader = terrainRenderer.getShader();
 		shader.start();
 		shader.loadClipPlane(clipPlane);
-		shader.loadFogColor(SKY_COLOR);
+		shader.loadFog(FOG_DENSITY, FOG_GRADIENT, FOG_COLOR);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
@@ -149,7 +150,7 @@ public class RenderingManager {
 	private static void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(SKY_COLOR.x, SKY_COLOR.y, SKY_COLOR.z, 1.0f);
+		GL11.glClearColor(FOG_COLOR.x, FOG_COLOR.y, FOG_COLOR.z, 1.0f);
 	}
 	
 	private static Matrix4f createProjectionMatrix() {
