@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
@@ -19,16 +20,28 @@ import com.alexian123.texture.ModelTexture;
 import com.alexian123.util.Maths;
 
 public class EntityRenderer {
-	
-	private final EntityShader shader = new EntityShader();
+
+	protected final EntityShader shader;
 	
 	public EntityRenderer(Matrix4f projectionMatrix) {
+		this(projectionMatrix, new EntityShader());
+	}
+	
+	protected EntityRenderer(Matrix4f projectionMatrix, EntityShader shader) {
+		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
+		shader.connectTextureUnits();
 		shader.stop();
 	}
 	
-	public void render(Map<TexturedModel, List<Entity>> entities) {
+	public void render(Map<TexturedModel, List<Entity>> entities, List<Light> lights, Camera camera, Vector4f clipPlane) {
+		shader.start();
+		shader.loadClipPlane(clipPlane);
+		shader.loadFog(RenderingManager.FOG_DENSITY, RenderingManager.FOG_GRADIENT, RenderingManager.FOG_COLOR);
+		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+		shader.loadLights(lights, viewMatrix);
+		shader.loadViewMatrix(viewMatrix);
 		for (TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
 			for (Entity entity : entities.get(model)) {
@@ -37,6 +50,7 @@ public class EntityRenderer {
 			}
 			unbind();
 		}
+		shader.stop();
 	}
 	
 	public void cleanup() {
@@ -47,15 +61,7 @@ public class EntityRenderer {
 		return shader;
 	}
 	
-	private void unbind() {
-		RenderingManager.enableCulling();
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
-		GL30.glBindVertexArray(0);
-	}
-	
-	private void prepareTexturedModel(TexturedModel model) {
+	protected void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 		ModelTexture texture = model.getTexture();
 		GL30.glBindVertexArray(rawModel.getVaoID());
@@ -70,6 +76,14 @@ public class EntityRenderer {
 		shader.loadShineParameters(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
+	}
+	
+	protected void unbind() {
+		RenderingManager.enableCulling();
+		GL20.glDisableVertexAttribArray(0);
+		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(2);
+		GL30.glBindVertexArray(0);
 	}
 	
 	private void prepareEntity(Entity entity) {

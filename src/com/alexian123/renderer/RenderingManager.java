@@ -14,15 +14,12 @@ import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
-import com.alexian123.light.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.TexturedModel;
-import com.alexian123.shader.EntityShader;
-import com.alexian123.shader.TerrainShader;
-import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.Water;
 import com.alexian123.terrain.WaterFrameBuffers;
 import com.alexian123.texture.GUITexture;
+import com.alexian123.texture.ModelTexture;
 import com.alexian123.util.Clock;
 
 public class RenderingManager {
@@ -38,21 +35,25 @@ public class RenderingManager {
 	private static final Matrix4f PROJECTION_MATRIX = createProjectionMatrix();
 	
 	private final EntityRenderer entityRenderer;
+	private final EntityRendererNM entityRendererNM;
 	private final TerrainRenderer terrainRenderer;
 	private final WaterRenderer waterRenderer;
 	private final SkyBoxRenderer skyBoxRenderer;
 	private final GUIRenderer guiRenderer;
 	
 	private final Map<TexturedModel, List<Entity>> entities;
+	private final Map<TexturedModel, List<Entity>> entitiesNM;
 	
 	public RenderingManager(Loader loader, Clock clock) {
 		enableCulling();
 		this.entityRenderer = new EntityRenderer(PROJECTION_MATRIX);
+		this.entityRendererNM = new EntityRendererNM(PROJECTION_MATRIX);
 		this.terrainRenderer = new TerrainRenderer(PROJECTION_MATRIX);
 		this.waterRenderer = new WaterRenderer(loader, PROJECTION_MATRIX);
 		this.skyBoxRenderer = new SkyBoxRenderer(loader, PROJECTION_MATRIX, clock);
 		this.guiRenderer = new GUIRenderer(loader);
 		this.entities = new HashMap<>();
+		this.entitiesNM = new HashMap<>();
 	}
 	
 	public void render(Scene scene, Camera camera, List<GUITexture> guis) {
@@ -64,6 +65,7 @@ public class RenderingManager {
 	
 	public void cleanup() {
 		entityRenderer.cleanup();
+		entityRendererNM.cleanup();
 		terrainRenderer.cleanup();
 		waterRenderer.cleanup();
 		skyBoxRenderer.cleanup();
@@ -93,44 +95,26 @@ public class RenderingManager {
 		for (Entity entity : scene.getEntities()) {
 			processEntity(entity);
 		}
-		renderEntities(scene.getLights(), camera, clipPlane);
-		renderTerrains(scene.getTerrains(), scene.getLights(), camera, clipPlane);
+		entityRenderer.render(entities, scene.getLights(), camera, clipPlane);
+		entityRendererNM.render(entitiesNM, scene.getLights(), camera, clipPlane);
+		terrainRenderer.render(scene.getTerrains(), scene.getLights(), camera, clipPlane);
 		skyBoxRenderer.render(camera, FOG_COLOR);
 		entities.clear();
+		entitiesNM.clear();
 	}
 	
 	private void processEntity(Entity entity) {
 		TexturedModel model = entity.getModel();
-		List<Entity> batch = entities.get(model);
+		ModelTexture texture = model.getTexture();
+		Map<TexturedModel, List<Entity>> entitiesMap = texture.getNormalMap() != ModelTexture.NO_TEXTURE ? entitiesNM : entities;
+		List<Entity> batch = entitiesMap.get(model);
 		if (batch == null) {
 			List<Entity> newBatch = new ArrayList<>();
 			newBatch.add(entity);
-			entities.put(model,  newBatch);
+			entitiesMap.put(model,  newBatch);
 		} else {
 			batch.add(entity);
 		}
-	}
-	
-	private void renderEntities(List<Light> lights, Camera camera, Vector4f clipPlane) {
-		EntityShader shader = entityRenderer.getShader();
-		shader.start();
-		shader.loadClipPlane(clipPlane);
-		shader.loadFog(FOG_DENSITY, FOG_GRADIENT, FOG_COLOR);
-		shader.loadLights(lights);
-		shader.loadViewMatrix(camera);
-		entityRenderer.render(entities);
-		shader.stop();
-	}
-	
-	private void renderTerrains(List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane) {
-		TerrainShader shader = terrainRenderer.getShader();
-		shader.start();
-		shader.loadClipPlane(clipPlane);
-		shader.loadFog(FOG_DENSITY, FOG_GRADIENT, FOG_COLOR);
-		shader.loadLights(lights);
-		shader.loadViewMatrix(camera);
-		terrainRenderer.render(terrains);
-		shader.stop();
 	}
 	
 	/* Static Methods */

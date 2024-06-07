@@ -8,7 +8,10 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
+import com.alexian123.entity.Camera;
+import com.alexian123.light.Light;
 import com.alexian123.model.RawModel;
 import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
@@ -26,13 +29,19 @@ public class TerrainRenderer {
 		shader.stop();
 	}
 	
-	public void render(List<Terrain> terrains) {
+	public void render(List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane) {
+		shader.start();
+		shader.loadClipPlane(clipPlane);
+		shader.loadFog(RenderingManager.FOG_DENSITY, RenderingManager.FOG_GRADIENT, RenderingManager.FOG_COLOR);
+		shader.loadLights(lights);
+		shader.loadViewMatrix(camera);
 		for (Terrain terrain : terrains) {
 			prepareTerrain(terrain);
 			loadModelMatrix(terrain);
 			GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			unbind();
 		}
+		shader.stop();
 	}
 	
 	public void cleanup() {
@@ -41,13 +50,6 @@ public class TerrainRenderer {
 	
 	public TerrainShader getShader() {
 		return shader;
-	}
-	
-	private void unbind() {
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
-		GL30.glBindVertexArray(0);
 	}
 	
 	private void prepareTerrain(Terrain terrain) {
@@ -72,6 +74,13 @@ public class TerrainRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getBlueTexture().getID());
 		GL13.glActiveTexture(GL13.GL_TEXTURE4);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlendMap().getID());
+	}
+	
+	private void unbind() {
+		GL20.glDisableVertexAttribArray(0);
+		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(2);
+		GL30.glBindVertexArray(0);
 	}
 	
 	private void loadModelMatrix(Terrain terrain) {

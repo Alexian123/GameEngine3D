@@ -2,8 +2,11 @@ package com.alexian123.texture;
 
 public class ModelTexture {
 	
+	public static final int NO_TEXTURE = -1;
+	
 	private final int id;
 	
+	private int normalMap = NO_TEXTURE;
 	private float shineDamper = 1;
 	private float reflectivity = 0;
 	private boolean transparency = false;
@@ -13,9 +16,20 @@ public class ModelTexture {
 	public ModelTexture(int id) {
 		this.id = id;
 	}
+	
+	public ModelTexture(int id, int normalMap) {
+		this.id = id;
+		this.normalMap = normalMap;
+	}
 
 	public ModelTexture(int id, float shineDamper, float reflectivity) {
 		this.id = id;
+		this.shineDamper = shineDamper;
+		this.reflectivity = reflectivity;
+	}
+	public ModelTexture(int id, int normalMap, float shineDamper, float reflectivity) {
+		this.id = id;
+		this.normalMap = normalMap;
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
 	}
@@ -45,6 +59,14 @@ public class ModelTexture {
 	
 	public int getID() {
 		return id;
+	}
+
+	public int getNormalMap() {
+		return normalMap;
+	}
+
+	public void setNormalMap(int normalMap) {
+		this.normalMap = normalMap;
 	}
 
 	public float getShineDamper() {

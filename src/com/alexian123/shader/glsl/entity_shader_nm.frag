@@ -3,7 +3,6 @@
 #define MAX_LIGHTS 4
 
 in vec2 passTextureCoord;
-in vec3 surfaceNormal;
 in vec3 toLightVector[MAX_LIGHTS];
 in vec3 toCameraVector;
 in float visibility;
@@ -11,6 +10,7 @@ in float visibility;
 out vec4 outColor;
 
 uniform sampler2D modelTexture;
+uniform sampler2D normalMap;
 
 uniform vec3 lightColor[MAX_LIGHTS];
 uniform vec3 attenuation[MAX_LIGHTS];
@@ -19,7 +19,9 @@ uniform float reflectivity;
 uniform vec3 fogColor;
 
 void main(void) {
-	vec3 unitSurfaceNormal = normalize(surfaceNormal);
+	vec4 normalMapColor = 2.0 * texture(normalMap, passTextureCoord) - 1.0;
+
+	vec3 unitSurfaceNormal = normalize(normalMapColor.rgb);
 	vec3 unitToCameraVector = normalize(toCameraVector);
 
 	vec3 diffuse = vec3(0.0);

@@ -1,14 +1,11 @@
 package com.alexian123.entity;
 
-import java.util.List;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.model.TexturedModel;
 import com.alexian123.renderer.DisplayManager;
 import com.alexian123.terrain.Terrain;
-import com.alexian123.terrain.TerrainGrid;
 
 public class Player extends Entity {
 	

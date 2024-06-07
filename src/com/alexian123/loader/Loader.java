@@ -19,6 +19,7 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import com.alexian123.model.ModelData;
+import com.alexian123.model.ModelDataNM;
 import com.alexian123.model.RawModel;
 import com.alexian123.texture.TextureData;
 
@@ -41,8 +42,23 @@ public class Loader {
 		return new RawModel(vaoID, indices.length);
 	}
 	
-	public RawModel loadToVao(ModelData modelData) {
-		return loadToVao(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
+	public RawModel loadToVao(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
+		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
+		storeDataInAttributeList(0, 3, vertices);
+		storeDataInAttributeList(1, 2, textureCoords);
+		storeDataInAttributeList(2, 3, normals);
+		storeDataInAttributeList(3, 3, tangents);
+		unbindVAO();
+		return new RawModel(vaoID, indices.length);
+	}
+	
+	public RawModel loadToVao(ModelData data) {
+		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
+	}
+	
+	public RawModel loadToVao(ModelDataNM data) {
+		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getTangents(), data.getIndices());
 	}
 	
 	public RawModel loadToVao(float[] vertices, int dimensions) {
@@ -58,7 +74,7 @@ public class Loader {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/textures/" + fileName + ".png"));
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f);
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -2.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("Error loading texture: " + fileName);

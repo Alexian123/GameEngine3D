@@ -10,11 +10,10 @@ public class Entity {
 	protected Vector3f position;
 	protected Vector3f rotation;
 	private float scale;
-	private int textureIndex;
+	private int textureIndex = 0;
 	
 	public Entity(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
 		this.model = model;
-		this.textureIndex = 0;
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;

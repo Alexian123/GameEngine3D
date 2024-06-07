@@ -6,7 +6,7 @@ public class Vertex {
 	
 	private static final int NO_INDEX = -1;
 	
-	private Vector3f position;
+	protected Vector3f position;
 	private int textureIndex = NO_INDEX;
 	private int normalIndex = NO_INDEX;
 	private Vertex duplicateVertex = null;
@@ -31,8 +31,8 @@ public class Vertex {
 		return textureIndex != NO_INDEX && normalIndex != NO_INDEX;
 	}
 	
-	public boolean hasSameTextureAndNormal(int textureIndexOther, int normalIndexOther) {
-		return textureIndexOther == textureIndex && normalIndexOther == normalIndex;
+	public boolean hasSameTextureAndNormal(int textureIndex, int normalIndex) {
+		return textureIndex == this.textureIndex && normalIndex == this.normalIndex;
 	}
 	
 	public void setTextureIndex(int textureIndex) {

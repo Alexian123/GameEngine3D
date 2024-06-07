@@ -7,33 +7,40 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.alexian123.entity.Camera;
 import com.alexian123.light.Light;
-import com.alexian123.util.Maths;
 
 public class EntityShader extends ShaderProgram {
 	
 	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/entity_shader.vert";
 	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/entity_shader.frag";
 	
-	private int transformationMatrixLocation;
-	private int projectionMatrixLocation;
-	private int viewMatrixLocation;
-	private int lightPositionLocations[];
-	private int lightColorLocations[];
-	private int attenuationLocations[];
-	private int shineDamperLocation;
-	private int reflectivityLocation;
-	private int useFakeLightingLocation;
-	private int fogDensityLocation;
-	private int fogGradientLocation;
-	private int fogColorLocation;
-	private int atlasDimensionLocation;
-	private int atlasOffsetLocation;
-	private int clipPlaneLocation;
+	protected int modelTextureLocation;
+	protected int transformationMatrixLocation;
+	protected int projectionMatrixLocation;
+	protected int viewMatrixLocation;
+	protected int lightPositionLocations[];
+	protected int lightColorLocations[];
+	protected int attenuationLocations[];
+	protected int shineDamperLocation;
+	protected int reflectivityLocation;
+	protected int useFakeLightingLocation;
+	protected int fogDensityLocation;
+	protected int fogGradientLocation;
+	protected int fogColorLocation;
+	protected int atlasDimensionLocation;
+	protected int atlasOffsetLocation;
+	protected int clipPlaneLocation;
 
 	public EntityShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
+	}
+	
+	protected EntityShader(String vertexShader, String fragmentShader) {
+		super(vertexShader, fragmentShader);
+	}
+	
+	public void connectTextureUnits(){
+		super.loadInt(modelTextureLocation, 0);
 	}
 	
 	public void loadFog(float density, float gradient, Vector3f color) {
@@ -42,7 +49,7 @@ public class EntityShader extends ShaderProgram {
 		super.loadVector(fogColorLocation, color);
 	}
 	
-	public void loadLights(List<Light> lights) {
+	public void loadLights(List<Light> lights, Matrix4f viewMatrix) {
 		for (int i = 0; i < MAX_LIGHTS; ++i) {
 			if (i < lights.size()) {
 				Light light = lights.get(i);
@@ -57,8 +64,8 @@ public class EntityShader extends ShaderProgram {
 		}
 	}
 	
-	public void loadViewMatrix(Camera camera) {
-		super.loadMatrix(viewMatrixLocation, Maths.createViewMatrix(camera));
+	public void loadViewMatrix(Matrix4f viewMatrix) {
+		super.loadMatrix(viewMatrixLocation, viewMatrix);
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {
@@ -99,6 +106,7 @@ public class EntityShader extends ShaderProgram {
 
 	@Override
 	protected void getAllUniformLocations() {
+		modelTextureLocation = super.getUniformLocation("modelTexture");
 		transformationMatrixLocation = super.getUniformLocation("transformationMatrix");
 		projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
 		viewMatrixLocation = super.getUniformLocation("viewMatrix");

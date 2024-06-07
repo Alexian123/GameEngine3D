@@ -14,17 +14,14 @@ import com.alexian123.entity.Player;
 import com.alexian123.light.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.loader.OBJFileLoader;
-import com.alexian123.model.ModelData;
+import com.alexian123.loader.OBJFileLoaderNM;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.renderer.DisplayManager;
-import com.alexian123.renderer.GUIRenderer;
 import com.alexian123.renderer.RenderingManager;
 import com.alexian123.renderer.Scene;
-import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.TerrainGrid;
 import com.alexian123.terrain.Water;
-import com.alexian123.terrain.WaterFrameBuffers;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.TerrainTexturePack;
@@ -52,10 +49,13 @@ public class Main {
 				new TerrainTexture[] {blendMap, blendMap, blendMap, blendMap}, 
 				new String[] {"heightmap", "heightmap", "heightmap", "heightmap"});
 		
+	
 		RawModel rawModel;
 		ModelTexture texture;
 		TexturedModel texturedModel;
 		Random random = new Random();
+		
+		/* Entities */
 		List<Entity> entities = new ArrayList<>();
 		
 		// trees
@@ -84,11 +84,8 @@ public class Main {
 		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("person"));
 		texture = new ModelTexture(loader.loadTexture("playerTexture"));
 		texturedModel = new TexturedModel(rawModel, texture);
-		Player player = new Player(texturedModel, new Vector3f(153, 5, -274), new Vector3f(0, 100, 0), 0.6f);
+		Player player = new Player(texturedModel, new Vector3f(286, 0, -268), new Vector3f(0, 100, 0), 0.6f);
 		entities.add(player);
-		
-		// camera
-		Camera camera = new Camera(player);
 		
 		// lamps
 		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("lamp"));
@@ -97,6 +94,31 @@ public class Main {
 		entities.add(new Entity(texturedModel, new Vector3f(185, -4.7f, -293), new Vector3f(0, 0, 0), 1));
 		entities.add(new Entity(texturedModel, new Vector3f(370, 4.2f, -300), new Vector3f(0, 0, 0), 1));
 		entities.add(new Entity(texturedModel, new Vector3f(293, -6.8f, -305), new Vector3f(0, 0, 0), 1));
+		
+		// NM barrel
+		rawModel = loader.loadToVao(OBJFileLoaderNM.loadOBJ("barrel"));	
+		texture = new ModelTexture(loader.loadTexture("barrel"), loader.loadTexture("barrelNormal"), 10f, 0.5f);
+		texturedModel = new TexturedModel(rawModel, texture);
+		Entity barrel = new Entity(texturedModel, new Vector3f(334, 10f, -290), new Vector3f(0, 0, 0), 1);
+		entities.add(barrel);
+		
+		// NM crate
+		rawModel = loader.loadToVao(OBJFileLoaderNM.loadOBJ("crate"));	
+		texture = new ModelTexture(loader.loadTexture("crate"), loader.loadTexture("crateNormal"), 10f, 0.5f);
+		texturedModel = new TexturedModel(rawModel, texture);
+		Entity crate = new Entity(texturedModel, new Vector3f(315, 10f, -313), new Vector3f(0, 0, 0), 0.05f);
+		entities.add(crate);
+		
+		// NM boulder
+		rawModel = loader.loadToVao(OBJFileLoaderNM.loadOBJ("boulder"));	
+		texture = new ModelTexture(loader.loadTexture("boulder"), loader.loadTexture("boulderNormal"), 10f, 0.5f);
+		texturedModel = new TexturedModel(rawModel, texture);
+		Entity boulder = new Entity(texturedModel, new Vector3f(350, 15f, -308), new Vector3f(0, 0, 0), 1);
+		entities.add(boulder);
+		/* -------- */
+		
+		// camera
+		Camera camera = new Camera(player);
 		
 		// lights
 		List<Light> lights = new ArrayList<>();
@@ -109,6 +131,7 @@ public class Main {
 		lights.add(light2);
 		lights.add(light3);
 		
+		// water
 		List<Water> waters = new ArrayList<>();
 		waters.add(new Water(165, -175, terrainGrid.getTerrainAt(165, -175).getHeightAtPosition(165, -175) - 1f));
 		waters.add(new Water(304, -360, terrainGrid.getTerrainAt(304, -360).getHeightAtPosition(304, -360) + 3f));
@@ -132,6 +155,10 @@ public class Main {
 			if (terrainPoint != null && Mouse.isButtonDown(0)) {
 				tree.setPosition(terrainPoint);
 			}
+			
+			barrel.incrementRotation(0, 0.5f, 0);
+			crate.incrementRotation(0, 0.5f, 0);
+			boulder.incrementRotation(0, 0.5f, 0);
 			
 			player.move(terrainGrid.getTerrainAt(player.getPosition().x, player.getPosition().z));
 			camera.move();
