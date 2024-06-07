@@ -7,7 +7,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Camera;
-import com.alexian123.light.Light;
+import com.alexian123.entity.Light;
 import com.alexian123.util.Maths;
 
 public class TerrainShader extends ShaderProgram {

@@ -1,12 +1,15 @@
 package com.alexian123.loader;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -18,6 +21,7 @@ import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
+import com.alexian123.font.FontType;
 import com.alexian123.model.ModelData;
 import com.alexian123.model.ModelDataNM;
 import com.alexian123.model.RawModel;
@@ -28,29 +32,43 @@ import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 public class Loader {
 	
-	private final List<Integer> vaos = new ArrayList<>();
-	private final List<Integer> vbos = new ArrayList<>();
+	private final Map<Integer, List<Integer>> vaos = new HashMap<>();
 	private final List<Integer> textures = new ArrayList<>();
 	
 	public RawModel loadToVao(float[] vertices, float[] textureCoords, float[] normals, int[] indices) {
-		int vaoID = createVAO();
-		bindIndicesBuffer(indices);
-		storeDataInAttributeList(0, 3, vertices);
-		storeDataInAttributeList(1, 2, textureCoords);
-		storeDataInAttributeList(2, 3, normals);
+		int vaoID = createVao();
+		bindIndicesBuffer(indices, vaos.get(vaoID));
+		storeDataInAttributeList(0, 3, vertices, vaos.get(vaoID));
+		storeDataInAttributeList(1, 2, textureCoords, vaos.get(vaoID));
+		storeDataInAttributeList(2, 3, normals, vaos.get(vaoID));
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
 	
 	public RawModel loadToVao(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
-		int vaoID = createVAO();
-		bindIndicesBuffer(indices);
-		storeDataInAttributeList(0, 3, vertices);
-		storeDataInAttributeList(1, 2, textureCoords);
-		storeDataInAttributeList(2, 3, normals);
-		storeDataInAttributeList(3, 3, tangents);
+		int vaoID = createVao();
+		bindIndicesBuffer(indices, vaos.get(vaoID));
+		storeDataInAttributeList(0, 3, vertices, vaos.get(vaoID));
+		storeDataInAttributeList(1, 2, textureCoords, vaos.get(vaoID));
+		storeDataInAttributeList(2, 3, normals, vaos.get(vaoID));
+		storeDataInAttributeList(3, 3, tangents, vaos.get(vaoID));
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
+	}
+	
+	public int loadToVao(float[] vertices, float[] textureCoords) {
+		int vaoID = createVao();
+		storeDataInAttributeList(0, 2, vertices, vaos.get(vaoID));
+		storeDataInAttributeList(1, 2, textureCoords, vaos.get(vaoID));
+		unbindVAO();
+		return vaoID;
+	}
+	
+	public RawModel loadToVao(float[] vertices, int dimensions) {
+		int vaoID = createVao();
+		storeDataInAttributeList(0, dimensions, vertices, vaos.get(vaoID));
+		unbindVAO();
+		return new RawModel(vaoID, vertices.length / dimensions);
 	}
 	
 	public RawModel loadToVao(ModelData data) {
@@ -59,13 +77,6 @@ public class Loader {
 	
 	public RawModel loadToVao(ModelDataNM data) {
 		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getTangents(), data.getIndices());
-	}
-	
-	public RawModel loadToVao(float[] vertices, int dimensions) {
-		int vaoID = createVAO();
-		this.storeDataInAttributeList(0, dimensions, vertices);
-		unbindVAO();
-		return new RawModel(vaoID, vertices.length / dimensions);
 	}
 	
 	public int loadTexture(String fileName) {
@@ -83,6 +94,23 @@ public class Loader {
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
 		return textureID;
+	}
+	
+	public FontType loadFont(String fontName) {
+		Texture texture = null;
+		try {
+			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/fonts/" + fontName + ".png"));
+			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0f);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Error loading font: " + fontName);
+			System.exit(-1);
+		}
+		int textureID = texture.getTextureID();
+		textures.add(textureID);
+		return new FontType(textureID, new File("res/fonts/" + fontName + ".fnt"));
 	}
 	
 	/** 
@@ -107,28 +135,35 @@ public class Loader {
 	}
 	
 	public void cleanup() {
-		for (int vao : vaos) {
-			GL30.glDeleteVertexArrays(vao);
+		for (int vao : vaos.keySet()) {
+			deleteVao(vao);
 		}
-		for (int vbo : vbos) {
-			GL15.glDeleteBuffers(vbo);
-		}
+		vaos.clear();
 		for (int texture : textures) {
 			GL11.glDeleteTextures(texture);
 		}
-		vaos.clear();
-		vbos.clear();
 		textures.clear();
 	}
 	
-	private int createVAO() {
+	public void deleteVao(int vaoID) {
+		List<Integer> vbos = vaos.get(vaoID);
+		if (vbos != null) {
+			for (int vbo : vbos) {
+				GL15.glDeleteBuffers(vbo);
+			}
+			vbos.clear();
+			GL30.glDeleteVertexArrays(vaoID);
+		}
+	}
+	
+	private int createVao() {
 		int vaoID = GL30.glGenVertexArrays();
-		vaos.add(vaoID);
+		vaos.put(vaoID, new ArrayList<Integer>());
 		GL30.glBindVertexArray(vaoID);
 		return vaoID;
 	}
 
-	private void storeDataInAttributeList(int attributeNum, int size, float[] data) {
+	private void storeDataInAttributeList(int attributeNum, int size, float[] data, List<Integer> vbos) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
@@ -142,7 +177,7 @@ public class Loader {
 		GL30.glBindVertexArray(0);
 	}
 	
-	private void bindIndicesBuffer(int[] indices) {
+	private void bindIndicesBuffer(int[] indices, List<Integer> vbos) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);

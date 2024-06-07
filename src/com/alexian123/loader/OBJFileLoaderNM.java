@@ -12,7 +12,6 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.model.ModelDataNM;
-import com.alexian123.util.VertexNM;
 
 public class OBJFileLoaderNM {
 

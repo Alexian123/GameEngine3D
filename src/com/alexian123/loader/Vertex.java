@@ -1,4 +1,4 @@
-package com.alexian123.util;
+package com.alexian123.loader;
 
 import org.lwjgl.util.vector.Vector3f;
 

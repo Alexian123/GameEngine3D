@@ -10,8 +10,10 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
+import com.alexian123.entity.Light;
 import com.alexian123.entity.Player;
-import com.alexian123.light.Light;
+import com.alexian123.font.FontType;
+import com.alexian123.font.GUIText;
 import com.alexian123.loader.Loader;
 import com.alexian123.loader.OBJFileLoader;
 import com.alexian123.loader.OBJFileLoaderNM;
@@ -35,7 +37,13 @@ public class Main {
 		DisplayManager.createDisplay("GameEngine3D", 1600, 900);
 		Loader loader = new Loader();
 		Clock clock = new Clock(0.0f);
-		RenderingManager renderingManager = new RenderingManager(loader, clock);
+		RenderingManager.init(loader, clock);
+		
+		// text
+		FontType font = loader.loadFont("harrington");
+		GUIText text = new GUIText("Hello, World!", 1, font, new Vector2f(0.5f, 0.5f), 0.5f, true);
+		text.setColour(1, 0, 0);
+		RenderingManager.loadText(text);
 		
 		// terrain
 		TerrainTexture bgTexture = new TerrainTexture(loader.loadTexture("grass2"));
@@ -165,12 +173,12 @@ public class Main {
 			
 			System.out.println(player.getPosition());
 			
-			renderingManager.render(scene, camera, guis);
+			RenderingManager.render(scene, camera, guis);
 			DisplayManager.updateDisplay();
 		}
 		
 		loader.cleanup();
-		renderingManager.cleanup();
+		RenderingManager.cleanup();
 		for (Water water : waters) {
 			water.getFbos().cleanup();
 		}
