@@ -10,13 +10,19 @@ import org.lwjgl.util.vector.Vector3f;
  *
  */
 public class GUIText {
+	
+	private static final float DEFAULT_CHARACTER_WIDTH = 0.5f;
+	private static final float DEFAULT_CHARACTER_EDGE = 0.1f;
+	private static final float DEFAULT_BORDER_WIDTH = 0.0f;
+	private static final float DEFAULT_BORDER_EDGE = 0.4f;
 
 	private String textString;
 	private float fontSize;
 
 	private int textMeshVao;
 	private int vertexCount;
-	private Vector3f colour = new Vector3f(0f, 0f, 0f);
+	private Vector3f color = new Vector3f(0f, 0f, 0f);
+	private Vector3f outlineColor = new Vector3f(0f, 0f, 0f);
 
 	private Vector2f position;
 	private float lineMaxSize;
@@ -25,6 +31,12 @@ public class GUIText {
 	private FontType font;
 
 	private boolean centerText = false;
+	
+	private Vector2f offset = new Vector2f(0f, 0f);
+	private float characterWidth = DEFAULT_CHARACTER_WIDTH;
+	private float characterEdge = DEFAULT_CHARACTER_EDGE;
+	private float borderWidth = DEFAULT_BORDER_WIDTH;
+	private float borderEdge = DEFAULT_BORDER_EDGE;
 
 	/**
 	 * Creates a new text, loads the text's quads into a VAO, and adds the text
@@ -69,7 +81,7 @@ public class GUIText {
 	}
 
 	/**
-	 * Set the colour of the text.
+	 * Set the color of the text.
 	 * 
 	 * @param r
 	 *            - red value, between 0 and 1.
@@ -78,15 +90,36 @@ public class GUIText {
 	 * @param b
 	 *            - blue value, between 0 and 1.
 	 */
-	public void setColour(float r, float g, float b) {
-		colour.set(r, g, b);
+	public void setColor(float r, float g, float b) {
+		color.set(r, g, b);
 	}
 
 	/**
-	 * @return the colour of the text.
+	 * @return the color of the text.
 	 */
-	public Vector3f getColour() {
-		return colour;
+	public Vector3f getColor() {
+		return color;
+	}
+	
+	/**
+	 * Set the outline color of the text.
+	 * 
+	 * @param r
+	 *            - red value, between 0 and 1.
+	 * @param g
+	 *            - green value, between 0 and 1.
+	 * @param b
+	 *            - blue value, between 0 and 1.
+	 */
+	public void setOutlineColor(float r, float g, float b) {
+		outlineColor.set(r, g, b);
+	}
+
+	/**
+	 * @return the outline color of the text.
+	 */
+	public Vector3f getOutlineColor() {
+		return outlineColor;
 	}
 
 	/**
@@ -127,6 +160,86 @@ public class GUIText {
 	public void setMeshInfo(int vao, int verticesCount) {
 		this.textMeshVao = vao;
 		this.vertexCount = verticesCount;
+	}
+	
+	/**
+	 * @return The text offset (for drop shadow effect).
+	 */
+	public Vector2f getOffset() {
+		return offset;
+	}
+
+	/**
+	 * Sets the text offset (for drop shadow effect)
+	 * 
+	 * @param offset
+	 */
+	public void setOffset(Vector2f offset) {
+		this.offset = offset;
+	}
+
+	/**
+	 * @return The character width.
+	 */
+	public float getCharacterWidth() {
+		return characterWidth;
+	}
+
+	/**
+	 * Sets the width of a character
+	 * 
+	 * @param characterWidth
+	 */
+	public void setCharacterWidth(float characterWidth) {
+		this.characterWidth = characterWidth;
+	}
+
+	/**
+	 * @return The character edge transition.
+	 */
+	public float getCharacterEdge() {
+		return characterEdge;
+	}
+
+	/**
+	 * Sets the edge transition of a character
+	 * 
+	 * @param characterEdge
+	 */
+	public void setCharacterEdge(float characterEdge) {
+		this.characterEdge = characterEdge;
+	}
+
+	/**
+	 * @return The border width.
+	 */
+	public float getBorderWidth() {
+		return borderWidth;
+	}
+
+	/**
+	 * Sets the width for a character's border
+	 * 
+	 * @param borderWidth
+	 */
+	public void setBorderWidth(float borderWidth) {
+		this.borderWidth = borderWidth;
+	}
+
+	/**
+	 * @return The border edge distance.
+	 */
+	public float getBorderEdge() {
+		return borderEdge;
+	}
+
+	/**
+	 * Sets the edge distance for a character's border
+	 * 
+	 * @param borderEdge
+	 */
+	public void setBorderEdge(float borderEdge) {
+		this.borderEdge = borderEdge;
 	}
 
 	/**
@@ -173,5 +286,4 @@ public class GUIText {
 	protected String getTextString() {
 		return textString;
 	}
-
 }

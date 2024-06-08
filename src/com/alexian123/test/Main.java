@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -40,9 +41,11 @@ public class Main {
 		RenderingManager.init(loader, clock);
 		
 		// text
-		FontType font = loader.loadFont("harrington");
-		GUIText text = new GUIText("Hello, World!", 1, font, new Vector2f(0.5f, 0.5f), 0.5f, true);
-		text.setColour(1, 0, 0);
+		FontType font = loader.loadFont("candara");
+		GUIText text = new GUIText("Hello, World!", 5f, font, new Vector2f(0.0f, 0.0f), 1f, false);
+		text.setColor(0, 0, 0);
+		text.setOutlineColor(1, 1, 1);
+		text.setBorderWidth(0.5f);
 		RenderingManager.loadText(text);
 		
 		// terrain
@@ -162,7 +165,7 @@ public class Main {
 			Vector3f terrainPoint = mousePicker.getCurrentTerrainPoint();
 			if (terrainPoint != null && Mouse.isButtonDown(0)) {
 				tree.setPosition(terrainPoint);
-			}
+			}		
 			
 			barrel.incrementRotation(0, 0.5f, 0);
 			crate.incrementRotation(0, 0.5f, 0);

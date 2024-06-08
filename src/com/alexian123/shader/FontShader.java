@@ -10,6 +10,12 @@ public class FontShader extends ShaderProgram {
 	
 	private int translationLocation;
 	private int colorLocation;
+	private int outlineColorLocation;
+	private int offsetLocation;
+	private int characterWidthLocation;
+	private int characterEdgeLocation;
+	private int borderWidthLocation;
+	private int borderEdgeLocation;
 	
 	public FontShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -22,6 +28,24 @@ public class FontShader extends ShaderProgram {
 	public void loadColor(Vector3f color) {
 		super.loadVector(colorLocation, color);
 	}
+	
+	public void loadOutlineColor(Vector3f color) {
+		super.loadVector(outlineColorLocation, color);
+	}
+	
+	public void loadOffset(Vector2f offset) {
+		super.loadVector(offsetLocation, offset);
+	}
+	
+	public void loadCharacterDimensions(float width, float edge) {
+		super.loadFLoat(characterWidthLocation, width);
+		super.loadFLoat(characterEdgeLocation, edge);
+	}
+	
+	public void loadBorderDimensions(float width, float edge) {
+		super.loadFLoat(borderWidthLocation, width);
+		super.loadFLoat(borderEdgeLocation, edge);
+	}
 
 	@Override
 	protected void bindAttributes() {
@@ -33,5 +57,12 @@ public class FontShader extends ShaderProgram {
 	protected void getAllUniformLocations() {
 		translationLocation = super.getUniformLocation("translation");
 		colorLocation = super.getUniformLocation("color");
+		outlineColorLocation = super.getUniformLocation("outlineColor");
+		offsetLocation = super.getUniformLocation("offset");
+		characterWidthLocation = super.getUniformLocation("characterWidth");
+		characterEdgeLocation = super.getUniformLocation("characterEdge");
+		borderWidthLocation = super.getUniformLocation("borderWidth");
+		borderEdgeLocation = super.getUniformLocation("borderEdge");
+
 	}
 }
