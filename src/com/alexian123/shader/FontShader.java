@@ -8,61 +8,53 @@ public class FontShader extends ShaderProgram {
 	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/font_shader.vert";
 	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/font_shader.frag";
 	
-	private int translationLocation;
-	private int colorLocation;
-	private int outlineColorLocation;
-	private int offsetLocation;
-	private int characterWidthLocation;
-	private int characterEdgeLocation;
-	private int borderWidthLocation;
-	private int borderEdgeLocation;
-	
 	public FontShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 	}
 	
 	public void loadTranslation(Vector2f translation) {
-		super.loadVector(translationLocation, translation);
+		loadVector(uniforms.get(Uniform.TRANSLATION.getName()), translation);
 	}
 	
 	public void loadColor(Vector3f color) {
-		super.loadVector(colorLocation, color);
+		loadVector(uniforms.get(Uniform.COLOR.getName()), color);
 	}
 	
 	public void loadOutlineColor(Vector3f color) {
-		super.loadVector(outlineColorLocation, color);
+		loadVector(uniforms.get(Uniform.OUTLINE_COLOR.getName()), color);
 	}
 	
 	public void loadOffset(Vector2f offset) {
-		super.loadVector(offsetLocation, offset);
+		loadVector(uniforms.get(Uniform.OFFSET.getName()), offset);
 	}
 	
 	public void loadCharacterDimensions(float width, float edge) {
-		super.loadFLoat(characterWidthLocation, width);
-		super.loadFLoat(characterEdgeLocation, edge);
+		loadFLoat(uniforms.get(Uniform.CHARACTER_WIDTH.getName()), width);
+		loadFLoat(uniforms.get(Uniform.CHARACTER_EDGE.getName()), edge);
 	}
 	
 	public void loadBorderDimensions(float width, float edge) {
-		super.loadFLoat(borderWidthLocation, width);
-		super.loadFLoat(borderEdgeLocation, edge);
+		loadFLoat(uniforms.get(Uniform.BORDER_WIDTH.getName()), width);
+		loadFLoat(uniforms.get(Uniform.BORDER_EDGE.getName()), edge);
 	}
 
 	@Override
-	protected void bindAttributes() {
-		super.bindAttrib(0, "position");
-		super.bindAttrib(1, "textureCoord");
+	protected int setAttributes() {
+		int attribNo = 0;
+		attributes.put(Attribute.POSITION.getName(), attribNo++);
+		attributes.put(Attribute.TEXTURE_COORD.getName(), attribNo++);
+		return attribNo;
 	}
 	
 	@Override
-	protected void getAllUniformLocations() {
-		translationLocation = super.getUniformLocation("translation");
-		colorLocation = super.getUniformLocation("color");
-		outlineColorLocation = super.getUniformLocation("outlineColor");
-		offsetLocation = super.getUniformLocation("offset");
-		characterWidthLocation = super.getUniformLocation("characterWidth");
-		characterEdgeLocation = super.getUniformLocation("characterEdge");
-		borderWidthLocation = super.getUniformLocation("borderWidth");
-		borderEdgeLocation = super.getUniformLocation("borderEdge");
-
+	protected void setUniforms() {
+		uniforms.put(Uniform.TRANSLATION.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.COLOR.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.OUTLINE_COLOR.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.OFFSET.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.CHARACTER_WIDTH.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.CHARACTER_EDGE.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.BORDER_WIDTH.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.BORDER_EDGE.getName(), NEW_UNIFORM);
 	}
 }

@@ -4,6 +4,10 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Light {
 	
+	public static final int MAX_LIGHTS = 4;
+	
+	public static final Light NO_LIGHT = new Light(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 0, 0));
+	
 	private Vector3f position;
 	private Vector3f color;
 	private Vector3f attenuation;

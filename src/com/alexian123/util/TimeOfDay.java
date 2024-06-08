@@ -11,7 +11,7 @@ public enum TimeOfDay {
 	
 	private final float value;
 
-	TimeOfDay(float value) {
+	private TimeOfDay(float value) {
 		this.value = value;
 	}
 	

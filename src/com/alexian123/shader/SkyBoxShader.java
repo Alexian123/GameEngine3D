@@ -14,21 +14,14 @@ public class SkyBoxShader extends ShaderProgram{
 	
 	private static final float ROTATION_INCREMENT = 0.1f;
 	
-	private int projectionMatrixLocation;
-	private int viewMatrixLocation;
-	private int fogColorLocation;
-	private int cubeMap0Location;
-	private int cubeMap1Location;
-	private int blendFactorLocation;
-	
 	private float rotation = 0;
 
 	public SkyBoxShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 	}
 	
-	public void loadProjectionMatrix(Matrix4f matrix){
-		super.loadMatrix(projectionMatrixLocation, matrix);
+	public void loadProjectionMatrix(Matrix4f matrix) {
+		loadMatrix(uniforms.get(Uniform.PROJECTION_MATRIX.getName()), matrix);
 	}
 	
 	public void loadViewMatrix(Camera camera) {
@@ -40,34 +33,38 @@ public class SkyBoxShader extends ShaderProgram{
 		// add rotation
 		rotation += ROTATION_INCREMENT * DisplayManager.getFrameTimeSeconds();
 		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
-		super.loadMatrix(viewMatrixLocation, viewMatrix);
+		loadMatrix(uniforms.get(Uniform.VIEW_MATRIX.getName()), viewMatrix);
 	}
 	
 	public void loadFogColor(Vector3f fogColor) {
-		super.loadVector(fogColorLocation, fogColor);
+		loadVector(uniforms.get(Uniform.FOG_COLOR.getName()), fogColor);
 	}
 	
-	public void connectTextureUnits() {
-		super.loadInt(cubeMap0Location, 0);
-		super.loadInt(cubeMap1Location, 1);
+	public int connectTextureUnits() {
+		int textureNo = 0;
+		loadInt(uniforms.get(Uniform.CUBE_MAP_0.getName()), textureNo++);
+		loadInt(uniforms.get(Uniform.CUBE_MAP_1.getName()), textureNo++);
+		return textureNo;
 	}
 	
 	public void loadBlendFactor(float blendFactor) {
-		super.loadFLoat(blendFactorLocation, blendFactor);
+		loadFLoat(uniforms.get(Uniform.BLEND_FACTOR.getName()), blendFactor);
+	}
+	
+	@Override
+	protected int setAttributes() {
+		int attribNo = 0;
+		attributes.put(Attribute.POSITION.getName(), attribNo++);
+		return attribNo;
 	}
 
 	@Override
-	protected void getAllUniformLocations() {
-		projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
-		viewMatrixLocation = super.getUniformLocation("viewMatrix");
-		fogColorLocation = super.getUniformLocation("fogColor");
-		cubeMap0Location = super.getUniformLocation("cubeMap0");
-		cubeMap1Location = super.getUniformLocation("cubeMap1");
-		blendFactorLocation = super.getUniformLocation("blendFactor");
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttrib(0, "position");
+	protected void setUniforms() {
+		uniforms.put(Uniform.PROJECTION_MATRIX.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.VIEW_MATRIX.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.FOG_COLOR.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.CUBE_MAP_0.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.CUBE_MAP_1.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.BLEND_FACTOR.getName(), NEW_UNIFORM);
 	}
 }

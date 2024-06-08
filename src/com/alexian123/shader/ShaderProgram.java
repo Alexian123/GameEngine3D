@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -15,9 +19,13 @@ import org.lwjgl.util.vector.Vector4f;
 
 public abstract class ShaderProgram {
 	
-	protected static final int MAX_LIGHTS = 4;
+	protected static final int NEW_UNIFORM = -1;
 	
 	private static FloatBuffer matrix4fBuffer = BufferUtils.createFloatBuffer(16);
+	
+	protected final Map<String, Integer> attributes = new HashMap<>();
+	protected final Map<String, Integer> uniforms = new HashMap<>();
+	protected final Map<String, List<Integer>> uniformArrays = new HashMap<>();
 	
 	private final int programID;
 	private final int vertexShaderID;
@@ -31,9 +39,11 @@ public abstract class ShaderProgram {
 		programID = GL20.glCreateProgram();
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);
+		setAttributes();
 		bindAttributes();
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
+		setUniforms();
 		getAllUniformLocations();
 	}
 	
@@ -60,17 +70,9 @@ public abstract class ShaderProgram {
 		GL20.glDeleteProgram(programID);
 	}
 	
-	protected abstract void bindAttributes();
+	protected abstract int setAttributes();
 	
-	protected void bindAttrib(int attrib, String varName) {
-		GL20.glBindAttribLocation(programID, attrib, varName);
-	}
-	
-	protected abstract void getAllUniformLocations();
-	
-	protected int getUniformLocation(String uniformName) {
-		return GL20.glGetUniformLocation(programID, uniformName);
-	}
+	protected abstract void setUniforms();
 	
 	protected void loadFLoat(int location, float val) {
 		GL20.glUniform1f(location, val);
@@ -100,6 +102,32 @@ public abstract class ShaderProgram {
 		mat.store(matrix4fBuffer);
 		matrix4fBuffer.flip();
 		GL20.glUniformMatrix4(location, false, matrix4fBuffer);
+	}
+	
+	private void bindAttributes() {
+		for (String attribName : attributes.keySet()) {
+			GL20.glBindAttribLocation(programID, attributes.get(attribName), attribName);
+		}
+	}
+	
+	private void getAllUniformLocations() {
+		for (String uniformName : uniforms.keySet()) {
+			uniforms.replace(uniformName, GL20.glGetUniformLocation(programID, uniformName));
+		}
+		for (String uniformArrayName : uniformArrays.keySet()) {
+			List<Integer> uniformArray = uniformArrays.get(uniformArrayName);
+			for (int i = 0; i < uniformArray.size(); ++i) {
+				uniformArray.set(i, GL20.glGetUniformLocation(programID, uniformArrayName + "[" + i + "]"));
+			}
+		}
+	}
+	
+	protected static List<Integer> createNewUniformArray(int size) {
+		List<Integer> array = new ArrayList<>(size);
+		for (int i = 0; i < size; ++i) {
+			array.add(NEW_UNIFORM);
+		}
+		return array;
 	}
 
 	@SuppressWarnings("deprecation")

@@ -108,7 +108,7 @@ public class Main {
 		
 		// NM barrel
 		rawModel = loader.loadToVao(OBJFileLoaderNM.loadOBJ("barrel"));	
-		texture = new ModelTexture(loader.loadTexture("barrel"), loader.loadTexture("barrelNormal"), 10f, 0.5f);
+		texture = new ModelTexture(loader.loadTexture("barrel"), loader.loadTexture("barrelNormal"), 10f, 0.5f);;
 		texturedModel = new TexturedModel(rawModel, texture);
 		Entity barrel = new Entity(texturedModel, new Vector3f(334, 10f, -290), new Vector3f(0, 0, 0), 1);
 		entities.add(barrel);

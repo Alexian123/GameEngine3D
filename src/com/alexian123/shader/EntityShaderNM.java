@@ -13,44 +13,44 @@ public class EntityShaderNM extends EntityShader {
 	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/entity_shader_nm.vert";
 	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/entity_shader_nm.frag";
 	
-	private int normalMapLocation;
-	
 	public EntityShaderNM() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 	}
 	
 	@Override
-	public void connectTextureUnits(){
-		super.connectTextureUnits();
-		super.loadInt(normalMapLocation, 1);
+	public int connectTextureUnits() {
+		int textureNo = super.connectTextureUnits();
+		loadInt(uniforms.get(Uniform.NORMAL_MAP.getName()), textureNo++);
+		return textureNo;
 	}
 	
 	@Override
 	public void loadLights(List<Light> lights, Matrix4f viewMatrix) {
-		for (int i = 0; i < MAX_LIGHTS; ++i) {
+		for (int i = 0; i < Light.MAX_LIGHTS; ++i) {
 			if (i < lights.size()) {
 				Light light = lights.get(i);
-				super.loadVector(lightPositionLocations[i], getEyeSpaceLightPosition(light, viewMatrix));
-				super.loadVector(lightColorLocations[i], light.getColor());
-				super.loadVector(attenuationLocations[i], light.getAttenuation());
+				loadVector(uniformArrays.get(Uniform.LIGHT_POSITION.getName()).get(i), getEyeSpaceLightPosition(light, viewMatrix));
+				loadVector(uniformArrays.get(Uniform.LIGHT_COLOR.getName()).get(i), light.getColor());
+				loadVector(uniformArrays.get(Uniform.ATTENUATION.getName()).get(i), light.getAttenuation());
 			} else {
-				super.loadVector(lightPositionLocations[i], new Vector3f(0, 0, 0));
-				super.loadVector(lightColorLocations[i], new Vector3f(0, 0, 0));
-				super.loadVector(attenuationLocations[i], new Vector3f(1, 0, 0));
+				loadVector(uniformArrays.get(Uniform.LIGHT_POSITION.getName()).get(i), getEyeSpaceLightPosition(Light.NO_LIGHT, viewMatrix));
+				loadVector(uniformArrays.get(Uniform.LIGHT_COLOR.getName()).get(i), Light.NO_LIGHT.getColor());
+				loadVector(uniformArrays.get(Uniform.ATTENUATION.getName()).get(i), Light.NO_LIGHT.getAttenuation());
 			}
 		}
 	}
 
 	@Override
-	protected void bindAttributes() {
-		super.bindAttributes();
-		super.bindAttrib(3, "tangent");
+	protected int setAttributes() {
+		int attribNo = super.setAttributes();
+		attributes.put(Attribute.TANGENT.getName(), attribNo++);
+		return attribNo;
 	}
 	
 	@Override
-	protected void getAllUniformLocations() {
-		super.getAllUniformLocations();
-		normalMapLocation = super.getUniformLocation("normalMap");
+	protected void setUniforms() {
+		super.setUniforms();
+		uniforms.put(Uniform.NORMAL_MAP.getName(), NEW_UNIFORM);
 	}
 	
 	private Vector3f getEyeSpaceLightPosition(Light light, Matrix4f viewMatrix) {
