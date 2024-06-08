@@ -51,6 +51,11 @@ public class SkyBoxShader extends ShaderProgram{
 		loadFLoat(uniforms.get(Uniform.BLEND_FACTOR.getName()), blendFactor);
 	}
 	
+	public void loadLimits(float lower, float upper) {
+		loadFLoat(uniforms.get(Uniform.LOWER_LIMIT.getName()), lower);
+		loadFLoat(uniforms.get(Uniform.UPPER_LIMIT.getName()), upper);
+	}
+	
 	@Override
 	protected int setAttributes() {
 		int attribNo = 0;
@@ -66,5 +71,7 @@ public class SkyBoxShader extends ShaderProgram{
 		uniforms.put(Uniform.CUBE_MAP_0.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.CUBE_MAP_1.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.BLEND_FACTOR.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.LOWER_LIMIT.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.UPPER_LIMIT.getName(), NEW_UNIFORM);
 	}
 }

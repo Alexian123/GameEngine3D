@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Light;
+import com.alexian123.util.Constants;
 
 public class EntityShader extends ShaderProgram {
 	
@@ -35,7 +36,7 @@ public class EntityShader extends ShaderProgram {
 	}
 	
 	public void loadLights(List<Light> lights, Matrix4f viewMatrix) {
-		for (int i = 0; i < Light.MAX_LIGHTS; ++i) {
+		for (int i = 0; i < Constants.MAX_LIGHTS; ++i) {
 			if (i < lights.size()) {
 				Light light = lights.get(i);
 				loadVector(uniformArrays.get(Uniform.LIGHT_POSITION.getName()).get(i), light.getPosition());
@@ -107,9 +108,9 @@ public class EntityShader extends ShaderProgram {
 		uniforms.put(Uniform.ATLAS_OFFSET.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.CLIP_PLANE.getName(), NEW_UNIFORM);
 	
-		uniformArrays.put(Uniform.LIGHT_POSITION.getName(), createNewUniformArray(Light.MAX_LIGHTS));
-		uniformArrays.put(Uniform.LIGHT_COLOR.getName(), createNewUniformArray(Light.MAX_LIGHTS));
-		uniformArrays.put(Uniform.ATTENUATION.getName(), createNewUniformArray(Light.MAX_LIGHTS));
+		uniformArrays.put(Uniform.LIGHT_POSITION.getName(), createNewUniformArray(Constants.MAX_LIGHTS));
+		uniformArrays.put(Uniform.LIGHT_COLOR.getName(), createNewUniformArray(Constants.MAX_LIGHTS));
+		uniformArrays.put(Uniform.ATTENUATION.getName(), createNewUniformArray(Constants.MAX_LIGHTS));
 	}
 
 }

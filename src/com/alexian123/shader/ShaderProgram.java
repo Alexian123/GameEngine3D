@@ -33,7 +33,7 @@ public abstract class ShaderProgram {
 	
 	private boolean isRunning = false;
 	
-	public ShaderProgram(String vertexShader, String fragmentShader) {
+	protected ShaderProgram(String vertexShader, String fragmentShader) {
 		vertexShaderID = loadShader(vertexShader, GL20.GL_VERTEX_SHADER);
 		fragmentShaderID = loadShader(fragmentShader, GL20.GL_FRAGMENT_SHADER);
 		programID = GL20.glCreateProgram();

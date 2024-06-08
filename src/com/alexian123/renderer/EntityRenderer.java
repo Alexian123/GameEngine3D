@@ -17,6 +17,7 @@ import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.EntityShader;
 import com.alexian123.texture.ModelTexture;
+import com.alexian123.util.Constants;
 import com.alexian123.util.Maths;
 
 public class EntityRenderer {
@@ -38,7 +39,7 @@ public class EntityRenderer {
 	public void render(Map<TexturedModel, List<Entity>> entities, List<Light> lights, Camera camera, Vector4f clipPlane) {
 		shader.start();
 		shader.loadClipPlane(clipPlane);
-		shader.loadFog(RenderingManager.FOG_DENSITY, RenderingManager.FOG_GRADIENT, RenderingManager.FOG_COLOR);
+		shader.loadFog(Constants.FOG_DENSITY, Constants.FOG_GRADIENT, Constants.FOG_COLOR);
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		shader.loadLights(lights, viewMatrix);
 		shader.loadViewMatrix(viewMatrix);

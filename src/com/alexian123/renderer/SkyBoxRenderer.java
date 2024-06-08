@@ -5,13 +5,13 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.shader.SkyBoxShader;
 import com.alexian123.util.Clock;
+import com.alexian123.util.Constants;
 import com.alexian123.util.TimeOfDay;
 
 public class SkyBoxRenderer {
@@ -99,13 +99,14 @@ public class SkyBoxRenderer {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.connectTextureUnits();
+		shader.loadLimits(0.0f, 30.0f);
 		shader.stop();
 	}
 	
-	public void render(Camera camera, Vector3f fogColor) {
+	public void render(Camera camera) {
 		shader.start();
 		shader.loadViewMatrix(camera);
-		shader.loadFogColor(fogColor);
+		shader.loadFogColor(Constants.FOG_COLOR);
 		GL30.glBindVertexArray(cube.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		bindTextures();

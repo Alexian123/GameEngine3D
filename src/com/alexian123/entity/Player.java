@@ -6,12 +6,12 @@ import org.lwjgl.util.vector.Vector3f;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.renderer.DisplayManager;
 import com.alexian123.terrain.Terrain;
+import com.alexian123.util.Constants;
 
 public class Player extends Entity {
 	
 	private static final float RUN_SPEED = 20.0f;	// units/s
 	private static final float TURN_SPEED = 160.0f;	// degrees/s
-	private static final float GRAVITY = -50.0f;
 	private static final float JUMP_POWER = 20.0f;
 	
 	private float currentRunSpeed = 0;
@@ -32,7 +32,7 @@ public class Player extends Entity {
 		float dz = (float) (distance * Math.cos(Math.toRadians(rotation.y)));
 		position.x += dx;
 		position.z += dz;
-		currrentYSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
+		currrentYSpeed += Constants.GRAVITY * DisplayManager.getFrameTimeSeconds();
 		position.y += currrentYSpeed * DisplayManager.getFrameTimeSeconds();
 		float terrainHeight = 0.0f;
 		if (terrain != null) {

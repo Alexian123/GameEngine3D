@@ -16,6 +16,7 @@ import com.alexian123.model.RawModel;
 import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.TerrainTexturePack;
+import com.alexian123.util.Constants;
 import com.alexian123.util.Maths;
 
 public class TerrainRenderer {
@@ -32,7 +33,7 @@ public class TerrainRenderer {
 	public void render(List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane) {
 		shader.start();
 		shader.loadClipPlane(clipPlane);
-		shader.loadFog(RenderingManager.FOG_DENSITY, RenderingManager.FOG_GRADIENT, RenderingManager.FOG_COLOR);
+		shader.loadFog(Constants.FOG_DENSITY, Constants.FOG_GRADIENT, Constants.FOG_COLOR);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		for (Terrain terrain : terrains) {

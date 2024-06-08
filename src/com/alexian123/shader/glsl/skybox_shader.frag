@@ -6,11 +6,10 @@ out vec4 outColor;
 
 uniform samplerCube cubeMap0;
 uniform samplerCube cubeMap1;
-uniform float blendFactor;
 uniform vec3 fogColor;
-
-const float lowerLimit = 0.0;
-const float upperLimit = 30.0;
+uniform float blendFactor;
+uniform float lowerLimit;
+uniform float upperLimit;
 
 void main(void) {
 	vec4 color0 = texture(cubeMap0, textureCoord);

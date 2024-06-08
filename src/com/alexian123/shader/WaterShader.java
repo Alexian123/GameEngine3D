@@ -5,6 +5,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.util.Constants;
 import com.alexian123.util.Maths;
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Light;
@@ -55,7 +56,7 @@ public class WaterShader extends ShaderProgram {
 	}
 	
 	public void loadLights(List<Light> lights) {
-		for (int i = 0; i < Light.MAX_LIGHTS; ++i) {
+		for (int i = 0; i < Constants.MAX_LIGHTS; ++i) {
 			if (i < lights.size()) {
 				Light light = lights.get(i);
 				loadVector(uniformArrays.get(Uniform.LIGHT_POSITION.getName()).get(i), light.getPosition());
@@ -113,9 +114,9 @@ public class WaterShader extends ShaderProgram {
 		uniforms.put(Uniform.FOG_GRADIENT.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.FOG_COLOR.getName(), NEW_UNIFORM);
 	
-		uniformArrays.put(Uniform.LIGHT_POSITION.getName(), createNewUniformArray(Light.MAX_LIGHTS));
-		uniformArrays.put(Uniform.LIGHT_COLOR.getName(), createNewUniformArray(Light.MAX_LIGHTS));
-		uniformArrays.put(Uniform.ATTENUATION.getName(), createNewUniformArray(Light.MAX_LIGHTS));
+		uniformArrays.put(Uniform.LIGHT_POSITION.getName(), createNewUniformArray(Constants.MAX_LIGHTS));
+		uniformArrays.put(Uniform.LIGHT_COLOR.getName(), createNewUniformArray(Constants.MAX_LIGHTS));
+		uniformArrays.put(Uniform.ATTENUATION.getName(), createNewUniformArray(Constants.MAX_LIGHTS));
 	}
 
 }

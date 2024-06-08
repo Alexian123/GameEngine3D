@@ -2,6 +2,7 @@ package com.alexian123.renderer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Camera;
@@ -19,21 +19,15 @@ import com.alexian123.font.GUIText;
 import com.alexian123.font.TextMeshData;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.TexturedModel;
+import com.alexian123.particle.Particle;
 import com.alexian123.terrain.Water;
 import com.alexian123.terrain.WaterFrameBuffers;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.util.Clock;
+import com.alexian123.util.Constants;
 
 public class RenderingManager {
-	
-	public static final float NEAR_PLANE = 0.1f;
-	public static final float FAR_PLANE = 1000.0f;
-	public static final float FOV = 70.0f;
-	
-	public static final Vector3f FOG_COLOR = new Vector3f(0.5444f, 0.62f, 0.69f);
-	public static final float FOG_DENSITY = 0.0035f;
-	public static final float FOG_GRADIENT = 5.0f;
 	
 	private static final Matrix4f PROJECTION_MATRIX = createProjectionMatrix();
 	
@@ -44,12 +38,15 @@ public class RenderingManager {
 	private static TerrainRenderer terrainRenderer;
 	private static WaterRenderer waterRenderer;
 	private static SkyBoxRenderer skyBoxRenderer;
+	private static ParticleRenderer particleRenderer;
 	private static GUIRenderer guiRenderer;
 	private static FontRenderer fontRenderer;
 	
 	private static Map<TexturedModel, List<Entity>> entities;
 	private static Map<TexturedModel, List<Entity>> entitiesNM;
 	private static Map<FontType, List<GUIText>> texts;
+	
+	private static List<Particle> particles;
 	
 	private static boolean isInitialized = false;
 	
@@ -62,19 +59,23 @@ public class RenderingManager {
 			terrainRenderer = new TerrainRenderer(PROJECTION_MATRIX);
 			waterRenderer = new WaterRenderer(loader, PROJECTION_MATRIX);
 			skyBoxRenderer = new SkyBoxRenderer(loader, PROJECTION_MATRIX, clock);
+			particleRenderer = new ParticleRenderer(loader, PROJECTION_MATRIX);
 			guiRenderer = new GUIRenderer(loader);
 			fontRenderer = new FontRenderer();
 			entities = new HashMap<>();
 			entitiesNM = new HashMap<>();
 			texts = new HashMap<>();
+			particles = new ArrayList<>();
 			isInitialized = true;
 		}
 	}
 	
 	public static void render(Scene scene, Camera camera, List<GUITexture> guis) {
+		updateParticles();
 		renderWaterFX(scene, camera);
 		renderScene(scene, camera, new Vector4f(0, -1, 0, 1000));
 		waterRenderer.render(scene.getWaters(), camera, scene.getLights());
+		particleRenderer.render(particles, camera);
 		guiRenderer.render(guis);
 		fontRenderer.render(texts);
 	}
@@ -85,6 +86,7 @@ public class RenderingManager {
 		terrainRenderer.cleanup();
 		waterRenderer.cleanup();
 		skyBoxRenderer.cleanup();
+		particleRenderer.cleanup();
 		guiRenderer.cleanup();
 		fontRenderer.cleanup();
 	}
@@ -100,6 +102,10 @@ public class RenderingManager {
 	
 	public static void disableCulling() {
 		GL11.glDisable(GL11.GL_CULL_FACE);
+	}
+	
+	public static void addParticle(Particle particle) {
+		particles.add(particle);
 	}
 	
 	public static void loadText(GUIText text) {
@@ -152,7 +158,7 @@ public class RenderingManager {
 		entityRenderer.render(entities, scene.getLights(), camera, clipPlane);
 		entityRendererNM.render(entitiesNM, scene.getLights(), camera, clipPlane);
 		terrainRenderer.render(scene.getTerrains(), scene.getLights(), camera, clipPlane);
-		skyBoxRenderer.render(camera, FOG_COLOR);
+		skyBoxRenderer.render(camera);
 		entities.clear();
 		entitiesNM.clear();
 	}
@@ -160,7 +166,7 @@ public class RenderingManager {
 	private static void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(FOG_COLOR.x, FOG_COLOR.y, FOG_COLOR.z, 1.0f);
+		GL11.glClearColor(Constants.FOG_COLOR.x, Constants.FOG_COLOR.y, Constants.FOG_COLOR.z, 1.0f);
 	}
 	
 	private static void processEntity(Entity entity) {
@@ -175,17 +181,28 @@ public class RenderingManager {
 		batch.add(entity);
 	}
 	
+	private static void updateParticles() {
+		Iterator<Particle> iter = particles.iterator();
+		while (iter.hasNext()) {
+			Particle p = iter.next();
+			boolean alive = p.update();
+			if (!alive) {
+				iter.remove();
+			}
+		}
+	}
+	
 	private static Matrix4f createProjectionMatrix() {
 		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-		float xScale = (float) (1.0f / Math.tan(Math.toRadians(FOV / 2.0f)));
+		float xScale = (float) (1.0f / Math.tan(Math.toRadians(Constants.FOV / 2.0f)));
 		float yScale = xScale * aspectRatio;
-		float frustumLength = FAR_PLANE - NEAR_PLANE;
+		float frustumLength = Constants.FAR_PLANE - Constants.NEAR_PLANE;
 		Matrix4f projectionMatrix = new Matrix4f();
 		projectionMatrix.m00 = xScale;
 		projectionMatrix.m11 = yScale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustumLength);
+		projectionMatrix.m22 = -((Constants.FAR_PLANE + Constants.NEAR_PLANE) / frustumLength);
 		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustumLength);
+		projectionMatrix.m32 = -((2 * Constants.NEAR_PLANE * Constants.FAR_PLANE) / frustumLength);
 		projectionMatrix.m33 = 0;
 		return projectionMatrix;
 	}

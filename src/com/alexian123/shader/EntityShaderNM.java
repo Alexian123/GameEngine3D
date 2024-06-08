@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Light;
+import com.alexian123.util.Constants;
 
 public class EntityShaderNM extends EntityShader {
 	
@@ -26,7 +27,7 @@ public class EntityShaderNM extends EntityShader {
 	
 	@Override
 	public void loadLights(List<Light> lights, Matrix4f viewMatrix) {
-		for (int i = 0; i < Light.MAX_LIGHTS; ++i) {
+		for (int i = 0; i < Constants.MAX_LIGHTS; ++i) {
 			if (i < lights.size()) {
 				Light light = lights.get(i);
 				loadVector(uniformArrays.get(Uniform.LIGHT_POSITION.getName()).get(i), getEyeSpaceLightPosition(light, viewMatrix));

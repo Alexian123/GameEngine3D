@@ -16,6 +16,7 @@ import com.alexian123.model.RawModel;
 import com.alexian123.shader.WaterShader;
 import com.alexian123.terrain.Water;
 import com.alexian123.terrain.WaterFrameBuffers;
+import com.alexian123.util.Constants;
 import com.alexian123.util.Maths;
 
 public class WaterRenderer {
@@ -39,7 +40,7 @@ public class WaterRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadShineParameters(20f, 0.5f);	// shineDamper, reflectivity
-		shader.loadViewPlanes(RenderingManager.NEAR_PLANE, RenderingManager.FAR_PLANE);
+		shader.loadViewPlanes(Constants.NEAR_PLANE, Constants.FAR_PLANE);
 		shader.loadTilingFactor(4.0f);
 		shader.loadWaveStrength(0.04f);
 		shader.stop();
@@ -75,7 +76,7 @@ public class WaterRenderer {
 		shader.loadViewMatrix(camera);
 		shader.loadMoveFactor(moveFactor);
 		shader.loadLights(lights);
-		shader.loadFog(RenderingManager.FOG_DENSITY, RenderingManager.FOG_GRADIENT, RenderingManager.FOG_COLOR);
+		shader.loadFog(Constants.FOG_DENSITY, Constants.FOG_GRADIENT, Constants.FOG_COLOR);
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);

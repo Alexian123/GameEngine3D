@@ -44,8 +44,10 @@ public enum Uniform {
 	CHARACTER_WIDTH("characterWidth"),
 	CHARACTER_EDGE("characterEdige"),
 	BORDER_WIDTH("borderWidth"),
-	BORDER_EDGE("borderEdge");
-	
+	BORDER_EDGE("borderEdge"),
+	LOWER_LIMIT("lowerLimit"),
+	UPPER_LIMIT("upperLimit"),
+	MODEL_VIEW("modelViewMatrix");
 
 	private final String name;
 	

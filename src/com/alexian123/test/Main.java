@@ -20,6 +20,8 @@ import com.alexian123.loader.OBJFileLoader;
 import com.alexian123.loader.OBJFileLoaderNM;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
+import com.alexian123.particle.Particle;
+import com.alexian123.particle.ParticleSystem;
 import com.alexian123.renderer.DisplayManager;
 import com.alexian123.renderer.RenderingManager;
 import com.alexian123.renderer.Scene;
@@ -37,7 +39,7 @@ public class Main {
 	public static void main(String[] args) {
 		DisplayManager.createDisplay("GameEngine3D", 1600, 900);
 		Loader loader = new Loader();
-		Clock clock = new Clock(0.0f);
+		Clock clock = new Clock(1000.0f);
 		RenderingManager.init(loader, clock);
 		
 		// text
@@ -158,6 +160,14 @@ public class Main {
 		// Mouse picker
 		MousePicker mousePicker = new MousePicker(RenderingManager.getProjectionMatrix(), camera, terrainGrid);
 		
+		// Particles
+		ParticleSystem particleSystem = new ParticleSystem(50, 25, 0.3f, 4, 1);
+		particleSystem.randomizeRotation();
+		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
+		particleSystem.setLifeError(0.1f);
+		particleSystem.setSpeedError(0.4f);
+		particleSystem.setScaleError(0.8f);
+		
 		while (!DisplayManager.displayShouldClose()) {
 			clock.tick();
 			
@@ -165,7 +175,9 @@ public class Main {
 			Vector3f terrainPoint = mousePicker.getCurrentTerrainPoint();
 			if (terrainPoint != null && Mouse.isButtonDown(0)) {
 				tree.setPosition(terrainPoint);
-			}		
+			}
+			
+			particleSystem.generateParticles(player.getPosition());
 			
 			barrel.incrementRotation(0, 0.5f, 0);
 			crate.incrementRotation(0, 0.5f, 0);
