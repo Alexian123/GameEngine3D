@@ -1,4 +1,4 @@
-package com.alexian123.renderer;
+package com.alexian123.rendering;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

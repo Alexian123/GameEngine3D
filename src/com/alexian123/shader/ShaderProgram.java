@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,11 +124,7 @@ public abstract class ShaderProgram {
 	}
 	
 	protected static List<Integer> createNewUniformArray(int size) {
-		List<Integer> array = new ArrayList<>(size);
-		for (int i = 0; i < size; ++i) {
-			array.add(NEW_UNIFORM);
-		}
-		return array;
+		return new ArrayList<>(Collections.nCopies(size, NEW_UNIFORM));
 	}
 
 	@SuppressWarnings("deprecation")

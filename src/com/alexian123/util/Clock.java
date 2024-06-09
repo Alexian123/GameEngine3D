@@ -1,6 +1,6 @@
 package com.alexian123.util;
 
-import com.alexian123.renderer.DisplayManager;
+import com.alexian123.rendering.DisplayManager;
 
 public class Clock {
 
@@ -9,6 +9,10 @@ public class Clock {
 	
 	public Clock(float timeSpeed) {
 		this.timeSpeed = timeSpeed;
+	}
+	
+	public Clock() {
+		this.timeSpeed = 0.0f;
 	}
 
 	public void tick() {

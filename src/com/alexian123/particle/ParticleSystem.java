@@ -6,8 +6,8 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.alexian123.renderer.DisplayManager;
-import com.alexian123.renderer.RenderingManager;
+import com.alexian123.rendering.DisplayManager;
+import com.alexian123.rendering.RenderingManager;
 
 public class ParticleSystem {
 

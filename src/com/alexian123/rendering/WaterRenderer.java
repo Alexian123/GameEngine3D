@@ -1,4 +1,4 @@
-package com.alexian123.renderer;
+package com.alexian123.rendering;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ import com.alexian123.util.Maths;
 
 public class WaterRenderer {
 	
-	private static final String DUDV_MAP_FILE = "waterDUDV";
-	private static final String NORMAL_MAP_FILE = "waterNormal";
+	private static final String DUDV_MAP_FILE = "maps/waterDUDV";
+	private static final String NORMAL_MAP_FILE = "maps/waterNormal";
 	private static final float WAVE_SPEED = 0.03f;
 	
 	private float moveFactor = 0;

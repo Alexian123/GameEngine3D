@@ -2,7 +2,7 @@ package com.alexian123.particle;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.renderer.DisplayManager;
+import com.alexian123.rendering.DisplayManager;
 import com.alexian123.util.Constants;
 
 public class Particle {

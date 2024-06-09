@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
-import com.alexian123.renderer.DisplayManager;
+import com.alexian123.rendering.DisplayManager;
 import com.alexian123.util.Maths;
 
 public class SkyBoxShader extends ShaderProgram{

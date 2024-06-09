@@ -15,7 +15,7 @@ import com.alexian123.model.ModelDataNM;
 
 public class OBJFileLoaderNM {
 
-	private static final String RES_LOC = "res/models/normalMapping/";
+	private static final String RES_LOC = "res/models/normal_mapping/";
 
 	public static ModelDataNM loadOBJ(String objFileName) {
 		FileReader isr = null;

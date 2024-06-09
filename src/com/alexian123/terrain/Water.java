@@ -1,8 +1,13 @@
 package com.alexian123.terrain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Water {
 	
 	public static final float TILE_SIZE = 60.0f;
+	
+	private static final List<Water> instances = new ArrayList<>();
 	
 	private final float height;
 	private final float x;
@@ -15,6 +20,7 @@ public class Water {
 		this.z = centerZ;
 		this.height = height;
 		this.fbos = new WaterFrameBuffers();
+		instances.add(this);
 	}
 
 	public float getHeight() {
@@ -31,5 +37,14 @@ public class Water {
 	
 	public WaterFrameBuffers getFbos() {
 		return fbos;
+	}
+	
+	public static void cleanup() {
+		if (!instances.isEmpty()) {
+			for (Water water : instances) {
+				water.fbos.cleanup();
+			}
+			instances.clear();
+		}
 	}
 }

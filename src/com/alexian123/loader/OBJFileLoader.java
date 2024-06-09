@@ -15,7 +15,7 @@ import com.alexian123.model.ModelData;
 
 public class OBJFileLoader {
 	
-	private static final String RES_LOC = "res/models/";
+	private static final String RES_LOC = "res/models/regular/";
 
 	public static ModelData loadOBJ(String objFileName) {
 		FileReader isr = null;
