@@ -1,6 +1,7 @@
 package com.alexian123.shader;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 
 public class ParticleShader extends ShaderProgram{
 	
@@ -18,6 +19,12 @@ public class ParticleShader extends ShaderProgram{
 	public void loadProjectionMatrix(Matrix4f matrix) {
 		loadMatrix(uniforms.get(Uniform.PROJECTION_MATRIX.getName()), matrix);
 	}
+	
+	public void loadAtlasInfo(Vector2f currentOffset, Vector2f nextOffset, float dimension, float blendFactor) {
+		loadVector(uniforms.get(Uniform.CURRENT_ATLAS_OFFSET.getName()), currentOffset);
+		loadVector(uniforms.get(Uniform.NEXT_ATLAS_OFFSET.getName()), nextOffset);
+		loadVector(uniforms.get(Uniform.TEXTURE_COORD_INFO.getName()), new Vector2f(dimension, blendFactor));
+	}
 
 	@Override
 	protected int setAttributes() {
@@ -30,5 +37,8 @@ public class ParticleShader extends ShaderProgram{
 	protected void setUniforms() {
 		uniforms.put(Uniform.MODEL_VIEW.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.PROJECTION_MATRIX.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.CURRENT_ATLAS_OFFSET.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.NEXT_ATLAS_OFFSET.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.TEXTURE_COORD_INFO.getName(), NEW_UNIFORM);
 	}
 }

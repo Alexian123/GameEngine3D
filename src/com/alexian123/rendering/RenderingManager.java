@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -20,10 +21,12 @@ import com.alexian123.font.TextMeshData;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.particle.Particle;
+import com.alexian123.particle.ParticleSorter;
 import com.alexian123.terrain.Water;
 import com.alexian123.terrain.WaterFrameBuffers;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.texture.ModelTexture;
+import com.alexian123.texture.ParticleTexture;
 import com.alexian123.util.Clock;
 import com.alexian123.util.Constants;
 
@@ -44,9 +47,8 @@ public class RenderingManager {
 	
 	private static Map<TexturedModel, List<Entity>> entities;
 	private static Map<TexturedModel, List<Entity>> entitiesNM;
+	private static Map<ParticleTexture, List<Particle>> particles;
 	private static Map<FontType, List<GUIText>> texts;
-	
-	private static List<Particle> particles;
 	
 	private static boolean isInitialized = false;
 	
@@ -64,14 +66,14 @@ public class RenderingManager {
 			fontRenderer = new FontRenderer();
 			entities = new HashMap<>();
 			entitiesNM = new HashMap<>();
+			particles = new HashMap<>();
 			texts = new HashMap<>();
-			particles = new ArrayList<>();
 			isInitialized = true;
 		}
 	}
 	
 	public static void render(Scene scene, Camera camera, List<GUITexture> guis) {
-		updateParticles();
+		updateParticles(camera);
 		renderWaterFX(scene, camera);
 		renderScene(scene, camera, new Vector4f(0, -1, 0, 1000));
 		waterRenderer.render(scene.getWaters(), camera, scene.getLights());
@@ -105,7 +107,13 @@ public class RenderingManager {
 	}
 	
 	public static void addParticle(Particle particle) {
-		particles.add(particle);
+		ParticleTexture texture = particle.getTexture();
+		List<Particle> batch = particles.get(texture);
+		if (batch == null) {
+			batch = new ArrayList<>();
+			particles.put(texture,  batch);
+		}
+		batch.add(particle);
 	}
 	
 	public static void loadText(GUIText text) {
@@ -181,14 +189,22 @@ public class RenderingManager {
 		batch.add(entity);
 	}
 	
-	private static void updateParticles() {
-		Iterator<Particle> iter = particles.iterator();
-		while (iter.hasNext()) {
-			Particle p = iter.next();
-			boolean alive = p.update();
-			if (!alive) {
-				iter.remove();
+	private static void updateParticles(Camera camera) {
+		Iterator<Entry<ParticleTexture, List<Particle>>> mapIter = particles.entrySet().iterator();
+		while (mapIter.hasNext()) {
+			List<Particle> batch = mapIter.next().getValue();
+			Iterator<Particle> iter = batch.iterator();
+			while (iter.hasNext()) {
+				Particle p = iter.next();
+				boolean alive = p.update(camera);
+				if (!alive) {
+					iter.remove();
+					if (batch.isEmpty()) {
+						mapIter.remove();
+					}
+				}
 			}
+				ParticleSorter.sortHighToLow(batch);
 		}
 	}
 	

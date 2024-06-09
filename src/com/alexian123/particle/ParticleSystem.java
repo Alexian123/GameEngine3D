@@ -8,10 +8,17 @@ import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.rendering.DisplayManager;
 import com.alexian123.rendering.RenderingManager;
+import com.alexian123.texture.ParticleTexture;
 
 public class ParticleSystem {
+	
+	private final ParticleTexture texture;
 
-	private float pps, averageSpeed, gravityComplient, averageLifeLength, averageScale;
+	private final float pps;
+	private final float averageSpeed;
+	private final float gravityComplient;
+	private final float averageLifeLength;
+	private final float averageScale;
 
 	private float speedError, lifeError, scaleError = 0;
 	private boolean randomRotation = false;
@@ -20,7 +27,8 @@ public class ParticleSystem {
 
 	private Random random = new Random();
 
-	public ParticleSystem(float pps, float speed, float gravityComplient, float lifeLength, float scale) {
+	public ParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength, float scale) {
+		this.texture = texture;
 		this.pps = pps;
 		this.averageSpeed = speed;
 		this.gravityComplient = gravityComplient;
@@ -89,7 +97,7 @@ public class ParticleSystem {
 		velocity.scale(generateValue(averageSpeed, speedError));
 		float scale = generateValue(averageScale, scaleError);
 		float lifeLength = generateValue(averageLifeLength, lifeError);
-		RenderingManager.addParticle(new Particle(new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale));
+		RenderingManager.addParticle(new Particle(new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale, texture));
 	}
 
 	private float generateValue(float average, float errorMargin) {

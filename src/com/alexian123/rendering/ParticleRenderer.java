@@ -1,8 +1,10 @@
 package com.alexian123.rendering;
 
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
@@ -13,6 +15,7 @@ import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.particle.Particle;
 import com.alexian123.shader.ParticleShader;
+import com.alexian123.texture.ParticleTexture;
 import com.alexian123.util.Maths;
 
 public class ParticleRenderer {
@@ -29,12 +32,23 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 	
-	public void render(List<Particle> particles, Camera camera) {
+	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
-		for (Particle particle : particles) {
-			updateModelViewMatrix(particle, viewMatrix);
-			GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+		for (ParticleTexture texture : particles.keySet()) {
+			if (texture.isAdditiveBlending()) {
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			} else {
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			}
+			
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
+			for (Particle particle : particles.get(texture)) {
+				updateModelViewMatrix(particle, viewMatrix);
+				shader.loadAtlasInfo(particle.getCurrentAtlasOffset(), particle.getNextAtlasOffset(), texture.getAtlasDimension(), particle.getBlendFactor());
+				GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+			}
 		}
 		endRendering();
 	}
@@ -48,10 +62,9 @@ public class ParticleRenderer {
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDepthMask(false);
 	}
-	
+
 	private void updateModelViewMatrix(Particle particle, Matrix4f viewMatrix) {
 		Matrix4f modelMatrix = new Matrix4f();
 		Matrix4f.translate(particle.getPosition(), modelMatrix, modelMatrix);

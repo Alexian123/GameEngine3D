@@ -24,6 +24,7 @@ import com.alexian123.terrain.TerrainGrid;
 import com.alexian123.terrain.Water;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.texture.ModelTexture;
+import com.alexian123.texture.ParticleTexture;
 import com.alexian123.texture.TerrainTexture;
 import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.MousePicker;
@@ -35,7 +36,8 @@ public class TestGame extends Game {
 	private TerrainGrid terrain;
 	private MousePicker mousePicker;
 	private Scene currentScene;
-	private ParticleSystem particleSystem;
+	private ParticleSystem fireSystem;
+	private ParticleSystem cosmicSystem;
 	
 	private List<Entity> entities = new ArrayList<>();
 	private List<Light> lights = new ArrayList<>();
@@ -71,7 +73,8 @@ public class TestGame extends Game {
 			lastTree.setPosition(terrainPoint);
 		}
 		
-		particleSystem.generateParticles(player.getPosition());
+		fireSystem.generateParticles(player.getPosition());
+		cosmicSystem.generateParticles(new Vector3f(251, -12, -273));
 		
 		barrel.incrementRotation(0, 0.5f, 0);
 		crate.incrementRotation(0, 0.5f, 0);
@@ -207,11 +210,19 @@ public class TestGame extends Game {
 	}
 	
 	private void initParticleSystem() {
-		particleSystem = new ParticleSystem(50, 25, 0.3f, 4, 1);
-		particleSystem.randomizeRotation();
-		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
-		particleSystem.setLifeError(0.1f);
-		particleSystem.setSpeedError(0.4f);
-		particleSystem.setScaleError(0.8f);
+		ParticleTexture texture = new ParticleTexture(loader.loadTexture("particles/fire"), 8, true);
+		fireSystem = new ParticleSystem(texture, 1000, 10, 0.1f, 2, 1.6f);
+		fireSystem.randomizeRotation();
+		fireSystem.setDirection(new Vector3f(0.5f, 0.5f, 0), 0.05f);
+		fireSystem.setLifeError(0.1f);
+		fireSystem.setSpeedError(0.25f);
+		fireSystem.setScaleError(0.5f);
+		texture = new ParticleTexture(loader.loadTexture("particles/cosmic"), 4, false);
+		cosmicSystem = new ParticleSystem(texture, 100, 10, 0.1f, 2, 1.6f);
+		cosmicSystem.randomizeRotation();
+		cosmicSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
+		cosmicSystem.setLifeError(0.1f);
+		cosmicSystem.setSpeedError(0.25f);
+		cosmicSystem.setScaleError(0.5f);
 	}
 }

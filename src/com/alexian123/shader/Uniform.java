@@ -47,7 +47,11 @@ public enum Uniform {
 	BORDER_EDGE("borderEdge"),
 	LOWER_LIMIT("lowerLimit"),
 	UPPER_LIMIT("upperLimit"),
-	MODEL_VIEW("modelViewMatrix");
+	MODEL_VIEW("modelViewMatrix"),
+	CURRENT_ATLAS_OFFSET("currentAtlasOffset"),
+	NEXT_ATLAS_OFFSET("nextAtlasOffset"),
+	TEXTURE_COORD_INFO("textureCoordInfo");
+	;
 
 	private final String name;
 	
