@@ -25,6 +25,10 @@ public class WaterRenderer {
 	private static final String DUDV_MAP_FILE = "maps/waterDUDV";
 	private static final String NORMAL_MAP_FILE = "maps/waterNormal";
 	private static final float WAVE_SPEED = 0.03f;
+	private static final int MAX_NUM_TEXTURES = 5;
+	
+	private final int numTextures;
+	private final int[] textures = new int[MAX_NUM_TEXTURES];
 	
 	private float moveFactor = 0;
 	
@@ -38,14 +42,16 @@ public class WaterRenderer {
 		this.dudvTexture = loader.loadTexture(DUDV_MAP_FILE);
 		this.normalTexture = loader.loadTexture(NORMAL_MAP_FILE);
 		shader.start();
-		shader.connectTextureUnits();
+		this.numTextures = shader.connectTextureUnits();
 		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
 		shader.loadShineParameters(20f, 0.5f);	// shineDamper, reflectivity
 		shader.loadViewPlanes(Constants.NEAR_PLANE, Constants.FAR_PLANE);
 		shader.loadTilingFactor(4.0f);
 		shader.loadWaveStrength(0.04f);
 		shader.stop();
-		setUpVAO(loader);
+		setUpVAO(loader);		
+		textures[0] = dudvTexture;
+		textures[1] = normalTexture;
 	}
 
 	public void render(List<Water> waters, Camera camera, List<Light> lights) {
@@ -64,13 +70,6 @@ public class WaterRenderer {
 	public void cleanup() {
 		shader.cleanup();
 	}
-	
-	private void unbind() {
-		GL11.glDisable(GL11.GL_BLEND);
-		GL20.glDisableVertexAttribArray(0);
-		GL30.glBindVertexArray(0);
-		shader.stop();
-	}
 
 	private void prepareRender(Camera camera, WaterFrameBuffers fbos, List<Light> lights) {
 		shader.start();
@@ -79,19 +78,27 @@ public class WaterRenderer {
 		shader.loadLights(lights);
 		shader.loadFog(Constants.FOG_DENSITY, Constants.FOG_GRADIENT, Constants.FOG_COLOR);
 		GL30.glBindVertexArray(quad.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getReflectionTexture());
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionTexture());
-		GL13.glActiveTexture(GL13.GL_TEXTURE2);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, dudvTexture);
-		GL13.glActiveTexture(GL13.GL_TEXTURE3);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, normalTexture);
-		GL13.glActiveTexture(GL13.GL_TEXTURE4);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionDepthTexture());
+		for (int i = 0; i < shader.getNumAttributes(); ++i) {
+			GL20.glEnableVertexAttribArray(i);
+		}
+		textures[2] = fbos.getReflectionTexture();
+		textures[3] = fbos.getRefractionTexture();
+		textures[4] = fbos.getRefractionDepthTexture();
+		for (int i = 0; i < numTextures; ++i) {
+			GL13.glActiveTexture(GL13.GL_TEXTURE0 + i);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textures[i]);
+		}
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+	}
+	
+	private void unbind() {
+		GL11.glDisable(GL11.GL_BLEND);
+		for (int i = 0; i < shader.getNumAttributes(); ++i) {
+			GL20.glDisableVertexAttribArray(i);
+		}
+		GL30.glBindVertexArray(0);
+		shader.stop();
 	}
 	
 	private void setUpVAO(Loader loader) {

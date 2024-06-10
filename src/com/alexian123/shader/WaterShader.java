@@ -34,10 +34,10 @@ public class WaterShader extends ShaderProgram {
 	
 	public int connectTextureUnits() {
 		int textureNo = 0;
-		loadInt(uniforms.get(Uniform.REFLECTION_TEXTURE.getName()), textureNo++);
-		loadInt(uniforms.get(Uniform.REFRACTION_TEXTURE.getName()), textureNo++);
 		loadInt(uniforms.get(Uniform.DUDV_MAP.getName()), textureNo++);
 		loadInt(uniforms.get(Uniform.NORMAL_MAP.getName()), textureNo++);
+		loadInt(uniforms.get(Uniform.REFLECTION_TEXTURE.getName()), textureNo++);
+		loadInt(uniforms.get(Uniform.REFRACTION_TEXTURE.getName()), textureNo++);
 		loadInt(uniforms.get(Uniform.DEPTH_MAP.getName()), textureNo++);
 		return textureNo;
 	}

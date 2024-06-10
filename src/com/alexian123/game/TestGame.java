@@ -64,6 +64,7 @@ public class TestGame extends Game {
 		currentScene = new Scene(entities, terrain, waters, lights);
 		camera = new Camera(player);
 		mousePicker = new MousePicker(camera, terrain);
+		clock.setTimeSpeed(1000);
 	}
 	
 

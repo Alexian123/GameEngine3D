@@ -27,7 +27,9 @@ public class GUIRenderer {
 	public void render(List<GUITexture> guis) {
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
+		for (int i = 0; i < shader.getNumAttributes(); ++i) {
+			GL20.glEnableVertexAttribArray(i);
+		}
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -40,7 +42,9 @@ public class GUIRenderer {
 		}
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_BLEND);
-		GL20.glDisableVertexAttribArray(0);
+		for (int i = 0; i < shader.getNumAttributes(); ++i) {
+			GL20.glDisableVertexAttribArray(i);
+		}
 		GL30.glBindVertexArray(0);
 		shader.stop();
 	}

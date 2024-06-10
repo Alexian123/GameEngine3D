@@ -44,7 +44,6 @@ public class ParticleRenderer {
 			} else {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			}
-			
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
 			for (Particle particle : particles.get(system)) {
@@ -63,7 +62,9 @@ public class ParticleRenderer {
 	private void prepare() {
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
+		for (int i = 0; i < shader.getNumAttributes(); ++i) {
+			GL20.glEnableVertexAttribArray(i);
+		}
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDepthMask(false);
 	}
@@ -89,7 +90,9 @@ public class ParticleRenderer {
 	
 	private void endRendering() {
 		shader.stop();
-		GL20.glDisableVertexAttribArray(0);
+		for (int i = 0; i < shader.getNumAttributes(); ++i) {
+			GL20.glDisableVertexAttribArray(i);
+		}
 		GL30.glBindVertexArray(0);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDepthMask(true);

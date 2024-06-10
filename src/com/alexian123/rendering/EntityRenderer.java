@@ -22,18 +22,23 @@ import com.alexian123.util.Constants;
 import com.alexian123.util.Maths;
 
 public class EntityRenderer {
+	
+	private static final int MAX_NUM_TEXTURES = 2;
 
 	protected final EntityShader shader;
+	
+	protected final int numTextures;
+	protected final int[] textures = new int[MAX_NUM_TEXTURES];
 	
 	public EntityRenderer() {
 		this(new EntityShader());
 	}
 	
-	protected EntityRenderer(EntityShader shader) {
+	public EntityRenderer(EntityShader shader) {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
-		shader.connectTextureUnits();
+		this.numTextures = shader.connectTextureUnits();
 		shader.stop();
 	}
 	
@@ -66,25 +71,29 @@ public class EntityRenderer {
 	protected void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 		ModelTexture texture = model.getTexture();
+		textures[0] = texture.getID();
+		textures[1] = texture.getNormalMap();
 		GL30.glBindVertexArray(rawModel.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glEnableVertexAttribArray(2);
+		for (int i = 0; i < shader.getNumAttributes(); ++i) {
+			GL20.glEnableVertexAttribArray(i);
+		}
 		shader.loadAtlasDimension(texture.getAtlasDimension());
 		if (texture.isTransparency()) {
 			RenderingManager.disableCulling();
 		}
 		shader.loadUseFakeLighting(texture.isFakeLighting());
 		shader.loadShineParameters(texture.getShineDamper(), texture.getReflectivity());
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
+		for (int i = 0; i < numTextures; ++i) {
+			GL13.glActiveTexture(GL13.GL_TEXTURE0 + i);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textures[i]);
+		}
 	}
 	
 	protected void unbind() {
 		RenderingManager.enableCulling();
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
+		for (int i = 0; i < shader.getNumAttributes(); ++i) {
+			GL20.glDisableVertexAttribArray(i);
+		}
 		GL30.glBindVertexArray(0);
 	}
 	

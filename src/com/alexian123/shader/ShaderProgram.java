@@ -32,6 +32,8 @@ public abstract class ShaderProgram {
 	private final int vertexShaderID;
 	private final int fragmentShaderID;
 	
+	private final int numAttributes;
+	
 	private boolean isRunning = false;
 	
 	protected ShaderProgram(String vertexShader, String fragmentShader) {
@@ -40,7 +42,7 @@ public abstract class ShaderProgram {
 		programID = GL20.glCreateProgram();
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);
-		setAttributes();
+		numAttributes = setAttributes();
 		bindAttributes();
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
@@ -71,6 +73,10 @@ public abstract class ShaderProgram {
 		GL20.glDeleteProgram(programID);
 	}
 	
+	public int getNumAttributes() {
+		return numAttributes;
+	}
+
 	protected abstract int setAttributes();
 	
 	protected abstract void setUniforms();

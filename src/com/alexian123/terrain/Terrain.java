@@ -20,6 +20,8 @@ public class Terrain {
 	private static final float MAX_HEIGHT = 40.0f;
 	private static final float MAX_PIXEL_COLOR = 256 * 256 * 256;
 	
+	private static final int NUM_TEXTURES = 5;
+	
 	protected static final float SIZE = 800.0f;
 	
 	private final float x;
@@ -27,6 +29,8 @@ public class Terrain {
 	private final RawModel model;
 	private final TerrainTexturePack texturePack;
 	private final TerrainTexture blendMap;
+	
+	private final TerrainTexture[] orderedTextures = new TerrainTexture[NUM_TEXTURES];
 	
 	private float heights[][];
 	
@@ -36,6 +40,13 @@ public class Terrain {
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
 		this.model = generateTerrain(loader, heightmapFile);
+		
+		// add textures in correct order (BG, R, G, B, blend)
+		orderedTextures[0] = texturePack.getBackgroundTexture();
+		orderedTextures[1] = texturePack.getRedTexture();
+		orderedTextures[2] = texturePack.getGreenTexture();
+		orderedTextures[3] = texturePack.getBlueTexture();
+		orderedTextures[4] = blendMap;
 	}
 	
 	public float getX() {
@@ -58,6 +69,10 @@ public class Terrain {
 		return blendMap;
 	}
 	
+	public TerrainTexture[] getOrderedTextures() {
+		return orderedTextures;
+	}
+
 	public float getHeightAtPosition(float worldX, float worldZ) {
 		float terrainX = worldX - this.x;
 		float terrainZ = worldZ - this.z;

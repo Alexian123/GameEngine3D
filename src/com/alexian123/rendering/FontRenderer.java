@@ -45,8 +45,9 @@ public class FontRenderer {
 	
 	private void renderText(GUIText text) {
 		GL30.glBindVertexArray(text.getMesh());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
+		for (int i = 0; i < shader.getNumAttributes(); ++i) {
+			GL20.glEnableVertexAttribArray(i);
+		}
 		shader.loadColor(text.getColor());
 		shader.loadOutlineColor(text.getOutlineColor());
 		shader.loadOffset(text.getOffset());
@@ -54,8 +55,9 @@ public class FontRenderer {
 		shader.loadCharacterDimensions(text.getCharacterWidth(), text.getCharacterEdge());
 		shader.loadBorderDimensions(text.getBorderWidth(), text.getBorderEdge());
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
+		for (int i = 0; i < shader.getNumAttributes(); ++i) {
+			GL20.glDisableVertexAttribArray(i);
+		}
 		GL30.glBindVertexArray(0);
 	}
 	

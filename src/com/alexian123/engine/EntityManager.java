@@ -12,7 +12,7 @@ import com.alexian123.entity.Entity;
 import com.alexian123.entity.Light;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.rendering.EntityRenderer;
-import com.alexian123.rendering.EntityRendererNM;
+import com.alexian123.shader.EntityShaderNM;
 import com.alexian123.texture.ModelTexture;
 
 public class EntityManager {
@@ -21,7 +21,7 @@ public class EntityManager {
 	private static Map<TexturedModel, List<Entity>> entitiesNM = new HashMap<>();
 	
 	private static EntityRenderer renderer = new EntityRenderer();
-	private static EntityRendererNM rendererNM = new EntityRendererNM();
+	private static EntityRenderer rendererNM = new EntityRenderer(new EntityShaderNM());
 	
 	public static void renderEntities(List<Entity> allEntities, List<Light> lights, Camera camera, Vector4f clipPlane) {
 		for (Entity entity : allEntities) {
