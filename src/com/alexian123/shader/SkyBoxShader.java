@@ -48,12 +48,12 @@ public class SkyBoxShader extends ShaderProgram{
 	}
 	
 	public void loadBlendFactor(float blendFactor) {
-		loadFLoat(uniforms.get(Uniform.BLEND_FACTOR.getName()), blendFactor);
+		loadFloat(uniforms.get(Uniform.BLEND_FACTOR.getName()), blendFactor);
 	}
 	
 	public void loadLimits(float lower, float upper) {
-		loadFLoat(uniforms.get(Uniform.LOWER_LIMIT.getName()), lower);
-		loadFLoat(uniforms.get(Uniform.UPPER_LIMIT.getName()), upper);
+		loadFloat(uniforms.get(Uniform.LOWER_LIMIT.getName()), lower);
+		loadFloat(uniforms.get(Uniform.UPPER_LIMIT.getName()), upper);
 	}
 	
 	@Override

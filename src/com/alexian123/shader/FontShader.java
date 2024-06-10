@@ -29,13 +29,13 @@ public class FontShader extends ShaderProgram {
 	}
 	
 	public void loadCharacterDimensions(float width, float edge) {
-		loadFLoat(uniforms.get(Uniform.CHARACTER_WIDTH.getName()), width);
-		loadFLoat(uniforms.get(Uniform.CHARACTER_EDGE.getName()), edge);
+		loadFloat(uniforms.get(Uniform.CHARACTER_WIDTH.getName()), width);
+		loadFloat(uniforms.get(Uniform.CHARACTER_EDGE.getName()), edge);
 	}
 	
 	public void loadBorderDimensions(float width, float edge) {
-		loadFLoat(uniforms.get(Uniform.BORDER_WIDTH.getName()), width);
-		loadFLoat(uniforms.get(Uniform.BORDER_EDGE.getName()), edge);
+		loadFloat(uniforms.get(Uniform.BORDER_WIDTH.getName()), width);
+		loadFloat(uniforms.get(Uniform.BORDER_EDGE.getName()), edge);
 	}
 
 	@Override

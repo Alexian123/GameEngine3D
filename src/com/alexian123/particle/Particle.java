@@ -26,6 +26,8 @@ public class Particle {
 	private float elapsedTime = 0;
 	private float distanceToCamera = 0;
 
+	private final Vector3f change = new Vector3f();
+	
 	public Particle(Vector3f position, Vector3f velocity, float gravityComplient, float lifeLength, float rotation,
 			float scale, ParticleSystem parentSystem) {
 		this.position = position;
@@ -71,7 +73,7 @@ public class Particle {
 
 	public boolean update(Camera camera) {
 		velocity.y += Constants.GRAVITY * gravityComplient * GameManager.getFrameTimeSeconds();
-		Vector3f change = new Vector3f(velocity);
+		change.set(velocity);
 		change.scale(GameManager.getFrameTimeSeconds());
 		Vector3f.add(change, position, position);
 		distanceToCamera = Vector3f.sub(camera.getPosition(), position, null).lengthSquared();

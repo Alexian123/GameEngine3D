@@ -4,7 +4,11 @@ public enum Attribute {
 	POSITION("position"),
 	TEXTURE_COORD("textureCoord"),
 	NORMAL("normal"),
-	TANGENT("tangent");
+	TANGENT("tangent"),
+	MODEL_VIEW_MATRIX("modelViewMatrix"),
+	ATLAS_OFFSETS("atlasOffsets"),
+	BLEND_FACTOR("blendFactor"),
+	;
 
 	private final String name;
 	

@@ -58,7 +58,7 @@ public class TestGame extends Game {
 		initEntities();
 		initWater();
 		initLights();
-		initParticleSystem();
+		initParticles();
 		initGUI();
 		initText();
 		currentScene = new Scene(entities, terrain, waters, lights);
@@ -87,6 +87,7 @@ public class TestGame extends Game {
 		}
 		
 		cosmicSystem.generateParticles();
+		fireSystem2.generateParticles();
 		
 		barrel.incrementRotation(0, 0.5f, 0);
 		crate.incrementRotation(0, 0.5f, 0);
@@ -221,7 +222,7 @@ public class TestGame extends Game {
 		text.show();
 	}
 	
-	private void initParticleSystem() {
+	private void initParticles() {
 		ParticleTexture texture = new ParticleTexture(loader.loadTexture("particles/fire"), 8, true);
 		fireSystem = new ParticleSystem(texture, 1000, 10, 0.1f, 2, 1.6f);
 		fireSystem.randomizeRotation();

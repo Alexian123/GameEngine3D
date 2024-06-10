@@ -1,12 +1,15 @@
 package com.alexian123.rendering;
 
+import java.nio.FloatBuffer;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL31;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -23,12 +26,26 @@ import com.alexian123.util.Maths;
 public class ParticleRenderer {
 	
 	private static final float[] VERTICES = { -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
+	private static final int MAX_PARTICLES = 10000;
+	private static final int INSTANCE_DATA_LENGTH = 21;
+	
+	private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * INSTANCE_DATA_LENGTH);
+	
+	private final Loader loader;
+	private final int vbo;
 	
 	private final RawModel quad;
 	private final ParticleShader shader = new ParticleShader();
 	
+	private int pointer = 0;
+	
 	public ParticleRenderer(Loader loader) {
+		this.loader = loader;
+		this.vbo = loader.createEmptyVbo(INSTANCE_DATA_LENGTH * MAX_PARTICLES);
 		quad = loader.loadToVao(VERTICES, 2);
+		for (int i = 1; i <= 6; ++i) {
+			loader.addInstancedAttribute(quad.getVaoID(), vbo, i, i != 6 ? 4 : 1, INSTANCE_DATA_LENGTH, (i - 1) * 4);
+		}
 		shader.start();
 		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
 		shader.stop();
@@ -38,19 +55,16 @@ public class ParticleRenderer {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
 		for (ParticleSystem system : systemsOrder) {
-			ParticleTexture texture = system.getTexture();
-			if (texture.isAdditiveBlending()) {
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			} else {
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			bindTexture(system.getTexture());
+			List<Particle> particleList = particles.get(system);
+			pointer = 0;
+			float[] vboData = new float[particleList.size() * INSTANCE_DATA_LENGTH];
+			for (Particle particle : particleList) {
+				updateModelViewMatrix(particle, viewMatrix, vboData);
+				updateAtlasInfo(particle, vboData);
 			}
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
-			for (Particle particle : particles.get(system)) {
-				updateModelViewMatrix(particle, viewMatrix);
-				shader.loadAtlasInfo(particle.getCurrentAtlasOffset(), particle.getNextAtlasOffset(), texture.getAtlasDimension(), particle.getBlendFactor());
-				GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
-			}
+			loader.updateVbo(vbo, vboData, buffer);
+			GL31.glDrawArraysInstanced(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount(), particleList.size());
 		}
 		endRendering();
 	}
@@ -68,8 +82,19 @@ public class ParticleRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDepthMask(false);
 	}
+	
+	private void bindTexture(ParticleTexture texture) {
+		shader.loadAtlasDimension(texture.getAtlasDimension());
+		if (texture.isAdditiveBlending()) {
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		} else {
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		}
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
+	}
 
-	private void updateModelViewMatrix(Particle particle, Matrix4f viewMatrix) {
+	private void updateModelViewMatrix(Particle particle, Matrix4f viewMatrix, float[] vboData) {
 		Matrix4f modelMatrix = new Matrix4f();
 		Matrix4f.translate(particle.getPosition(), modelMatrix, modelMatrix);
 		modelMatrix.m00 = viewMatrix.m00;
@@ -85,7 +110,37 @@ public class ParticleRenderer {
 		float scale = particle.getScale();
 		Matrix4f.scale(new Vector3f(scale, scale, scale), modelMatrix, modelMatrix);
 		Matrix4f modelViewMatrix = Matrix4f.mul(viewMatrix, modelMatrix, null);
-		shader.loadModelViewMatrix(modelViewMatrix);
+		storeMatrixDataInArray(modelViewMatrix, vboData);
+	}
+	
+	private void storeMatrixDataInArray(Matrix4f matrix, float[] data) {
+		data[pointer++] = matrix.m00;
+		data[pointer++] = matrix.m01;
+		data[pointer++] = matrix.m02;
+		data[pointer++] = matrix.m03;
+		
+		data[pointer++] = matrix.m10;
+		data[pointer++] = matrix.m11;
+		data[pointer++] = matrix.m12;
+		data[pointer++] = matrix.m13;
+		
+		data[pointer++] = matrix.m20;
+		data[pointer++] = matrix.m21;
+		data[pointer++] = matrix.m22;
+		data[pointer++] = matrix.m23;
+		
+		data[pointer++] = matrix.m30;
+		data[pointer++] = matrix.m31;
+		data[pointer++] = matrix.m32;
+		data[pointer++] = matrix.m33;
+	}
+	
+	private void updateAtlasInfo(Particle particle, float[] data) {
+		data[pointer++] = particle.getCurrentAtlasOffset().x;
+		data[pointer++] = particle.getCurrentAtlasOffset().y;
+		data[pointer++] = particle.getNextAtlasOffset().x;
+		data[pointer++] = particle.getNextAtlasOffset().y;
+		data[pointer++] = particle.getBlendFactor();
 	}
 	
 	private void endRendering() {

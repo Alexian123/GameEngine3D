@@ -18,6 +18,7 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
@@ -32,6 +33,37 @@ public class Loader {
 	
 	private final Map<Integer, List<Integer>> vaos = new HashMap<>();
 	private final List<Integer> textures = new ArrayList<>();
+	
+	public void addInstancedAttribute(int vao, int vbo, int attribNo, int size, int length, int offset) {
+		List<Integer> vbos = vaos.get(vao);
+		if (!vbos.contains(vbo)) {
+			vbos.add(vbo);
+		}
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL30.glBindVertexArray(vao);
+		GL20.glVertexAttribPointer(attribNo, size, GL11.GL_FLOAT, false, length * 4, offset * 4);
+		GL33.glVertexAttribDivisor(attribNo, 1);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
+	}
+	
+	public void updateVbo(int vbo, float[] data, FloatBuffer buffer) {
+		buffer.clear();
+		buffer.put(data);
+		buffer.flip();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity() * 4, GL15.GL_STREAM_DRAW);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
+	public int createEmptyVbo(int size) {
+		int vbo = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vbo);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, size * 4, GL15.GL_STREAM_DRAW);
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+		return vbo;
+	}
 	
 	public RawModel loadToVao(float[] vertices, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVao();

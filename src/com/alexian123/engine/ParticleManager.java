@@ -60,12 +60,10 @@ public class ParticleManager {
 			List<Particle> batch = entry.getValue();
 			Iterator<Particle> iter = batch.iterator();
 			float sumDistanceToCamera = 0f;
-			int numParticles = 0;
 			while (iter.hasNext()) {
 				Particle p = iter.next();
 				boolean alive = p.update(camera);
 				if (alive) {
-					++numParticles;
 					sumDistanceToCamera += p.getDistanceToCamera();
 				} else {
 					iter.remove();
@@ -75,8 +73,10 @@ public class ParticleManager {
 					}
 				}
 			}
-			system.setAverageDistanceToCamera(sumDistanceToCamera / numParticles);
-			ParticleSorter.sortBatchHighToLow(batch);
+			system.setAverageDistanceToCamera(sumDistanceToCamera / batch.size());
+			if (!system.getTexture().isAdditiveBlending()) {
+				ParticleSorter.sortBatchHighToLow(batch);
+			}
 		}
 		ParticleSorter.sortSystemsHighToLow(systemsOrder);
 	}

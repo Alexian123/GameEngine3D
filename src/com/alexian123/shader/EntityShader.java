@@ -30,8 +30,8 @@ public class EntityShader extends ShaderProgram {
 	}
 	
 	public void loadFog(float density, float gradient, Vector3f color) {
-		loadFLoat(uniforms.get(Uniform.FOG_DENSITY.getName()), density);
-		loadFLoat(uniforms.get(Uniform.FOG_GRADIENT.getName()), gradient);
+		loadFloat(uniforms.get(Uniform.FOG_DENSITY.getName()), density);
+		loadFloat(uniforms.get(Uniform.FOG_GRADIENT.getName()), gradient);
 		loadVector(uniforms.get(Uniform.FOG_COLOR.getName()), color);
 	}
 	
@@ -63,8 +63,8 @@ public class EntityShader extends ShaderProgram {
 	}
 	
 	public void loadShineParameters(float shineDamper, float reflectivity) {
-		loadFLoat(uniforms.get(Uniform.SHINE_DAMPER.getName()), shineDamper);
-		loadFLoat(uniforms.get(Uniform.REFLECTIVITY.getName()), reflectivity);
+		loadFloat(uniforms.get(Uniform.SHINE_DAMPER.getName()), shineDamper);
+		loadFloat(uniforms.get(Uniform.REFLECTIVITY.getName()), reflectivity);
 	}
 	
 	public void loadUseFakeLighting(boolean useFakeLighting) {
@@ -72,7 +72,7 @@ public class EntityShader extends ShaderProgram {
 	}
 	
 	public void loadAtlasDimension(float atlasDimension) {
-		loadFLoat(uniforms.get(Uniform.ATLAS_DIMENSION.getName()), atlasDimension);
+		loadFloat(uniforms.get(Uniform.ATLAS_DIMENSION.getName()), atlasDimension);
 	}
 	
 	public void loadAtlasOffset(float offsetX, float offsetY) {

@@ -81,7 +81,7 @@ public abstract class ShaderProgram {
 	
 	protected abstract void setUniforms();
 	
-	protected void loadFLoat(int location, float val) {
+	protected void loadFloat(int location, float val) {
 		GL20.glUniform1f(location, val);
 	}
 	

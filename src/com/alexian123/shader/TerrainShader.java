@@ -21,8 +21,8 @@ public class TerrainShader extends ShaderProgram {
 	}
 	
 	public void loadFog(float density, float gradient, Vector3f color) {
-		loadFLoat(uniforms.get(Uniform.FOG_DENSITY.getName()), density);
-		loadFLoat(uniforms.get(Uniform.FOG_GRADIENT.getName()), gradient);
+		loadFloat(uniforms.get(Uniform.FOG_DENSITY.getName()), density);
+		loadFloat(uniforms.get(Uniform.FOG_GRADIENT.getName()), gradient);
 		loadVector(uniforms.get(Uniform.FOG_COLOR.getName()), color);
 	}
 	
@@ -54,8 +54,8 @@ public class TerrainShader extends ShaderProgram {
 	}
 	
 	public void loadShineParameters(float shineDamper, float reflectivity) {
-		loadFLoat(uniforms.get(Uniform.SHINE_DAMPER.getName()), shineDamper);
-		loadFLoat(uniforms.get(Uniform.REFLECTIVITY.getName()), reflectivity);
+		loadFloat(uniforms.get(Uniform.SHINE_DAMPER.getName()), shineDamper);
+		loadFloat(uniforms.get(Uniform.REFLECTIVITY.getName()), reflectivity);
 	}
 	
 	public int connectTextureUnits() {

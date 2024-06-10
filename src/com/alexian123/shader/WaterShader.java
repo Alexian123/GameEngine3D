@@ -43,16 +43,16 @@ public class WaterShader extends ShaderProgram {
 	}
 	
 	public void loadViewPlanes(float nearPlane, float farPlane) {
-		loadFLoat(uniforms.get(Uniform.NEAR_PLANE.getName()), nearPlane);
-		loadFLoat(uniforms.get(Uniform.FAR_PLANE.getName()), farPlane);
+		loadFloat(uniforms.get(Uniform.NEAR_PLANE.getName()), nearPlane);
+		loadFloat(uniforms.get(Uniform.FAR_PLANE.getName()), farPlane);
 	}
 	
 	public void loadMoveFactor(float moveFactor) {
-		loadFLoat(uniforms.get(Uniform.MOVE_FACTOR.getName()), moveFactor);
+		loadFloat(uniforms.get(Uniform.MOVE_FACTOR.getName()), moveFactor);
 	}
 	
 	public void loadWaveStrength(float waveStrength) {
-		loadFLoat(uniforms.get(Uniform.WAVE_STRENGTH.getName()), waveStrength);
+		loadFloat(uniforms.get(Uniform.WAVE_STRENGTH.getName()), waveStrength);
 	}
 	
 	public void loadLights(List<Light> lights) {
@@ -71,17 +71,17 @@ public class WaterShader extends ShaderProgram {
 	}
 	
 	public void loadShineParameters(float shineDamper, float reflectivity) {
-		loadFLoat(uniforms.get(Uniform.SHINE_DAMPER.getName()), shineDamper);
-		loadFLoat(uniforms.get(Uniform.REFLECTIVITY.getName()), reflectivity);
+		loadFloat(uniforms.get(Uniform.SHINE_DAMPER.getName()), shineDamper);
+		loadFloat(uniforms.get(Uniform.REFLECTIVITY.getName()), reflectivity);
 	}
 	
 	public void loadTilingFactor(float tilingFactor) {
-		loadFLoat(uniforms.get(Uniform.TILING_FACTOR.getName()), tilingFactor);
+		loadFloat(uniforms.get(Uniform.TILING_FACTOR.getName()), tilingFactor);
 	}
 	
 	public void loadFog(float density, float gradient, Vector3f color) {
-		loadFLoat(uniforms.get(Uniform.FOG_DENSITY.getName()), density);
-		loadFLoat(uniforms.get(Uniform.FOG_GRADIENT.getName()), gradient);
+		loadFloat(uniforms.get(Uniform.FOG_DENSITY.getName()), density);
+		loadFloat(uniforms.get(Uniform.FOG_GRADIENT.getName()), gradient);
 		loadVector(uniforms.get(Uniform.FOG_COLOR.getName()), color);
 	}
 	
