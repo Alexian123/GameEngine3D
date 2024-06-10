@@ -54,6 +54,7 @@ public class RenderingManager {
 		EntityManager.cleanup();
 		ParticleManager.cleanup();
 		TextManager.cleanup();
+		Water.cleanup();
 		terrainRenderer.cleanup();
 		waterRenderer.cleanup();
 		skyBoxRenderer.cleanup();

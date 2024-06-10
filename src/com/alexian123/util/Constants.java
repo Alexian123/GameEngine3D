@@ -5,6 +5,12 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Constants {
 	
+	public static final int DEFAULT_SCREEN_WIDTH = 1600;
+	public static final int DEFAULT_SCREEN_HEIGHT = 900;
+	public static final String DEFAULT_WINDOW_TITLE = "GameEngine3D";
+	
+	public static final int FPS_CAP = 144;
+	
 	public static final float GRAVITY = -50.0f;
 	
 	public static final int MAX_LIGHTS = 4;
@@ -17,4 +23,6 @@ public class Constants {
 	public static final Vector3f FOG_COLOR = new Vector3f(0.5444f, 0.62f, 0.69f);
 	public static final float FOG_DENSITY = 0.0035f;
 	public static final float FOG_GRADIENT = 5.0f;
+	
+	public static final float MILLISECONDS_PER_SECOND = 1000.0f;
 }

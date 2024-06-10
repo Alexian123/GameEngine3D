@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.engine.DisplayManager;
+import com.alexian123.engine.GameManager;
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Light;
 import com.alexian123.loader.Loader;
@@ -49,7 +49,7 @@ public class WaterRenderer {
 	}
 
 	public void render(List<Water> waters, Camera camera, List<Light> lights) {
-		moveFactor += WAVE_SPEED * DisplayManager.getFrameTimeSeconds();
+		moveFactor += WAVE_SPEED * GameManager.getFrameTimeSeconds();
 		moveFactor %= 1;
 		for (Water water : waters) {
 			prepareRender(camera, water.getFbos(), lights);

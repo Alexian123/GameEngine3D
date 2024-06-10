@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.alexian123.engine.DisplayManager;
+import com.alexian123.engine.GameManager;
 import com.alexian123.engine.ParticleManager;
 import com.alexian123.texture.ParticleTexture;
 
@@ -19,6 +19,7 @@ public class ParticleSystem {
 	private final float gravityComplient;
 	private final float averageLifeLength;
 	private final float averageScale;
+	private Vector3f center;
 
 	private float speedError, lifeError, scaleError = 0;
 	private boolean randomRotation = false;
@@ -26,6 +27,8 @@ public class ParticleSystem {
 	private float directionDeviation = 0;
 
 	private Random random = new Random();
+	
+	private float averageDistanceToCamera;
 
 	public ParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength, float scale) {
 		this.texture = texture;
@@ -34,6 +37,16 @@ public class ParticleSystem {
 		this.gravityComplient = gravityComplient;
 		this.averageLifeLength = lifeLength;
 		this.averageScale = scale;
+	}
+	
+	public ParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength, float scale, Vector3f center) {
+		this.texture = texture;
+		this.pps = pps;
+		this.averageSpeed = speed;
+		this.gravityComplient = gravityComplient;
+		this.averageLifeLength = lifeLength;
+		this.averageScale = scale;
+		this.center = center;
 	}
 
 	/**
@@ -72,25 +85,56 @@ public class ParticleSystem {
 	public void setScaleError(float error) {
 		this.scaleError = error * averageScale;
 	}
+	
+	/**
+	 * @param center
+	 *            - The center of the particle system
+	 */
+	public void setCenter(Vector3f center) {
+		this.center = center;
+	}
 
-	public void generateParticles(Vector3f systemCenter) {
-		float delta = DisplayManager.getFrameTimeSeconds();
+	/**
+	 * Start generating particles from the specified center
+	 * 
+	 * @param center
+	 */
+	public void generateParticles() {
+		float delta = GameManager.getFrameTimeSeconds();
 		float particlesToCreate = pps * delta;
 		int count = (int) Math.floor(particlesToCreate);
 		float partialParticle = particlesToCreate % 1;
 		for (int i = 0; i < count; i++) {
-			emitParticle(systemCenter);
+			emitParticle();
 		}
 		if (Math.random() < partialParticle) {
-			emitParticle(systemCenter);
+			emitParticle();
 		}
 	}
 	
+	/**
+	 * @return The Particle texture
+	 */
 	public ParticleTexture getTexture() {
 		return texture;
 	}
+	
+	/**
+	 * @param averageDistanceToCamera
+	 * 			- the average distance from all the particles to the camera
+	 */
+	public void setAverageDistanceToCamera(float averageDistanceToCamera) {
+		this.averageDistanceToCamera = averageDistanceToCamera;
+	}
+	
+	/**
+	 * @return The average distance from the particles to the camera
+	 */
+	public float getAverageDistanceToCamera() {
+		return averageDistanceToCamera;
+	}
 
-	private void emitParticle(Vector3f center) {
+	private void emitParticle() {
 		Vector3f velocity = null;
 		if(direction!=null){
 			velocity = generateRandomUnitVectorWithinCone(direction, directionDeviation);

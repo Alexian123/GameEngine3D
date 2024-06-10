@@ -1,6 +1,6 @@
 package com.alexian123.util;
 
-import com.alexian123.engine.DisplayManager;
+import com.alexian123.engine.GameManager;
 
 public class Clock {
 
@@ -16,7 +16,7 @@ public class Clock {
 	}
 
 	public void tick() {
-		timeVal += DisplayManager.getFrameTimeSeconds() * timeSpeed;
+		timeVal += GameManager.getFrameTimeSeconds() * timeSpeed;
 		timeVal %= TimeOfDay.MAX_TIME.getValue();
 	}
 	

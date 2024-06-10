@@ -16,6 +16,7 @@ import com.alexian123.rendering.ParticleRenderer;
 
 public class ParticleManager {
 
+	private static List<ParticleSystem> systemsOrder = new ArrayList<>();
 	private static Map<ParticleSystem, List<Particle>> particles = new HashMap<>();
 	
 	private static ParticleRenderer renderer;
@@ -31,7 +32,7 @@ public class ParticleManager {
 	
 	public static void renderParticles(Camera camera) {
 		updateParticles(camera);
-		renderer.render(particles, camera);
+		renderer.render(systemsOrder, particles, camera);
 	}
 	
 	public static void cleanup() {
@@ -50,22 +51,34 @@ public class ParticleManager {
 	}
 	
 	private static void updateParticles(Camera camera) {
+		systemsOrder.clear();
 		Iterator<Entry<ParticleSystem, List<Particle>>> mapIter = particles.entrySet().iterator();
 		while (mapIter.hasNext()) {
-			List<Particle> batch = mapIter.next().getValue();
+			Entry<ParticleSystem, List<Particle>> entry = mapIter.next();
+			ParticleSystem system = entry.getKey();
+			systemsOrder.add(system);
+			List<Particle> batch = entry.getValue();
 			Iterator<Particle> iter = batch.iterator();
+			float sumDistanceToCamera = 0f;
+			int numParticles = 0;
 			while (iter.hasNext()) {
 				Particle p = iter.next();
 				boolean alive = p.update(camera);
-				if (!alive) {
+				if (alive) {
+					++numParticles;
+					sumDistanceToCamera += p.getDistanceToCamera();
+				} else {
 					iter.remove();
 					if (batch.isEmpty()) {
 						mapIter.remove();
+						systemsOrder.remove(system);
 					}
 				}
 			}
-			ParticleSorter.sortHighToLow(batch);
+			system.setAverageDistanceToCamera(sumDistanceToCamera / numParticles);
+			ParticleSorter.sortBatchHighToLow(batch);
 		}
+		ParticleSorter.sortSystemsHighToLow(systemsOrder);
 	}
 	
 }

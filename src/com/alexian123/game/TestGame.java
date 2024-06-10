@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -14,6 +15,7 @@ import com.alexian123.entity.Light;
 import com.alexian123.entity.Player;
 import com.alexian123.font.FontType;
 import com.alexian123.font.GUIText;
+import com.alexian123.loader.Loader;
 import com.alexian123.loader.OBJFileLoader;
 import com.alexian123.loader.OBJFileLoaderNM;
 import com.alexian123.model.RawModel;
@@ -26,6 +28,7 @@ import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.ParticleTexture;
 import com.alexian123.texture.TerrainTexture;
 import com.alexian123.texture.TerrainTexturePack;
+import com.alexian123.util.Clock;
 import com.alexian123.util.MousePicker;
 import com.alexian123.util.Scene;
 
@@ -36,7 +39,7 @@ public class TestGame extends Game {
 	private TerrainGrid terrain;
 	private MousePicker mousePicker;
 	private Scene currentScene;
-	private ParticleSystem fireSystem;
+	private ParticleSystem fireSystem, fireSystem2;
 	private ParticleSystem cosmicSystem;
 	
 	private List<Entity> entities = new ArrayList<>();
@@ -49,8 +52,8 @@ public class TestGame extends Game {
 	private Entity crate;
 	private Entity boulder;
 	
-	public TestGame(String title, int screenWidth, int screenHeight) {
-		super(title, screenWidth, screenHeight);
+	public TestGame() {
+		super(new Loader(), new Clock());
 		initTerrain();
 		initEntities();
 		initWater();
@@ -65,7 +68,12 @@ public class TestGame extends Game {
 	
 
 	@Override
-	protected void update() {
+	public void update() {
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			stop();
+		}
+		
 		clock.tick();
 		mousePicker.update();
 		Vector3f terrainPoint = mousePicker.getCurrentTerrainPoint();
@@ -73,9 +81,11 @@ public class TestGame extends Game {
 			lastTree.setPosition(terrainPoint);
 		}
 		
-		fireSystem.generateParticles(player.getPosition());
-		cosmicSystem.generateParticles(new Vector3f(251, -12, -273));
-		fireSystem.generateParticles(new Vector3f(283, 0, -233));
+		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+			fireSystem.generateParticles();
+		}
+		
+		cosmicSystem.generateParticles();
 		
 		barrel.incrementRotation(0, 0.5f, 0);
 		crate.incrementRotation(0, 0.5f, 0);
@@ -88,17 +98,17 @@ public class TestGame extends Game {
 	}
 
 	@Override
-	protected Scene getCurrentScene() {
+	public Scene getCurrentScene() {
 		return currentScene;
 	}
 
 	@Override
-	protected Camera getCamera() {
+	public Camera getCamera() {
 		return camera;
 	}
 
 	@Override
-	protected List<GUITexture> getGUI() {
+	public List<GUITexture> getGUI() {
 		return guis;
 	}
 	
@@ -218,6 +228,16 @@ public class TestGame extends Game {
 		fireSystem.setLifeError(0.1f);
 		fireSystem.setSpeedError(0.25f);
 		fireSystem.setScaleError(0.5f);
+		fireSystem.setCenter(player.getPosition());
+		
+		fireSystem2 = new ParticleSystem(texture, 1000, 10, 0.1f, 2, 1.6f);
+		fireSystem2.randomizeRotation();
+		fireSystem2.setDirection(new Vector3f(0.5f, 0.5f, 0), 0.05f);
+		fireSystem2.setLifeError(0.1f);
+		fireSystem2.setSpeedError(0.25f);
+		fireSystem2.setScaleError(0.5f);
+		fireSystem2.setCenter(new Vector3f(283, 0, -233));
+		
 		texture = new ParticleTexture(loader.loadTexture("particles/cosmic"), 4, false);
 		cosmicSystem = new ParticleSystem(texture, 100, 10, 0.1f, 2, 1.6f);
 		cosmicSystem.randomizeRotation();
@@ -225,5 +245,6 @@ public class TestGame extends Game {
 		cosmicSystem.setLifeError(0.1f);
 		cosmicSystem.setSpeedError(0.25f);
 		cosmicSystem.setScaleError(0.5f);
+		cosmicSystem.setCenter(new Vector3f(251, -12, -273));
 	}
 }

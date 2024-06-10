@@ -3,7 +3,7 @@ package com.alexian123.particle;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.engine.DisplayManager;
+import com.alexian123.engine.GameManager;
 import com.alexian123.entity.Camera;
 import com.alexian123.texture.ParticleTexture;
 import com.alexian123.util.Constants;
@@ -70,13 +70,13 @@ public class Particle {
 	}
 
 	public boolean update(Camera camera) {
-		velocity.y += Constants.GRAVITY * gravityComplient * DisplayManager.getFrameTimeSeconds();
+		velocity.y += Constants.GRAVITY * gravityComplient * GameManager.getFrameTimeSeconds();
 		Vector3f change = new Vector3f(velocity);
-		change.scale(DisplayManager.getFrameTimeSeconds());
+		change.scale(GameManager.getFrameTimeSeconds());
 		Vector3f.add(change, position, position);
 		distanceToCamera = Vector3f.sub(camera.getPosition(), position, null).lengthSquared();
 		updateAtlasInfo();
-		elapsedTime += DisplayManager.getFrameTimeSeconds();
+		elapsedTime += GameManager.getFrameTimeSeconds();
 		return elapsedTime < lifeLength;
 	}
 	

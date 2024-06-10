@@ -3,7 +3,7 @@ package com.alexian123.shader;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.engine.DisplayManager;
+import com.alexian123.engine.GameManager;
 import com.alexian123.entity.Camera;
 import com.alexian123.util.Maths;
 
@@ -31,7 +31,7 @@ public class SkyBoxShader extends ShaderProgram{
 		viewMatrix.m31 = 0;
 		viewMatrix.m32 = 0;
 		// add rotation
-		rotation += ROTATION_INCREMENT * DisplayManager.getFrameTimeSeconds();
+		rotation += ROTATION_INCREMENT * GameManager.getFrameTimeSeconds();
 		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
 		loadMatrix(uniforms.get(Uniform.VIEW_MATRIX.getName()), viewMatrix);
 	}

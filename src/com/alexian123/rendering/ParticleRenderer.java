@@ -34,10 +34,10 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 	
-	public void render(Map<ParticleSystem, List<Particle>> particles, Camera camera) {
+	public void render(List<ParticleSystem> systemsOrder, Map<ParticleSystem, List<Particle>> particles, Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
-		for (ParticleSystem system : particles.keySet()) {
+		for (ParticleSystem system : systemsOrder) {
 			ParticleTexture texture = system.getTexture();
 			if (texture.isAdditiveBlending()) {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
