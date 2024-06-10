@@ -1,22 +1,22 @@
-package com.alexian123.rendering;
+package com.alexian123.util;
 
 import java.util.List;
 
 import com.alexian123.entity.Entity;
 import com.alexian123.entity.Light;
-import com.alexian123.terrain.Terrain;
+import com.alexian123.terrain.TerrainGrid;
 import com.alexian123.terrain.Water;
 
 public class Scene {
 
 	private List<Entity> entities;
-	private List<Terrain> terrains;
+	private TerrainGrid terrainGrid;
 	private List<Water> waters;
 	private List<Light> lights;
 	
-	public Scene(List<Entity> entities, List<Terrain> terrains, List<Water> waters, List<Light> lights) {
+	public Scene(List<Entity> entities, TerrainGrid terrainGrid, List<Water> waters, List<Light> lights) {
 		this.entities = entities;
-		this.terrains = terrains;
+		this.terrainGrid = terrainGrid;
 		this.waters = waters;
 		this.lights = lights;
 	}
@@ -29,12 +29,12 @@ public class Scene {
 		this.entities = entities;
 	}
 
-	public List<Terrain> getTerrains() {
-		return terrains;
+	public TerrainGrid getTerrainGrid() {
+		return terrainGrid;
 	}
 
-	public void setTerrains(List<Terrain> terrains) {
-		this.terrains = terrains;
+	public void setTerrainGrid(TerrainGrid terrainGrid) {
+		this.terrainGrid = terrainGrid;
 	}
 	
 	public List<Water> getWaters() {

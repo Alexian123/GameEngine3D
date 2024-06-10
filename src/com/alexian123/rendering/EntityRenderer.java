@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
 
+import com.alexian123.engine.RenderingManager;
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
 import com.alexian123.entity.Light;
@@ -24,14 +25,14 @@ public class EntityRenderer {
 
 	protected final EntityShader shader;
 	
-	public EntityRenderer(Matrix4f projectionMatrix) {
-		this(projectionMatrix, new EntityShader());
+	public EntityRenderer() {
+		this(new EntityShader());
 	}
 	
-	protected EntityRenderer(Matrix4f projectionMatrix, EntityShader shader) {
+	protected EntityRenderer(EntityShader shader) {
 		this.shader = shader;
 		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
 		shader.connectTextureUnits();
 		shader.stop();
 	}

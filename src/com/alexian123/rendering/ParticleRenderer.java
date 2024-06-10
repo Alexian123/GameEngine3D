@@ -14,8 +14,10 @@ import com.alexian123.entity.Camera;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.particle.Particle;
+import com.alexian123.particle.ParticleSystem;
 import com.alexian123.shader.ParticleShader;
 import com.alexian123.texture.ParticleTexture;
+import com.alexian123.util.Constants;
 import com.alexian123.util.Maths;
 
 public class ParticleRenderer {
@@ -25,17 +27,18 @@ public class ParticleRenderer {
 	private final RawModel quad;
 	private final ParticleShader shader = new ParticleShader();
 	
-	public ParticleRenderer(Loader loader, Matrix4f projectionMatrix) {
+	public ParticleRenderer(Loader loader) {
 		quad = loader.loadToVao(VERTICES, 2);
 		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
 		shader.stop();
 	}
 	
-	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera) {
+	public void render(Map<ParticleSystem, List<Particle>> particles, Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
-		for (ParticleTexture texture : particles.keySet()) {
+		for (ParticleSystem system : particles.keySet()) {
+			ParticleTexture texture = system.getTexture();
 			if (texture.isAdditiveBlending()) {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			} else {
@@ -44,7 +47,7 @@ public class ParticleRenderer {
 			
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
-			for (Particle particle : particles.get(texture)) {
+			for (Particle particle : particles.get(system)) {
 				updateModelViewMatrix(particle, viewMatrix);
 				shader.loadAtlasInfo(particle.getCurrentAtlasOffset(), particle.getNextAtlasOffset(), texture.getAtlasDimension(), particle.getBlendFactor());
 				GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());

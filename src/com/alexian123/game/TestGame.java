@@ -19,7 +19,6 @@ import com.alexian123.loader.OBJFileLoaderNM;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.particle.ParticleSystem;
-import com.alexian123.rendering.Scene;
 import com.alexian123.terrain.TerrainGrid;
 import com.alexian123.terrain.Water;
 import com.alexian123.texture.GUITexture;
@@ -28,6 +27,7 @@ import com.alexian123.texture.ParticleTexture;
 import com.alexian123.texture.TerrainTexture;
 import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.MousePicker;
+import com.alexian123.util.Scene;
 
 public class TestGame extends Game {
 	
@@ -58,9 +58,9 @@ public class TestGame extends Game {
 		initParticleSystem();
 		initGUI();
 		initText();
-		currentScene = new Scene(entities, terrain.getTerrains(), waters, lights);
+		currentScene = new Scene(entities, terrain, waters, lights);
 		camera = new Camera(player);
-		mousePicker = new MousePicker(projectionMatrix, camera, terrain);
+		mousePicker = new MousePicker(camera, terrain);
 	}
 	
 
@@ -75,6 +75,7 @@ public class TestGame extends Game {
 		
 		fireSystem.generateParticles(player.getPosition());
 		cosmicSystem.generateParticles(new Vector3f(251, -12, -273));
+		fireSystem.generateParticles(new Vector3f(283, 0, -233));
 		
 		barrel.incrementRotation(0, 0.5f, 0);
 		crate.incrementRotation(0, 0.5f, 0);
@@ -206,7 +207,7 @@ public class TestGame extends Game {
 		text.setColor(0, 0, 0);
 		text.setOutlineColor(1, 1, 1);
 		text.setBorderWidth(0.5f);
-		super.addText(text);
+		text.show();
 	}
 	
 	private void initParticleSystem() {

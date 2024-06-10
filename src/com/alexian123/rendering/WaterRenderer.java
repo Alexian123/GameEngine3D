@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.engine.DisplayManager;
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Light;
 import com.alexian123.loader.Loader;
@@ -32,13 +33,13 @@ public class WaterRenderer {
 	private int dudvTexture;
 	private int normalTexture;
 	
-	public WaterRenderer(Loader loader, Matrix4f projectionMatrix) {
+	public WaterRenderer(Loader loader) {
 		this.shader = new WaterShader();
 		this.dudvTexture = loader.loadTexture(DUDV_MAP_FILE);
 		this.normalTexture = loader.loadTexture(NORMAL_MAP_FILE);
 		shader.start();
 		shader.connectTextureUnits();
-		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
 		shader.loadShineParameters(20f, 0.5f);	// shineDamper, reflectivity
 		shader.loadViewPlanes(Constants.NEAR_PLANE, Constants.FAR_PLANE);
 		shader.loadTilingFactor(4.0f);

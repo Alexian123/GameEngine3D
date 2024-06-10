@@ -22,8 +22,6 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import com.alexian123.font.FontType;
-import com.alexian123.model.ModelData;
-import com.alexian123.model.ModelDataNM;
 import com.alexian123.model.RawModel;
 import com.alexian123.texture.TextureData;
 

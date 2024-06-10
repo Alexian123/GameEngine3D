@@ -11,8 +11,6 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.model.ModelDataNM;
-
 public class OBJFileLoaderNM {
 
 	private static final String RES_LOC = "res/models/normal_mapping/";

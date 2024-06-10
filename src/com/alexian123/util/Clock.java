@@ -1,6 +1,6 @@
 package com.alexian123.util;
 
-import com.alexian123.rendering.DisplayManager;
+import com.alexian123.engine.DisplayManager;
 
 public class Clock {
 

@@ -3,8 +3,8 @@ package com.alexian123.entity;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.engine.DisplayManager;
 import com.alexian123.model.TexturedModel;
-import com.alexian123.rendering.DisplayManager;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.util.Constants;
 

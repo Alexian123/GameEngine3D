@@ -1,5 +1,6 @@
 package com.alexian123.util;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -7,6 +8,21 @@ import org.lwjgl.util.vector.Vector3f;
 import com.alexian123.entity.Camera;
 
 public class Maths {
+	
+	public static Matrix4f createProjectionMatrix(float fov, float farPlane, float nearPlane) {
+		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
+		float xScale = (float) (1.0f / Math.tan(Math.toRadians(fov / 2.0f)));
+		float yScale = xScale * aspectRatio;
+		float frustumLength = farPlane - nearPlane;
+		Matrix4f projectionMatrix = new Matrix4f();
+		projectionMatrix.m00 = xScale;
+		projectionMatrix.m11 = yScale;
+		projectionMatrix.m22 = -((farPlane + nearPlane) / frustumLength);
+		projectionMatrix.m23 = -1;
+		projectionMatrix.m32 = -((2 * nearPlane * farPlane) / frustumLength);
+		projectionMatrix.m33 = 0;
+		return projectionMatrix;
+	}
 	
 	public static Matrix4f createTransformationMatrix(Vector3f translation, Vector3f rotation, float scale) {
 		Matrix4f matrix = new Matrix4f();

@@ -4,8 +4,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.vector.Matrix4f;
 
+import com.alexian123.engine.RenderingManager;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.EntityShaderNM;
@@ -13,8 +13,8 @@ import com.alexian123.texture.ModelTexture;
 
 public class EntityRendererNM extends EntityRenderer {
 
-	public EntityRendererNM(Matrix4f projectionMatrix) {
-		super(projectionMatrix, new EntityShaderNM());
+	public EntityRendererNM() {
+		super(new EntityShaderNM());
 	}
 
 	@Override

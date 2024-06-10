@@ -6,8 +6,8 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.alexian123.rendering.DisplayManager;
-import com.alexian123.rendering.RenderingManager;
+import com.alexian123.engine.DisplayManager;
+import com.alexian123.engine.ParticleManager;
 import com.alexian123.texture.ParticleTexture;
 
 public class ParticleSystem {
@@ -85,6 +85,10 @@ public class ParticleSystem {
 			emitParticle(systemCenter);
 		}
 	}
+	
+	public ParticleTexture getTexture() {
+		return texture;
+	}
 
 	private void emitParticle(Vector3f center) {
 		Vector3f velocity = null;
@@ -97,7 +101,7 @@ public class ParticleSystem {
 		velocity.scale(generateValue(averageSpeed, speedError));
 		float scale = generateValue(averageScale, scaleError);
 		float lifeLength = generateValue(averageLifeLength, lifeError);
-		RenderingManager.addParticle(new Particle(new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale, texture));
+		ParticleManager.addParticle(new Particle(new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale, this));
 	}
 
 	private float generateValue(float average, float errorMargin) {

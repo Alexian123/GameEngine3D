@@ -3,8 +3,8 @@ package com.alexian123.particle;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.engine.DisplayManager;
 import com.alexian123.entity.Camera;
-import com.alexian123.rendering.DisplayManager;
 import com.alexian123.texture.ParticleTexture;
 import com.alexian123.util.Constants;
 
@@ -18,7 +18,7 @@ public class Particle {
 	private final float rotation;
 	private final float scale;
 	
-	private final ParticleTexture texture;
+	private final ParticleSystem parentSystem;
 	
 	private Vector2f currentAtlasOffset = new Vector2f();
 	private Vector2f nextAtlasOffset = new Vector2f();
@@ -27,14 +27,14 @@ public class Particle {
 	private float distanceToCamera = 0;
 
 	public Particle(Vector3f position, Vector3f velocity, float gravityComplient, float lifeLength, float rotation,
-			float scale, ParticleTexture texture) {
+			float scale, ParticleSystem parentSystem) {
 		this.position = position;
 		this.velocity = velocity;
 		this.gravityComplient = gravityComplient;
 		this.lifeLength = lifeLength;
 		this.rotation = rotation;
 		this.scale = scale;
-		this.texture = texture;
+		this.parentSystem = parentSystem;
 	}
 
 	public Vector3f getPosition() {
@@ -49,8 +49,8 @@ public class Particle {
 		return scale;
 	}
 
-	public ParticleTexture getTexture() {
-		return texture;
+	public ParticleSystem getParentSystem() {
+		return parentSystem;
 	}
 
 	public Vector2f getCurrentAtlasOffset() {
@@ -81,17 +81,18 @@ public class Particle {
 	}
 	
 	private void updateAtlasInfo() {
+		ParticleTexture texture = parentSystem.getTexture();
 		float lifeFactor = elapsedTime / lifeLength;
 		int numStages = texture.getAtlasDimension() * texture.getAtlasDimension();
 		float atlasProgress = lifeFactor * numStages;
 		int currentStageIndex = (int) Math.floor(atlasProgress);
 		int nextStageIndex = (currentStageIndex < numStages - 1) ? currentStageIndex + 1 : currentStageIndex;
-		this.blendFactor = atlasProgress % 1;
-		setAtlasOffset(this.currentAtlasOffset, currentStageIndex);
-		setAtlasOffset(this.nextAtlasOffset, nextStageIndex);
+		blendFactor = atlasProgress % 1;
+		setAtlasOffset(currentAtlasOffset, currentStageIndex, texture);
+		setAtlasOffset(nextAtlasOffset, nextStageIndex, texture);
 	}
 	
-	private void setAtlasOffset(Vector2f offset, int index) {
+	private void setAtlasOffset(Vector2f offset, int index, ParticleTexture texture) {
 		int column = index % texture.getAtlasDimension();
 		int row = index / texture.getAtlasDimension();
 		offset.x = (float) column / texture.getAtlasDimension();

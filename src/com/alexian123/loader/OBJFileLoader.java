@@ -11,8 +11,6 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.model.ModelData;
-
 public class OBJFileLoader {
 	
 	private static final String RES_LOC = "res/models/regular/";

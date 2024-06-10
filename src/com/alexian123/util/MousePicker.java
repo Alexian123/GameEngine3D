@@ -16,7 +16,6 @@ public class MousePicker {
 	private static final int RECURSION_COUNT = 200;
 	private static final float RAY_RANGE = 600;
 	
-	private final Matrix4f projectionMatrix;
 	private final Camera camera;
 	private final TerrainGrid terrainGrid;
 	
@@ -25,8 +24,7 @@ public class MousePicker {
 	private Vector3f currentTerrainPoint;
 	
 	
-	public MousePicker(Matrix4f projectionMatrix, Camera camera, TerrainGrid terrainGrid) {
-		this.projectionMatrix = projectionMatrix;
+	public MousePicker(Camera camera, TerrainGrid terrainGrid) {
 		this.camera = camera;
 		this.terrainGrid = terrainGrid;
 		this.viewMatrix = Maths.createViewMatrix(camera);
@@ -71,7 +69,7 @@ public class MousePicker {
 	}
 	
 	private Vector4f clipToEyeSpace(Vector4f clipCoords) {
-		Matrix4f inverseProjectionMatrix = Matrix4f.invert(projectionMatrix, null);
+		Matrix4f inverseProjectionMatrix = Matrix4f.invert(Constants.PROJECTION_MATRIX, null);
 		Vector4f eyeCoords = Matrix4f.transform(inverseProjectionMatrix, clipCoords, null);
 		return new Vector4f(eyeCoords.x, eyeCoords.y, -1f, 0f);
 	}

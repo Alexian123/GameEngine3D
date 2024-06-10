@@ -3,6 +3,8 @@ package com.alexian123.font;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.engine.TextManager;
+
 /**
  * Represents a piece of text in the game.
  * 
@@ -37,6 +39,8 @@ public class GUIText {
 	private float characterEdge = DEFAULT_CHARACTER_EDGE;
 	private float borderWidth = DEFAULT_BORDER_WIDTH;
 	private float borderEdge = DEFAULT_BORDER_EDGE;
+	
+	private boolean visible = false;
 
 	/**
 	 * Creates a new text, loads the text's quads into a VAO, and adds the text
@@ -71,6 +75,33 @@ public class GUIText {
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
+	}
+	
+	/**
+	 * Show the text on the screen
+	 */
+	public void show() {
+		if (!visible) {
+			TextManager.loadText(this);
+			visible = true;
+		}
+	}
+	
+	/**
+	 * Hide the text from the screen
+	 */
+	public void hide() {
+		if (visible) {
+			TextManager.removeText(this);
+			visible = false;
+		}
+	}
+	
+	/**
+	 * @return true if the text is visible on the screen
+	 */
+	public boolean isVisible() {
+		return visible;
 	}
 
 	/**

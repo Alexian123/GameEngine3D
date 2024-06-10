@@ -4,7 +4,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.vector.Matrix4f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.loader.Loader;
@@ -91,13 +90,13 @@ public class SkyBoxRenderer {
 	private int texture0, texture1;
 	private float blendFactor;
 	
-	public SkyBoxRenderer(Loader loader, Matrix4f projectionMatrix, Clock clock) {
+	public SkyBoxRenderer(Loader loader, Clock clock) {
 		this.cube = loader.loadToVao(VERTICES, 3);
 		this.dayTextureID = loader.loadCubeMap(DAY_TEXTURE_FILES);
 		this.nightTextureID = loader.loadCubeMap(NIGHT_TEXTURE_FILES);
 		this.clock = clock;
 		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
 		shader.connectTextureUnits();
 		shader.loadLimits(0.0f, 30.0f);
 		shader.stop();
