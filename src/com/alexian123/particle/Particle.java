@@ -10,15 +10,15 @@ import com.alexian123.util.Constants;
 
 public class Particle {
 	
-	private final Vector3f position;
-	private final Vector3f velocity;
+	private Vector3f position;
+	private Vector3f velocity;
 	
-	private final float gravityComplient;
-	private final float lifeLength;
-	private final float rotation;
-	private final float scale;
+	private float gravityComplient;
+	private float lifeLength;
+	private float rotation;
+	private float scale;
 	
-	private final ParticleSystem parentSystem;
+	private ParticleSystem parentSystem;
 	
 	private Vector2f currentAtlasOffset = new Vector2f();
 	private Vector2f nextAtlasOffset = new Vector2f();
@@ -28,15 +28,22 @@ public class Particle {
 
 	private final Vector3f change = new Vector3f();
 	
-	public Particle(Vector3f position, Vector3f velocity, float gravityComplient, float lifeLength, float rotation,
-			float scale, ParticleSystem parentSystem) {
+	public Particle(ParticleSystem parentSystem) {
+		this.parentSystem = parentSystem;
+		parentSystem.addDeadParticle(this);
+	}
+	
+	public void revive(Vector3f position, Vector3f velocity, float gravityComplient, float lifeLength, float rotation,
+			float scale) {
 		this.position = position;
 		this.velocity = velocity;
 		this.gravityComplient = gravityComplient;
 		this.lifeLength = lifeLength;
 		this.rotation = rotation;
 		this.scale = scale;
-		this.parentSystem = parentSystem;
+		this.elapsedTime = 0;
+		this.blendFactor = 0;
+		this.distanceToCamera = 0;
 	}
 
 	public Vector3f getPosition() {
@@ -79,7 +86,11 @@ public class Particle {
 		distanceToCamera = Vector3f.sub(camera.getPosition(), position, null).lengthSquared();
 		updateAtlasInfo();
 		elapsedTime += GameManager.getFrameTimeSeconds();
-		return elapsedTime < lifeLength;
+		boolean alive = elapsedTime < lifeLength;
+		if (!alive) {
+			parentSystem.addDeadParticle(this);
+		}
+		return alive;
 	}
 	
 	private void updateAtlasInfo() {

@@ -14,6 +14,7 @@ public class Constants {
 	public static final float GRAVITY = -50.0f;
 	
 	public static final int MAX_LIGHTS = 4;
+	public static final int MAX_PARTICLES = 10000;
 	
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000.0f;

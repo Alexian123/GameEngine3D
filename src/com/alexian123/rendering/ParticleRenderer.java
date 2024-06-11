@@ -26,10 +26,9 @@ import com.alexian123.util.Maths;
 public class ParticleRenderer {
 	
 	private static final float[] VERTICES = { -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
-	private static final int MAX_PARTICLES = 10000;
 	private static final int INSTANCE_DATA_LENGTH = 21;
 	
-	private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * INSTANCE_DATA_LENGTH);
+	private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(Constants.MAX_PARTICLES * INSTANCE_DATA_LENGTH);
 	
 	private final Loader loader;
 	private final int vbo;
@@ -41,7 +40,7 @@ public class ParticleRenderer {
 	
 	public ParticleRenderer(Loader loader) {
 		this.loader = loader;
-		this.vbo = loader.createEmptyVbo(INSTANCE_DATA_LENGTH * MAX_PARTICLES);
+		this.vbo = loader.createEmptyVbo(INSTANCE_DATA_LENGTH * Constants.MAX_PARTICLES);
 		quad = loader.loadToVao(VERTICES, 2);
 		for (int i = 1; i <= 6; ++i) {
 			loader.addInstancedAttribute(quad.getVaoID(), vbo, i, i != 6 ? 4 : 1, INSTANCE_DATA_LENGTH, (i - 1) * 4);
@@ -58,13 +57,15 @@ public class ParticleRenderer {
 			bindTexture(system.getTexture());
 			List<Particle> particleList = particles.get(system);
 			pointer = 0;
-			float[] vboData = new float[particleList.size() * INSTANCE_DATA_LENGTH];
-			for (Particle particle : particleList) {
+			int size = Math.min(Constants.MAX_PARTICLES, particleList.size());
+			float[] vboData = new float[size * INSTANCE_DATA_LENGTH];
+			for (int i = 0; i < size; ++i) {
+				Particle particle = particleList.get(i);
 				updateModelViewMatrix(particle, viewMatrix, vboData);
 				updateAtlasInfo(particle, vboData);
 			}
 			loader.updateVbo(vbo, vboData, buffer);
-			GL31.glDrawArraysInstanced(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount(), particleList.size());
+			GL31.glDrawArraysInstanced(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount(), size);
 		}
 		endRendering();
 	}

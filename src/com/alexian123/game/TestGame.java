@@ -40,7 +40,7 @@ public class TestGame extends Game {
 	private MousePicker mousePicker;
 	private Scene currentScene;
 	private ParticleSystem fireSystem, fireSystem2;
-	private ParticleSystem cosmicSystem;
+	private ParticleSystem[] cosmicSystems = new ParticleSystem[10];
 	
 	private List<Entity> entities = new ArrayList<>();
 	private List<Light> lights = new ArrayList<>();
@@ -51,6 +51,9 @@ public class TestGame extends Game {
 	private Entity barrel;
 	private Entity crate;
 	private Entity boulder;
+	
+	private FontType font;
+	private GUIText text;
 	
 	public TestGame() {
 		super(new Loader(), new Clock());
@@ -85,8 +88,11 @@ public class TestGame extends Game {
 		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
 			fireSystem.generateParticles();
 		}
-		
-		cosmicSystem.generateParticles();
+			
+		for (ParticleSystem cosmicSystem : cosmicSystems) {
+			cosmicSystem.generateParticles();
+		}
+	
 		fireSystem2.generateParticles();
 		
 		barrel.incrementRotation(0, 0.5f, 0);
@@ -96,7 +102,13 @@ public class TestGame extends Game {
 		player.move(terrain.getTerrainAt(player.getPosition().x, player.getPosition().z));
 		camera.move();
 		
-		System.out.println(player.getPosition());
+		Vector3f playerPos = player.getPosition();
+		text.hide();
+		text = new GUIText(String.format("X:%.1f Y:%.1f Z:%.1f", playerPos.x, playerPos.y, playerPos.z), 2f, font, new Vector2f(0.0f, 0.0f), 1f, false);
+		text.setColor(0, 0, 0);
+		text.setOutlineColor(1, 1, 1);
+		text.setBorderWidth(0.5f);
+		text.show();
 	}
 
 	@Override
@@ -214,8 +226,8 @@ public class TestGame extends Game {
 	}
 	
 	private void initText() {
-		FontType font = loader.loadFont("candara");
-		GUIText text = new GUIText("Hello, World!", 5f, font, new Vector2f(0.0f, 0.0f), 1f, false);
+		font = loader.loadFont("candara");
+		text = new GUIText("Hello, World!", 5f, font, new Vector2f(0.0f, 0.0f), 1f, false);
 		text.setColor(0, 0, 0);
 		text.setOutlineColor(1, 1, 1);
 		text.setBorderWidth(0.5f);
@@ -241,12 +253,14 @@ public class TestGame extends Game {
 		fireSystem2.setCenter(new Vector3f(283, 0, -233));
 		
 		texture = new ParticleTexture(loader.loadTexture("particles/cosmic"), 4, false);
-		cosmicSystem = new ParticleSystem(texture, 100, 10, 0.1f, 2, 1.6f);
-		cosmicSystem.randomizeRotation();
-		cosmicSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
-		cosmicSystem.setLifeError(0.1f);
-		cosmicSystem.setSpeedError(0.25f);
-		cosmicSystem.setScaleError(0.5f);
-		cosmicSystem.setCenter(new Vector3f(251, -12, -273));
+		for (int i = 0; i < cosmicSystems.length; ++i) {
+			cosmicSystems[i] = new ParticleSystem(texture, 100, 10, 0.1f, 2, 1.6f);
+			cosmicSystems[i].randomizeRotation();
+			cosmicSystems[i].setDirection(new Vector3f(0, 1, 0), 0.1f);
+			cosmicSystems[i].setLifeError(0.1f);
+			cosmicSystems[i].setSpeedError(0.25f);
+			cosmicSystems[i].setScaleError(0.5f);
+			cosmicSystems[i].setCenter(new Vector3f(251 + 5 * i, terrain.getTerrainAt(251 + 5 * i, -273).getHeightAtPosition(251 + 5 * i, -273), -273));
+		}
 	}
 }

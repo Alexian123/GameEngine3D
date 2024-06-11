@@ -1,5 +1,7 @@
 package com.alexian123.particle;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 import org.lwjgl.util.vector.Matrix4f;
@@ -9,8 +11,11 @@ import org.lwjgl.util.vector.Vector4f;
 import com.alexian123.engine.GameManager;
 import com.alexian123.engine.ParticleManager;
 import com.alexian123.texture.ParticleTexture;
+import com.alexian123.util.Constants;
 
 public class ParticleSystem {
+	
+	private final Queue<Particle> deadParticles = new LinkedList<>();
 	
 	private final ParticleTexture texture;
 
@@ -29,14 +34,10 @@ public class ParticleSystem {
 	private Random random = new Random();
 	
 	private float averageDistanceToCamera;
+	
 
 	public ParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength, float scale) {
-		this.texture = texture;
-		this.pps = pps;
-		this.averageSpeed = speed;
-		this.gravityComplient = gravityComplient;
-		this.averageLifeLength = lifeLength;
-		this.averageScale = scale;
+		this(texture, pps, speed, gravityComplient, lifeLength, scale, new Vector3f());
 	}
 	
 	public ParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength, float scale, Vector3f center) {
@@ -47,6 +48,11 @@ public class ParticleSystem {
 		this.averageLifeLength = lifeLength;
 		this.averageScale = scale;
 		this.center = center;
+		
+		// create available particles
+		for (int i = 0; i < Constants.MAX_PARTICLES; ++i) {
+			new Particle(this);
+		}
 	}
 
 	/**
@@ -133,6 +139,15 @@ public class ParticleSystem {
 	public float getAverageDistanceToCamera() {
 		return averageDistanceToCamera;
 	}
+	
+	/**
+	 * Adds a particle to the queue of dead particles
+	 * 
+	 * @param particle
+	 */
+	public void addDeadParticle(Particle particle) {
+		deadParticles.add(particle);
+	}
 
 	private void emitParticle() {
 		Vector3f velocity = null;
@@ -145,7 +160,11 @@ public class ParticleSystem {
 		velocity.scale(generateValue(averageSpeed, speedError));
 		float scale = generateValue(averageScale, scaleError);
 		float lifeLength = generateValue(averageLifeLength, lifeError);
-		ParticleManager.addParticle(new Particle(new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale, this));
+		Particle p = deadParticles.poll();
+		if (p != null) {
+			p.revive(new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale);
+			ParticleManager.addParticle(p);
+		}
 	}
 
 	private float generateValue(float average, float errorMargin) {
