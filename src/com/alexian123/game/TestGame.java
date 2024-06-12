@@ -21,8 +21,8 @@ import com.alexian123.loader.OBJFileLoaderNM;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.particle.ParticleSystem;
+import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.TerrainGrid;
-import com.alexian123.terrain.Water;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.ParticleTexture;
@@ -31,12 +31,13 @@ import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.Clock;
 import com.alexian123.util.MousePicker;
 import com.alexian123.util.Scene;
+import com.alexian123.water.Water;
 
 public class TestGame extends Game {
 	
 	private Player player;
 	private Camera camera;
-	private TerrainGrid terrain;
+	private TerrainGrid terrainGrid;
 	private MousePicker mousePicker;
 	private Scene currentScene;
 	private ParticleSystem fireSystem, fireSystem2;
@@ -59,21 +60,20 @@ public class TestGame extends Game {
 		super(new Loader(), new Clock());
 		initTerrain();
 		initEntities();
-		initWater();
+		//initWater();
 		initLights();
 		initParticles();
 		initGUI();
 		initText();
-		currentScene = new Scene(entities, terrain, waters, lights);
+		currentScene = new Scene(entities, terrainGrid.asList(), waters, lights);
 		camera = new Camera(player);
-		mousePicker = new MousePicker(camera, terrain);
+		mousePicker = new MousePicker(camera, terrainGrid);
 		clock.setTimeSpeed(1000);
 	}
 	
 
 	@Override
 	public void update() {
-		
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			stop();
 		}
@@ -99,7 +99,7 @@ public class TestGame extends Game {
 		crate.incrementRotation(0, 0.5f, 0);
 		boulder.incrementRotation(0, 0.5f, 0);
 		
-		player.move(terrain.getTerrainAt(player.getPosition().x, player.getPosition().z));
+		player.move(terrainGrid.getTerrainAt(player.getPosition().x, player.getPosition().z));
 		camera.move();
 		
 		Vector3f playerPos = player.getPosition();
@@ -133,10 +133,11 @@ public class TestGame extends Game {
 		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("terrain/path"));
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("maps/blendMap"));
 		TerrainTexturePack texturePack = new TerrainTexturePack(bgTexture, rTexture, gTexture, bTexture);
-		terrain = new TerrainGrid(-1, -1, 2, loader, 
-				new TerrainTexturePack[] {texturePack, texturePack, texturePack, texturePack}, 
-				new TerrainTexture[] {blendMap, blendMap, blendMap, blendMap}, 
-				new String[] {"maps/heightmap", "maps/heightmap", "maps/heightmap", "maps/heightmap"});
+		terrainGrid = new TerrainGrid(2);
+		new Terrain(terrainGrid, loader, texturePack, blendMap);
+		new Terrain(terrainGrid, loader, texturePack, blendMap);
+		new Terrain(terrainGrid, loader, texturePack, blendMap);
+		new Terrain(terrainGrid, loader, texturePack, blendMap);
 	}
 	
 	private void initEntities() {
@@ -149,7 +150,7 @@ public class TestGame extends Game {
 		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("person"));
 		texture = new ModelTexture(loader.loadTexture("entities/playerTexture"));
 		texturedModel = new TexturedModel(rawModel, texture);
-		player = new Player(texturedModel, new Vector3f(286, 0, -268), new Vector3f(0, 100, 0), 0.6f);
+		player = new Player(texturedModel, new Vector3f(286, 0, 268), new Vector3f(0, 100, 0), 0.6f);
 		entities.add(player);
 		
 		// trees
@@ -159,7 +160,7 @@ public class TestGame extends Game {
 		for (int i = 0; i < 100; ++i) {
 			float x = random.nextFloat() * 1600 - 800; 
 			float z = random.nextFloat() * 1600 - 800;
-			lastTree = new Entity(texturedModel, new Vector3f(x, terrain.getTerrainAt(x, z).getHeightAtPosition(x, z) - 0.5f, z), new Vector3f(0, 0, 0), 10);
+			lastTree = new Entity(texturedModel, new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z) - 0.5f, z), new Vector3f(0, 0, 0), 10);
 			entities.add(lastTree);
 		}
 		
@@ -170,7 +171,7 @@ public class TestGame extends Game {
 		for (int i = 0; i < 500; ++i) {
 			float x = random.nextFloat() * 1600 - 800; 
 			float z = random.nextFloat() * 1600 - 800;
-			entities.add(new Entity(texturedModel, random.nextInt(4), new Vector3f(x, terrain.getTerrainAt(x, z).getHeightAtPosition(x, z), z), new Vector3f(0, 0, 0), 1));
+			entities.add(new Entity(texturedModel, random.nextInt(4), new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z), z), new Vector3f(0, 0, 0), 1));
 		}
 		
 		// lamps
@@ -185,28 +186,28 @@ public class TestGame extends Game {
 		rawModel = loader.loadToVao(OBJFileLoaderNM.loadOBJ("barrel"));	
 		texture = new ModelTexture(loader.loadTexture("entities/barrel"), loader.loadTexture("maps/barrelNormal"), 10f, 0.5f);;
 		texturedModel = new TexturedModel(rawModel, texture);
-		barrel = new Entity(texturedModel, new Vector3f(334, 10f, -290), new Vector3f(0, 0, 0), 1);
+		barrel = new Entity(texturedModel, new Vector3f(334, terrainGrid.getHeightAt(334, 290) + 10f, 290), new Vector3f(0, 0, 0), 1);
 		entities.add(barrel);
 		
 		// NM crate
 		rawModel = loader.loadToVao(OBJFileLoaderNM.loadOBJ("crate"));	
 		texture = new ModelTexture(loader.loadTexture("entities/crate"), loader.loadTexture("maps/crateNormal"), 10f, 0.5f);
 		texturedModel = new TexturedModel(rawModel, texture);
-		crate = new Entity(texturedModel, new Vector3f(315, 10f, -313), new Vector3f(0, 0, 0), 0.05f);
+		crate = new Entity(texturedModel, new Vector3f(315, terrainGrid.getHeightAt(315, 313) + 10f, 313), new Vector3f(0, 0, 0), 0.05f);
 		entities.add(crate);
 		
 		// NM boulder
 		rawModel = loader.loadToVao(OBJFileLoaderNM.loadOBJ("boulder"));	
 		texture = new ModelTexture(loader.loadTexture("entities/boulder"), loader.loadTexture("maps/boulderNormal"), 10f, 0.5f);
 		texturedModel = new TexturedModel(rawModel, texture);
-		boulder = new Entity(texturedModel, new Vector3f(350, 15f, -308), new Vector3f(0, 0, 0), 1);
+		boulder = new Entity(texturedModel, new Vector3f(350, terrainGrid.getHeightAt(350, 308) + 10f, 308), new Vector3f(0, 0, 0), 1);
 		entities.add(boulder);
 	}
 
 	
 	private void initWater() {
-		waters.add(new Water(165, -175, terrain.getTerrainAt(165, -175).getHeightAtPosition(165, -175) - 1f));
-		waters.add(new Water(304, -360, terrain.getTerrainAt(304, -360).getHeightAtPosition(304, -360) + 3f));
+		waters.add(new Water(165, -175, terrainGrid.getTerrainAt(165, -175).getHeightAtPosition(165, -175) - 1f));
+		waters.add(new Water(304, -360, terrainGrid.getTerrainAt(304, -360).getHeightAtPosition(304, -360) + 3f));
 	}
 	
 	private void initLights() {
@@ -260,7 +261,7 @@ public class TestGame extends Game {
 			cosmicSystems[i].setLifeError(0.1f);
 			cosmicSystems[i].setSpeedError(0.25f);
 			cosmicSystems[i].setScaleError(0.5f);
-			cosmicSystems[i].setCenter(new Vector3f(251 + 5 * i, terrain.getTerrainAt(251 + 5 * i, -273).getHeightAtPosition(251 + 5 * i, -273), -273));
+			cosmicSystems[i].setCenter(new Vector3f(251 + 5 * i, terrainGrid.getTerrainAt(251 + 5 * i, -273).getHeightAtPosition(251 + 5 * i, -273), -273));
 		}
 	}
 }

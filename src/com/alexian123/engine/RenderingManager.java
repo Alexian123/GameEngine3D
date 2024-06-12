@@ -12,12 +12,12 @@ import com.alexian123.rendering.GUIRenderer;
 import com.alexian123.rendering.SkyBoxRenderer;
 import com.alexian123.rendering.TerrainRenderer;
 import com.alexian123.rendering.WaterRenderer;
-import com.alexian123.terrain.Water;
-import com.alexian123.terrain.WaterFrameBuffers;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.util.Clock;
 import com.alexian123.util.Constants;
 import com.alexian123.util.Scene;
+import com.alexian123.water.Water;
+import com.alexian123.water.WaterFrameBuffers;
 
 public class RenderingManager {
 	
@@ -91,7 +91,7 @@ public class RenderingManager {
 	private static void renderFrame(Scene scene, Camera camera, Vector4f clipPlane) {
 		prepare();
 		EntityManager.renderEntities(scene.getEntities(), scene.getLights(), camera, clipPlane);
-		terrainRenderer.render(scene.getTerrainGrid().getTerrains(), scene.getLights(), camera, clipPlane);
+		terrainRenderer.render(scene.getTerrains(), scene.getLights(), camera, clipPlane);
 		skyBoxRenderer.render(camera);
 	}
 	

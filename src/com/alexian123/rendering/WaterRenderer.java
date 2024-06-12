@@ -15,10 +15,10 @@ import com.alexian123.entity.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.shader.WaterShader;
-import com.alexian123.terrain.Water;
-import com.alexian123.terrain.WaterFrameBuffers;
 import com.alexian123.util.Constants;
 import com.alexian123.util.Maths;
+import com.alexian123.water.Water;
+import com.alexian123.water.WaterFrameBuffers;
 
 public class WaterRenderer {
 	

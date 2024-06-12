@@ -1,4 +1,4 @@
-package com.alexian123.terrain;
+package com.alexian123.water;
 
 import java.util.ArrayList;
 import java.util.List;

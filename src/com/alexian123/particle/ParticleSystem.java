@@ -1,6 +1,6 @@
 package com.alexian123.particle;
 
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.Random;
 
@@ -15,7 +15,7 @@ import com.alexian123.util.Constants;
 
 public class ParticleSystem {
 	
-	private final Queue<Particle> deadParticles = new LinkedList<>();
+	private final Queue<Particle> deadParticles = new ArrayDeque<>();
 	
 	private final ParticleTexture texture;
 

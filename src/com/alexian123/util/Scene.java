@@ -4,19 +4,19 @@ import java.util.List;
 
 import com.alexian123.entity.Entity;
 import com.alexian123.entity.Light;
-import com.alexian123.terrain.TerrainGrid;
-import com.alexian123.terrain.Water;
+import com.alexian123.terrain.Terrain;
+import com.alexian123.water.Water;
 
 public class Scene {
 
 	private List<Entity> entities;
-	private TerrainGrid terrainGrid;
+	private List<Terrain> terrains;
 	private List<Water> waters;
 	private List<Light> lights;
 	
-	public Scene(List<Entity> entities, TerrainGrid terrainGrid, List<Water> waters, List<Light> lights) {
+	public Scene(List<Entity> entities, List<Terrain> terrains, List<Water> waters, List<Light> lights) {
 		this.entities = entities;
-		this.terrainGrid = terrainGrid;
+		this.terrains = terrains;
 		this.waters = waters;
 		this.lights = lights;
 	}
@@ -29,12 +29,12 @@ public class Scene {
 		this.entities = entities;
 	}
 
-	public TerrainGrid getTerrainGrid() {
-		return terrainGrid;
+	public List<Terrain> getTerrains() {
+		return terrains;
 	}
 
-	public void setTerrainGrid(TerrainGrid terrainGrid) {
-		this.terrainGrid = terrainGrid;
+	public void setTerrains(List<Terrain> terrains) {
+		this.terrains = terrains;
 	}
 	
 	public List<Water> getWaters() {
