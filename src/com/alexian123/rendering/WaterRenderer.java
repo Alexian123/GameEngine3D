@@ -11,7 +11,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.engine.GameManager;
 import com.alexian123.entity.Camera;
-import com.alexian123.entity.Light;
+import com.alexian123.lighting.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.shader.WaterShader;

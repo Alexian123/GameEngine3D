@@ -11,10 +11,11 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
-import com.alexian123.entity.Light;
+import com.alexian123.entity.LightEntity;
 import com.alexian123.entity.Player;
 import com.alexian123.font.FontType;
 import com.alexian123.font.GUIText;
+import com.alexian123.lighting.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.loader.OBJFileLoader;
 import com.alexian123.loader.OBJFileLoaderNM;
@@ -52,6 +53,8 @@ public class TestGame extends Game {
 	private Entity barrel;
 	private Entity crate;
 	private Entity boulder;
+	
+	private LightEntity[] lamps;
 	
 	private FontType font;
 	private GUIText text;
@@ -178,9 +181,13 @@ public class TestGame extends Game {
 		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("lamp"));
 		texture = new ModelTexture(loader.loadTexture("entities/lamp"), false, true);
 		texturedModel = new TexturedModel(rawModel, texture);
-		entities.add(new Entity(texturedModel, new Vector3f(185, -4.7f, -293), new Vector3f(0, 0, 0), 1));
-		entities.add(new Entity(texturedModel, new Vector3f(370, 4.2f, -300), new Vector3f(0, 0, 0), 1));
-		entities.add(new Entity(texturedModel, new Vector3f(293, -6.8f, -305), new Vector3f(0, 0, 0), 1));
+		lamps = new LightEntity[3];
+		lamps[0] = new LightEntity(texturedModel, new Vector3f(185, terrainGrid.getHeightAt(185, 293), 293), new Vector3f(0, 0, 0), 1, 0.9f, new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
+		lamps[1] = new LightEntity(texturedModel, new Vector3f(370, terrainGrid.getHeightAt(370, 300), 300), new Vector3f(0, 0, 0), 1, 0.9f, new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
+		lamps[2] = new LightEntity(texturedModel, new Vector3f(293, terrainGrid.getHeightAt(293, 305), 305), new Vector3f(0, 0, 0), 1, 0.9f, new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
+		entities.add(lamps[0]);
+		entities.add(lamps[1]);
+		entities.add(lamps[2]);
 		
 		// NM barrel
 		rawModel = loader.loadToVao(OBJFileLoaderNM.loadOBJ("barrel"));	
@@ -206,19 +213,16 @@ public class TestGame extends Game {
 
 	
 	private void initWater() {
-		waters.add(new Water(165, -175, terrainGrid.getTerrainAt(165, -175).getHeightAtPosition(165, -175) - 1f));
-		waters.add(new Water(304, -360, terrainGrid.getTerrainAt(304, -360).getHeightAtPosition(304, -360) + 3f));
+		waters.add(new Water(165, 175, terrainGrid.getTerrainAt(165, 175).getHeightAtPosition(165, 175)));
+		waters.add(new Water(304, 360, terrainGrid.getTerrainAt(304, 360).getHeightAtPosition(304, 360)));
 	}
 	
 	private void initLights() {
 		Light sun = new Light(new Vector3f(0, 1000, -1000), new Vector3f(0.5f, 0.5f, 0.5f));
-		Light light1 = new Light(new Vector3f(185, 10, -293), new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
-		Light light2 = new Light(new Vector3f(370, 17, -300), new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
-		Light light3 = new Light(new Vector3f(293, 7, -305), new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
 		lights.add(sun);
-		lights.add(light1);
-		lights.add(light2);
-		lights.add(light3);
+		lights.add(lamps[0].getLight());
+		lights.add(lamps[1].getLight());
+		lights.add(lamps[2].getLight());
 	}
 	
 	private void initGUI() {

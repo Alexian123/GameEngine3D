@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.alexian123.entity.Light;
+import com.alexian123.lighting.Light;
 import com.alexian123.util.Constants;
 
 public class EntityShaderNM extends EntityShader {

@@ -36,4 +36,14 @@ public class ModelData {
 	public float getFurthestPoint() {
 		return furthestPoint;
 	}
+	
+	public float calculateHeight() {
+		float min = Float.MAX_VALUE;
+		float max = Float.MIN_VALUE;	
+		for (int i = 1; i < vertices.length; i += 3) {
+			min = Math.min(min, vertices[i]);
+			max = Math.max(max, vertices[i]);
+		}
+		return max - min;
+	}
 }

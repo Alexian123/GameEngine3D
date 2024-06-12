@@ -149,7 +149,7 @@ public class Terrain {
 				indices[pointer++] = bottomRight;
 			}
 		}
-		return loader.loadToVao(vertices, textureCoords, normals, indices);
+		return loader.loadToVao(vertices, textureCoords, normals, indices, 0);
 	}
 	
 	private Vector3f getNormal(int x, int z, HeightGenerator generator) {

@@ -1,4 +1,4 @@
-package com.alexian123.entity;
+package com.alexian123.lighting;
 
 import org.lwjgl.util.vector.Vector3f;
 

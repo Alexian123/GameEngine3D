@@ -2,12 +2,20 @@ package com.alexian123.model;
 
 public class RawModel {
 	
-	private int vaoID;
-	private int vertexCount;
+	private final int vaoID;
+	private final int vertexCount;
+	private final float height;
 	
 	public RawModel(int vaoID, int vertexCount) {;
 		this.vaoID = vaoID;
 		this.vertexCount = vertexCount;
+		this.height = 0;
+	}
+	
+	public RawModel(int vaoID, int vertexCount, float height) {;
+		this.vaoID = vaoID;
+		this.vertexCount = vertexCount;
+		this.height = height;
 	}
 
 	public int getVaoID() {
@@ -18,4 +26,7 @@ public class RawModel {
 		return vertexCount;
 	}
 
+	public float getHeight() {
+		return height;
+	}
 }

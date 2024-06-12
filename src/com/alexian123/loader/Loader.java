@@ -65,17 +65,17 @@ public class Loader {
 		return vbo;
 	}
 	
-	public RawModel loadToVao(float[] vertices, float[] textureCoords, float[] normals, int[] indices) {
+	public RawModel loadToVao(float[] vertices, float[] textureCoords, float[] normals, int[] indices, float modelHeight) {
 		int vaoID = createVao();
 		bindIndicesBuffer(indices, vaos.get(vaoID));
 		storeDataInAttributeList(0, 3, vertices, vaos.get(vaoID));
 		storeDataInAttributeList(1, 2, textureCoords, vaos.get(vaoID));
 		storeDataInAttributeList(2, 3, normals, vaos.get(vaoID));
 		unbindVAO();
-		return new RawModel(vaoID, indices.length);
+		return new RawModel(vaoID, indices.length, modelHeight);
 	}
 	
-	public RawModel loadToVao(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
+	public RawModel loadToVao(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices, float modelHeight) {
 		int vaoID = createVao();
 		bindIndicesBuffer(indices, vaos.get(vaoID));
 		storeDataInAttributeList(0, 3, vertices, vaos.get(vaoID));
@@ -83,7 +83,7 @@ public class Loader {
 		storeDataInAttributeList(2, 3, normals, vaos.get(vaoID));
 		storeDataInAttributeList(3, 3, tangents, vaos.get(vaoID));
 		unbindVAO();
-		return new RawModel(vaoID, indices.length);
+		return new RawModel(vaoID, indices.length, modelHeight);
 	}
 	
 	public int loadToVao(float[] vertices, float[] textureCoords) {
@@ -102,11 +102,11 @@ public class Loader {
 	}
 	
 	public RawModel loadToVao(ModelData data) {
-		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
+		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices(), data.calculateHeight());
 	}
 	
 	public RawModel loadToVao(ModelDataNM data) {
-		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getTangents(), data.getIndices());
+		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getTangents(), data.getIndices(), data.calculateHeight());
 	}
 	
 	public int loadTexture(String fileName) {

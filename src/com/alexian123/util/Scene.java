@@ -3,7 +3,7 @@ package com.alexian123.util;
 import java.util.List;
 
 import com.alexian123.entity.Entity;
-import com.alexian123.entity.Light;
+import com.alexian123.lighting.Light;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.water.Water;
 

@@ -8,7 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.alexian123.util.Constants;
 import com.alexian123.util.Maths;
 import com.alexian123.entity.Camera;
-import com.alexian123.entity.Light;
+import com.alexian123.lighting.Light;
 
 public class WaterShader extends ShaderProgram {
 

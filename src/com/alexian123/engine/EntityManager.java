@@ -9,7 +9,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
-import com.alexian123.entity.Light;
+import com.alexian123.lighting.Light;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.rendering.EntityRenderer;
 import com.alexian123.shader.EntityShaderNM;
