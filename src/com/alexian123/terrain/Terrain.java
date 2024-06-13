@@ -11,13 +11,10 @@ import com.alexian123.texture.TerrainTexture;
 
 public class Terrain {
 	
-	private static final int NUM_TEXTURES = 5;
 	private static final int VERTEX_COUNT = 256;
-	private static final int SEED = 1;
+	private static final int SEED = 42;
 	
 	protected static final float SIZE = 800.0f;
-	
-	private final TerrainTexture[] orderedTextures = new TerrainTexture[NUM_TEXTURES];
 	
 	private final float x;
 	private final float z;
@@ -35,7 +32,6 @@ public class Terrain {
 		this.z = gridZ * SIZE;
 		this.generator = new HeightGenerator(gridX, gridZ, VERTEX_COUNT, SEED);
 		this.model = generateTerrain(loader);
-		initTextures();
 	}
 	
 	public Terrain(TerrainGrid grid, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap) {
@@ -46,7 +42,6 @@ public class Terrain {
 		this.z = gridPos[1] * SIZE;
 		this.generator = new HeightGenerator(gridPos[0], gridPos[1], VERTEX_COUNT, SEED);
 		this.model = generateTerrain(loader);
-		initTextures();
 		grid.addTerrain(this);
 	}
 	
@@ -68,10 +63,6 @@ public class Terrain {
 	
 	public TerrainTexture getBlendMap() {
 		return blendMap;
-	}
-	
-	public TerrainTexture[] getOrderedTextures() {
-		return orderedTextures;
 	}
 
 	public float getHeightAtPosition(float worldX, float worldZ) {
@@ -98,15 +89,6 @@ public class Terrain {
 										new Vector2f(xCoord, zCoord));
 		}
 		return height;
-	}
-	
-	private void initTextures() {
-		// add textures in correct order (BG, R, G, B, blend)
-		orderedTextures[0] = texturePack.getBackgroundTexture();
-		orderedTextures[1] = texturePack.getRedTexture();
-		orderedTextures[2] = texturePack.getGreenTexture();
-		orderedTextures[3] = texturePack.getBlueTexture();
-		orderedTextures[4] = blendMap;
 	}
 	
 	private RawModel generateTerrain(Loader loader) {

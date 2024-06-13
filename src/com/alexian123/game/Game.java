@@ -13,6 +13,7 @@ public abstract class Game {
 	
 	protected Loader loader;
 	protected Clock clock;
+	protected Camera camera;
 	
 	private boolean running = true;
 	
@@ -20,9 +21,10 @@ public abstract class Game {
 	 * Creates a new game
 	 * 
 	 */
-	protected Game(Loader loader, Clock clock) {
+	protected Game(Loader loader, Clock clock, Camera camera) {
 		this.loader = loader;
 		this.clock = clock;
+		this.camera = camera;
 		GameManager.init(this);
 	}
 	
@@ -38,6 +40,13 @@ public abstract class Game {
 	 */
 	public Clock getClock() {
 		return clock;
+	}
+	
+	/**
+	 * 	@return The camera
+	 */
+	public Camera getCamera() {
+		return camera;
 	}
 	
 	/**
@@ -63,11 +72,6 @@ public abstract class Game {
 	 * 	@return The current scene to be rendered
 	 */
 	public abstract Scene getCurrentScene();
-	
-	/**
-	 * 	@return The camera
-	 */
-	public abstract Camera getCamera();
 	
 	/**
 	 * 	@return A list of GUI's to be rendered on the screen

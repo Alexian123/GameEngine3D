@@ -36,8 +36,6 @@ public class EntityManager {
 	public static void cleanup() {
 		renderer.cleanup();
 		rendererNM.cleanup();
-		entities.clear();
-		entitiesNM.clear();
 	}
 
 	private static void processEntity(Entity entity) {

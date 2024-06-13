@@ -47,6 +47,11 @@ public enum Uniform {
 	BORDER_EDGE("borderEdge"),
 	LOWER_LIMIT("lowerLimit"),
 	UPPER_LIMIT("upperLimit"),
+	MVP_MATRIX("mvpMatrix"),
+	TO_SHADOW_MAP_SPACE("toShadowMapSpace"),
+	SHADOW_MAP("shadowMap"),
+	SHADOW_DISTANCE("shadowDistance"),
+	SHADOW_TRANSITION("shadowTransition")
 	;
 
 	private final String name;

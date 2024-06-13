@@ -9,6 +9,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.engine.ShadowManager;
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
 import com.alexian123.entity.LightEntity;
@@ -37,7 +38,6 @@ import com.alexian123.water.Water;
 public class TestGame extends Game {
 	
 	private Player player;
-	private Camera camera;
 	private TerrainGrid terrainGrid;
 	private MousePicker mousePicker;
 	private Scene currentScene;
@@ -60,7 +60,7 @@ public class TestGame extends Game {
 	private GUIText text;
 	
 	public TestGame() {
-		super(new Loader(), new Clock());
+		super(new Loader(), new Clock(), new Camera());
 		initTerrain();
 		initEntities();
 		//initWater();
@@ -69,7 +69,6 @@ public class TestGame extends Game {
 		initGUI();
 		initText();
 		currentScene = new Scene(entities, terrainGrid.asList(), waters, lights);
-		camera = new Camera(player);
 		mousePicker = new MousePicker(camera, terrainGrid);
 		clock.setTimeSpeed(1000);
 	}
@@ -120,11 +119,6 @@ public class TestGame extends Game {
 	}
 
 	@Override
-	public Camera getCamera() {
-		return camera;
-	}
-
-	@Override
 	public List<GUITexture> getGUI() {
 		return guis;
 	}
@@ -154,13 +148,14 @@ public class TestGame extends Game {
 		texture = new ModelTexture(loader.loadTexture("entities/playerTexture"));
 		texturedModel = new TexturedModel(rawModel, texture);
 		player = new Player(texturedModel, new Vector3f(286, 0, 268), new Vector3f(0, 100, 0), 0.6f);
+		camera.setPlayer(player);
 		entities.add(player);
 		
 		// trees
 		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("tree"));
 		texture = new ModelTexture(loader.loadTexture("entities/tree"), 1, 0);
 		texturedModel = new TexturedModel(rawModel, texture);
-		for (int i = 0; i < 100; ++i) {
+		for (int i = 0; i < 1000; ++i) {
 			float x = random.nextFloat() * 1600 - 800; 
 			float z = random.nextFloat() * 1600 - 800;
 			lastTree = new Entity(texturedModel, new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z) - 0.5f, z), new Vector3f(0, 0, 0), 10);
@@ -218,7 +213,7 @@ public class TestGame extends Game {
 	}
 	
 	private void initLights() {
-		Light sun = new Light(new Vector3f(0, 1000, -1000), new Vector3f(0.5f, 0.5f, 0.5f));
+		Light sun = new Light(new Vector3f(1_000_000, 1_500_000, -1_000_000), new Vector3f(1.3f, 1.3f, 1.3f));
 		lights.add(sun);
 		lights.add(lamps[0].getLight());
 		lights.add(lamps[1].getLight());

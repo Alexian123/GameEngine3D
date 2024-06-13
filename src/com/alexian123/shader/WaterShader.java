@@ -12,8 +12,8 @@ import com.alexian123.lighting.Light;
 
 public class WaterShader extends ShaderProgram {
 
-	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/water_shader.vert";
-	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/water_shader.frag";
+	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/vertex/water_shader.vert";
+	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/fragment/water_shader.frag";
 
 	public WaterShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

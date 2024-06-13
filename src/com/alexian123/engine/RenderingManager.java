@@ -28,12 +28,13 @@ public class RenderingManager {
 	
 	private static boolean isInitialized = false;
 	
-	public static void init(Loader loader, Clock clock) {
+	public static void init(Loader loader, Clock clock, Camera camera) {
 		if (!isInitialized) {
 			enableCulling();
 			ParticleManager.init(loader);
 			TextManager.init(loader);
-			terrainRenderer = new TerrainRenderer();
+			ShadowManager.init(camera);
+			terrainRenderer = new TerrainRenderer(ShadowManager.getShadowMap());
 			waterRenderer = new WaterRenderer(loader);
 			skyBoxRenderer = new SkyBoxRenderer(loader, clock);
 			guiRenderer = new GUIRenderer(loader);
@@ -42,6 +43,7 @@ public class RenderingManager {
 	}
 	
 	public static void renderScene(Scene scene, Camera camera, List<GUITexture> guis) {
+		ShadowManager.render(scene.getEntities(), scene.getLights().get(0));
 		renderWaterFX(scene, camera);
 		renderFrame(scene, camera, new Vector4f(0, -1, 0, 1000));
 		waterRenderer.render(scene.getWaters(), camera, scene.getLights());
@@ -55,6 +57,7 @@ public class RenderingManager {
 		ParticleManager.cleanup();
 		TextManager.cleanup();
 		Water.cleanup();
+		ShadowManager.cleanup();
 		terrainRenderer.cleanup();
 		waterRenderer.cleanup();
 		skyBoxRenderer.cleanup();
@@ -91,7 +94,7 @@ public class RenderingManager {
 	private static void renderFrame(Scene scene, Camera camera, Vector4f clipPlane) {
 		prepare();
 		EntityManager.renderEntities(scene.getEntities(), scene.getLights(), camera, clipPlane);
-		terrainRenderer.render(scene.getTerrains(), scene.getLights(), camera, clipPlane);
+		terrainRenderer.render(scene.getTerrains(), scene.getLights(), camera, clipPlane, ShadowManager.getToShadowMapSpaceMatrix());
 		skyBoxRenderer.render(camera);
 	}
 	

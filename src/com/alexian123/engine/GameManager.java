@@ -18,7 +18,7 @@ public class GameManager {
 		if (!isInitialized) {
 			GameManager.game = game;
 			DisplayManager.init(Constants.DEFAULT_WINDOW_TITLE, Constants.DEFAULT_SCREEN_WIDTH, Constants.DEFAULT_SCREEN_HEIGHT);
-			RenderingManager.init(game.getLoader(), game.getClock());
+			RenderingManager.init(game.getLoader(), game.getClock(), game.getCamera());
 			lastFrameTime = getCurrentTime();
 			isInitialized = false;
 		}

@@ -25,5 +25,8 @@ public class Constants {
 	public static final float FOG_DENSITY = 0.0035f;
 	public static final float FOG_GRADIENT = 5.0f;
 	
+	public static final float SHADOW_DISTANCE = 150f;
+	public static final float SHADOW_TRANSITION = 10f;
+	
 	public static final float MILLISECONDS_PER_SECOND = 1000.0f;
 }

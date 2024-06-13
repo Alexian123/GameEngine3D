@@ -13,8 +13,8 @@ import com.alexian123.util.Maths;
 
 public class TerrainShader extends ShaderProgram {
 
-	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/terrain_shader.vert";
-	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/terrain_shader.frag";
+	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/vertex/terrain_shader.vert";
+	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/fragment/terrain_shader.frag";
 	
 	public TerrainShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -65,11 +65,21 @@ public class TerrainShader extends ShaderProgram {
 		loadInt(uniforms.get(Uniform.G_TEXTURE.getName()), textureNo++);
 		loadInt(uniforms.get(Uniform.B_TEXTURE.getName()), textureNo++);
 		loadInt(uniforms.get(Uniform.BLEND_MAP.getName()), textureNo++);
+		loadInt(uniforms.get(Uniform.SHADOW_MAP.getName()), textureNo++);
 		return textureNo;
 	}
 	
 	public void loadClipPlane(Vector4f clipPlane) {
 		loadVector(uniforms.get(Uniform.CLIP_PLANE.getName()), clipPlane);
+	}
+	
+	public void loadToShadowMapSpaceMatrix(Matrix4f matrix) {
+		loadMatrix(uniforms.get(Uniform.TO_SHADOW_MAP_SPACE.getName()), matrix);
+	}
+	
+	public void loadShadowParameters(float distance, float transition) {
+		loadFloat(uniforms.get(Uniform.SHADOW_DISTANCE.getName()), distance);
+		loadFloat(uniforms.get(Uniform.SHADOW_TRANSITION.getName()), transition);
 	}
 	
 	@Override
@@ -97,6 +107,10 @@ public class TerrainShader extends ShaderProgram {
 		uniforms.put(Uniform.B_TEXTURE.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.BLEND_MAP.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.CLIP_PLANE.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.TO_SHADOW_MAP_SPACE.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.SHADOW_MAP.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.SHADOW_DISTANCE.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.SHADOW_TRANSITION.getName(), NEW_UNIFORM);
 		
 		uniformArrays.put(Uniform.LIGHT_POSITION.getName(), createNewUniformArray(Constants.MAX_LIGHTS));
 		uniformArrays.put(Uniform.LIGHT_COLOR.getName(), createNewUniformArray(Constants.MAX_LIGHTS));

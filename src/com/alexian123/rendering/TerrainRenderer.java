@@ -15,26 +15,32 @@ import com.alexian123.lighting.Light;
 import com.alexian123.model.RawModel;
 import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
-import com.alexian123.texture.TerrainTexture;
+import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.Constants;
 import com.alexian123.util.Maths;
 
 public class TerrainRenderer {
 	
+	private static final int MAX_NUM_TEXTURES = 6;
+	
 	private TerrainShader shader = new TerrainShader();
 	
 	private final int numTextures;
+	protected final int[] textures = new int[MAX_NUM_TEXTURES];
 	
-	public TerrainRenderer() {
+	public TerrainRenderer(int shadowMapID) {
 		shader.start();
 		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
+		shader.loadShadowParameters(Constants.SHADOW_DISTANCE, Constants.SHADOW_TRANSITION);
 		this.numTextures = shader.connectTextureUnits();
+		textures[MAX_NUM_TEXTURES - 1] = shadowMapID;
 		shader.stop();
 	}
 	
-	public void render(List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane) {
+	public void render(List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane, Matrix4f toShadowMapSpace) {
 		shader.start();
 		shader.loadClipPlane(clipPlane);
+		shader.loadToShadowMapSpaceMatrix(toShadowMapSpace);
 		shader.loadFog(Constants.FOG_DENSITY, Constants.FOG_GRADIENT, Constants.FOG_COLOR);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
@@ -66,10 +72,15 @@ public class TerrainRenderer {
 	}
 	
 	private void bindTextures(Terrain terrain) {
-		TerrainTexture[] textures = terrain.getOrderedTextures();
+		TerrainTexturePack pack = terrain.getTexturePack();
+		textures[0] = pack.getBackgroundTexture().getID();
+		textures[1] = pack.getRedTexture().getID();
+		textures[2] = pack.getGreenTexture().getID();
+		textures[3] = pack.getBlueTexture().getID();
+		textures[4] = terrain.getBlendMap().getID();
 		for (int i = 0; i < numTextures; ++i) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0 + i);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textures[i].getID());
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textures[i]);
 		}
 	}
 	
