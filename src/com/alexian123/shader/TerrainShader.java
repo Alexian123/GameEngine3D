@@ -13,8 +13,8 @@ import com.alexian123.util.Maths;
 
 public class TerrainShader extends ShaderProgram {
 
-	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/vertex/terrain_shader.vert";
-	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/fragment/terrain_shader.frag";
+	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/vertex/terrain.vert";
+	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/fragment/terrain.frag";
 	
 	public TerrainShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -82,6 +82,14 @@ public class TerrainShader extends ShaderProgram {
 		loadFloat(uniforms.get(Uniform.SHADOW_TRANSITION.getName()), transition);
 	}
 	
+	public void loadShadowMapSize(int size) {
+		loadInt(uniforms.get(Uniform.SHADOW_MAP_SIZE.getName()), size);
+	}
+	
+	public void loadPcfCount(int pcfCount) {
+		loadInt(uniforms.get(Uniform.PCF_COUNT.getName()), pcfCount);
+	}
+	
 	@Override
 	protected int setAttributes() {
 		int attribNo = 0;
@@ -111,6 +119,8 @@ public class TerrainShader extends ShaderProgram {
 		uniforms.put(Uniform.SHADOW_MAP.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.SHADOW_DISTANCE.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.SHADOW_TRANSITION.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.SHADOW_MAP_SIZE.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.PCF_COUNT.getName(), NEW_UNIFORM);
 		
 		uniformArrays.put(Uniform.LIGHT_POSITION.getName(), createNewUniformArray(Constants.MAX_LIGHTS));
 		uniformArrays.put(Uniform.LIGHT_COLOR.getName(), createNewUniformArray(Constants.MAX_LIGHTS));

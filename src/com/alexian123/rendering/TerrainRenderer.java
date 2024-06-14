@@ -32,6 +32,8 @@ public class TerrainRenderer {
 		shader.start();
 		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
 		shader.loadShadowParameters(Constants.SHADOW_DISTANCE, Constants.SHADOW_TRANSITION);
+		shader.loadShadowMapSize(Constants.SHADOW_MAP_SIZE);
+		shader.loadPcfCount(Constants.PCF_COUNT);
 		this.numTextures = shader.connectTextureUnits();
 		textures[MAX_NUM_TEXTURES - 1] = shadowMapID;
 		shader.stop();

@@ -17,6 +17,7 @@ import com.alexian123.model.TexturedModel;
 import com.alexian123.rendering.ShadowRenderer;
 import com.alexian123.shadow.ShadowBox;
 import com.alexian123.shadow.ShadowFrameBuffer;
+import com.alexian123.util.Constants;
 
 /**
  * This class is in charge of using all of the classes in the shadows package to
@@ -28,8 +29,6 @@ import com.alexian123.shadow.ShadowFrameBuffer;
  *
  */
 public class ShadowManager {
-
-	private static final int SHADOW_MAP_SIZE = 4096;
 	
 	private static Matrix4f projectionMatrix = new Matrix4f();
 	private static Matrix4f lightViewMatrix = new Matrix4f();
@@ -58,7 +57,7 @@ public class ShadowManager {
 	public static void init(Camera camera) {
 		if (!isInitialized) {
 			shadowBox = new ShadowBox(lightViewMatrix, camera);
-			fbo = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+			fbo = new ShadowFrameBuffer(Constants.SHADOW_MAP_SIZE, Constants.SHADOW_MAP_SIZE);
 			renderer = new ShadowRenderer(projectionViewMatrix);
 			isInitialized = true;
 		}

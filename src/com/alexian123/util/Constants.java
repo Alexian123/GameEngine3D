@@ -25,8 +25,11 @@ public class Constants {
 	public static final float FOG_DENSITY = 0.0035f;
 	public static final float FOG_GRADIENT = 5.0f;
 	
-	public static final float SHADOW_DISTANCE = 150f;
+	public static final int SHADOW_MAP_SIZE = 4096 * 4;
+	public static final int PCF_COUNT = 4;
+	public static final float SHADOW_DISTANCE = 200f;
 	public static final float SHADOW_TRANSITION = 10f;
+	public static final float SHADOWBOX_OFFSET = 20f;
 	
 	public static final float MILLISECONDS_PER_SECOND = 1000.0f;
 }

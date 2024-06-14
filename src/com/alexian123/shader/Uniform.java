@@ -51,7 +51,9 @@ public enum Uniform {
 	TO_SHADOW_MAP_SPACE("toShadowMapSpace"),
 	SHADOW_MAP("shadowMap"),
 	SHADOW_DISTANCE("shadowDistance"),
-	SHADOW_TRANSITION("shadowTransition")
+	SHADOW_TRANSITION("shadowTransition"),
+	SHADOW_MAP_SIZE("shadowMapSize"),
+	PCF_COUNT("pcfCount")
 	;
 
 	private final String name;
