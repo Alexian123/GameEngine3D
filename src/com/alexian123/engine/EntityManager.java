@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.entity.Camera;
@@ -20,15 +21,25 @@ public class EntityManager {
 	private static Map<TexturedModel, List<Entity>> entities = new HashMap<>();
 	private static Map<TexturedModel, List<Entity>> entitiesNM = new HashMap<>();
 	
-	private static EntityRenderer renderer = new EntityRenderer();
-	private static EntityRenderer rendererNM = new EntityRenderer(new EntityShaderNM());
+	private static EntityRenderer renderer;
+	private static EntityRenderer rendererNM;
 	
-	public static void renderEntities(List<Entity> allEntities, List<Light> lights, Camera camera, Vector4f clipPlane) {
+	private static boolean isInitialized = false;
+	
+	public static void init(int shadowMapID) {
+		if (!isInitialized) {
+			renderer = new EntityRenderer(shadowMapID);
+			rendererNM = new EntityRenderer(new EntityShaderNM(), shadowMapID);
+			isInitialized = true;
+		}
+	}
+	
+	public static void renderEntities(List<Entity> allEntities, List<Light> lights, Camera camera, Vector4f clipPlane, Matrix4f toShadowMapSpace) {
 		for (Entity entity : allEntities) {
 			processEntity(entity);
 		}
-		renderer.render(entities, lights, camera, clipPlane);
-		rendererNM.render(entitiesNM, lights, camera, clipPlane);
+		renderer.render(entities, lights, camera, clipPlane, toShadowMapSpace);
+		rendererNM.render(entitiesNM, lights, camera, clipPlane, toShadowMapSpace);
 		entities.clear();
 		entitiesNM.clear();
 	}

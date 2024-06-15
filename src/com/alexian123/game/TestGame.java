@@ -63,7 +63,7 @@ public class TestGame extends Game {
 		super(new Loader(), new Clock(), new Camera());
 		initTerrain();
 		initEntities();
-		//initWater();
+		initWater();
 		initLights();
 		initParticles();
 		initGUI();
@@ -147,7 +147,7 @@ public class TestGame extends Game {
 		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("person"));
 		texture = new ModelTexture(loader.loadTexture("entities/playerTexture"));
 		texturedModel = new TexturedModel(rawModel, texture);
-		player = new Player(texturedModel, new Vector3f(286, 0, 268), new Vector3f(0, 100, 0), 0.6f);
+		player = new Player(texturedModel, new Vector3f(376, 0, 423), new Vector3f(0, 0, 0), 0.6f);
 		camera.setPlayer(player);
 		entities.add(player);
 		
@@ -177,7 +177,7 @@ public class TestGame extends Game {
 		texture = new ModelTexture(loader.loadTexture("entities/lamp"), false, true);
 		texturedModel = new TexturedModel(rawModel, texture);
 		lamps = new LightEntity[3];
-		lamps[0] = new LightEntity(texturedModel, new Vector3f(185, terrainGrid.getHeightAt(185, 293), 293), new Vector3f(0, 0, 0), 1, 0.9f, new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
+		lamps[0] = new LightEntity(texturedModel, new Vector3f(329, terrainGrid.getHeightAt(329, 476), 476), new Vector3f(0, 0, 0), 1, 0.9f, new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
 		lamps[1] = new LightEntity(texturedModel, new Vector3f(370, terrainGrid.getHeightAt(370, 300), 300), new Vector3f(0, 0, 0), 1, 0.9f, new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
 		lamps[2] = new LightEntity(texturedModel, new Vector3f(293, terrainGrid.getHeightAt(293, 305), 305), new Vector3f(0, 0, 0), 1, 0.9f, new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
 		entities.add(lamps[0]);
@@ -208,8 +208,7 @@ public class TestGame extends Game {
 
 	
 	private void initWater() {
-		waters.add(new Water(165, 175, terrainGrid.getTerrainAt(165, 175).getHeightAtPosition(165, 175)));
-		waters.add(new Water(304, 360, terrainGrid.getTerrainAt(304, 360).getHeightAtPosition(304, 360)));
+		waters.add(new Water(378, 475, -12));
 	}
 	
 	private void initLights() {

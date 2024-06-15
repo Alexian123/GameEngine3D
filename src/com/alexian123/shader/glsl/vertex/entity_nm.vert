@@ -10,11 +10,13 @@ in vec3 tangent;
 out vec2 passTextureCoord;
 out vec3 toLightVector[MAX_LIGHTS];
 out vec3 toCameraVector;
+out vec4 shadowMapCoord;
 out float visibility;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
+uniform mat4 toShadowMapSpace;
 uniform vec3 lightPosition[MAX_LIGHTS];
 uniform float useFakeLighting;
 uniform float atlasDimension;
@@ -22,10 +24,15 @@ uniform vec2 atlasOffset;
 uniform vec4 clipPlane;
 uniform float fogDensity;
 uniform float fogGradient;
+uniform float shadowDistance;
+uniform float shadowTransition;
 
 void main(void) {
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
+	shadowMapCoord = toShadowMapSpace * worldPosition;
+
 	gl_ClipDistance[0] = dot(worldPosition, clipPlane);
+
 	mat4 modelViewMatrix = viewMatrix * transformationMatrix;
 	vec4 positionRelativeToCamera = modelViewMatrix * vec4(position, 1.0);
 	gl_Position = projectionMatrix * positionRelativeToCamera;
@@ -57,4 +64,8 @@ void main(void) {
 	float distance = length(positionRelativeToCamera.xyz);
 	visibility = exp(-pow((distance * fogDensity), fogGradient));
 	visibility = clamp(visibility, 0.0, 1.0);
+
+	distance -= (shadowDistance - shadowTransition);
+	distance /= shadowTransition;
+	shadowMapCoord.w = clamp(1.0 - distance, 0.0, 1.0);
 }

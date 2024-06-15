@@ -29,7 +29,7 @@ public class LightEntity extends Entity {
 	 */
 	public LightEntity(TexturedModel model, Vector3f position, Vector3f rotation, float scale, 
 			float lightYFactor, Vector3f color, Vector3f attenuation) {
-		super(model, position, rotation, scale);
+		super(model, position, rotation, scale, true);
 		lightYFactor = Math.min(lightYFactor, 1.0f);
 		lightYFactor = Math.max(lightYFactor, 0.0f);
 		Vector3f lightPoition = new Vector3f(position);

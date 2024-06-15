@@ -34,6 +34,7 @@ public class RenderingManager {
 			ParticleManager.init(loader);
 			TextManager.init(loader);
 			ShadowManager.init(camera);
+			EntityManager.init(ShadowManager.getShadowMap());
 			terrainRenderer = new TerrainRenderer(ShadowManager.getShadowMap());
 			waterRenderer = new WaterRenderer(loader);
 			skyBoxRenderer = new SkyBoxRenderer(loader, clock);
@@ -93,7 +94,7 @@ public class RenderingManager {
 	
 	private static void renderFrame(Scene scene, Camera camera, Vector4f clipPlane) {
 		prepare();
-		EntityManager.renderEntities(scene.getEntities(), scene.getLights(), camera, clipPlane);
+		EntityManager.renderEntities(scene.getEntities(), scene.getLights(), camera, clipPlane, ShadowManager.getToShadowMapSpaceMatrix());
 		terrainRenderer.render(scene.getTerrains(), scene.getLights(), camera, clipPlane, ShadowManager.getToShadowMapSpaceMatrix());
 		skyBoxRenderer.render(camera);
 	}

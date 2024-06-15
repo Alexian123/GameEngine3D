@@ -23,28 +23,32 @@ import com.alexian123.util.Maths;
 
 public class EntityRenderer {
 	
-	private static final int MAX_NUM_TEXTURES = 2;
+	private static final int MAX_NUM_TEXTURES = 3;
 
 	protected final EntityShader shader;
 	
 	protected final int numTextures;
 	protected final int[] textures = new int[MAX_NUM_TEXTURES];
 	
-	public EntityRenderer() {
-		this(new EntityShader());
+	public EntityRenderer(int shadowMapID) {
+		this(new EntityShader(), shadowMapID);
 	}
 	
-	public EntityRenderer(EntityShader shader) {
+	public EntityRenderer(EntityShader shader, int shadowMapID) {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
+		shader.loadShadowParameters(Constants.SHADOW_DISTANCE, Constants.SHADOW_TRANSITION);
+		shader.loadShadowMapSize(Constants.SHADOW_MAP_SIZE);
 		this.numTextures = shader.connectTextureUnits();
+		textures[1] = shadowMapID;
 		shader.stop();
 	}
 	
-	public void render(Map<TexturedModel, List<Entity>> entities, List<Light> lights, Camera camera, Vector4f clipPlane) {
+	public void render(Map<TexturedModel, List<Entity>> entities, List<Light> lights, Camera camera, Vector4f clipPlane, Matrix4f toShadowMapSpace) {
 		shader.start();
 		shader.loadClipPlane(clipPlane);
+		shader.loadToShadowMapSpaceMatrix(toShadowMapSpace);
 		shader.loadFog(Constants.FOG_DENSITY, Constants.FOG_GRADIENT, Constants.FOG_COLOR);
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		shader.loadLights(lights, viewMatrix);
@@ -72,7 +76,7 @@ public class EntityRenderer {
 		RawModel rawModel = model.getRawModel();
 		ModelTexture texture = model.getTexture();
 		textures[0] = texture.getID();
-		textures[1] = texture.getNormalMap();
+		textures[2] = texture.getNormalMap();
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		for (int i = 0; i < shader.getNumAttributes(); ++i) {
 			GL20.glEnableVertexAttribArray(i);
@@ -101,5 +105,6 @@ public class EntityRenderer {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 		shader.loadAtlasOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
+		shader.loadPcfCount(entity.isNoShading() ? -1 : Constants.PCF_COUNT);
 	}
 }

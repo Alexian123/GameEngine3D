@@ -11,6 +11,7 @@ public class Entity {
 	protected Vector3f rotation;
 	private float scale;
 	private int textureIndex = 0;
+	private boolean noShading = false;
 	
 	public Entity(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
 		this.model = model;
@@ -25,6 +26,14 @@ public class Entity {
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
+	}
+	
+	protected Entity(TexturedModel model, Vector3f position, Vector3f rotation, float scale, boolean noShading) {
+		this.model = model;
+		this.position = position;
+		this.rotation = rotation;
+		this.scale = scale;
+		this.noShading = noShading;
 	}
 	
 	public float getTextureXOffset() {
@@ -77,7 +86,7 @@ public class Entity {
 		return scale;
 	}
 
-	public void setScale(float scale) {
+	protected void setScale(float scale) {
 		this.scale = scale;
 	}
 
@@ -87,5 +96,13 @@ public class Entity {
 
 	public void setTextureIndex(int textureIndex) {
 		this.textureIndex = textureIndex;
+	}
+
+	public boolean isNoShading() {
+		return noShading;
+	}
+
+	public void setNoShading(boolean noShading) {
+		this.noShading = noShading;
 	}
 }

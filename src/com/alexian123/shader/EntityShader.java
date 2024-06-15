@@ -26,6 +26,7 @@ public class EntityShader extends ShaderProgram {
 	public int connectTextureUnits() {
 		int textureNo = 0;
 		loadInt(uniforms.get(Uniform.MODEL_TEXTURE.getName()), textureNo++);
+		loadInt(uniforms.get(Uniform.SHADOW_MAP.getName()), textureNo++);
 		return textureNo;
 	}
 	
@@ -83,6 +84,23 @@ public class EntityShader extends ShaderProgram {
 		loadVector(uniforms.get(Uniform.CLIP_PLANE.getName()), clipPlane);
 	}
 	
+	public void loadToShadowMapSpaceMatrix(Matrix4f matrix) {
+		loadMatrix(uniforms.get(Uniform.TO_SHADOW_MAP_SPACE.getName()), matrix);
+	}
+	
+	public void loadShadowParameters(float distance, float transition) {
+		loadFloat(uniforms.get(Uniform.SHADOW_DISTANCE.getName()), distance);
+		loadFloat(uniforms.get(Uniform.SHADOW_TRANSITION.getName()), transition);
+	}
+	
+	public void loadShadowMapSize(int size) {
+		loadInt(uniforms.get(Uniform.SHADOW_MAP_SIZE.getName()), size);
+	}
+	
+	public void loadPcfCount(int pcfCount) {
+		loadInt(uniforms.get(Uniform.PCF_COUNT.getName()), pcfCount);
+	}
+	
 	@Override
 	protected int setAttributes() {
 		int attribNo = 0;
@@ -107,6 +125,12 @@ public class EntityShader extends ShaderProgram {
 		uniforms.put(Uniform.ATLAS_DIMENSION.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.ATLAS_OFFSET.getName(), NEW_UNIFORM);
 		uniforms.put(Uniform.CLIP_PLANE.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.TO_SHADOW_MAP_SPACE.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.SHADOW_MAP.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.SHADOW_DISTANCE.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.SHADOW_TRANSITION.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.SHADOW_MAP_SIZE.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.PCF_COUNT.getName(), NEW_UNIFORM);
 	
 		uniformArrays.put(Uniform.LIGHT_POSITION.getName(), createNewUniformArray(Constants.MAX_LIGHTS));
 		uniformArrays.put(Uniform.LIGHT_COLOR.getName(), createNewUniformArray(Constants.MAX_LIGHTS));
