@@ -5,6 +5,7 @@ import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.PixelFormat;
 
 import com.alexian123.util.Constants;
@@ -18,8 +19,9 @@ public class DisplayManager {
 			ContextAttribs attribs = new ContextAttribs(3, 3).withForwardCompatible(true).withProfileCore(true);
 			try {
 				Display.setDisplayMode(new DisplayMode(width, height));
-				Display.create(new PixelFormat().withDepthBits(24), attribs);
+				Display.create(new PixelFormat().withSamples(8).withDepthBits(24), attribs);
 				Display.setTitle(title);
+				GL11.glEnable(GL13.GL_MULTISAMPLE);
 			} catch (LWJGLException e) {
 				e.printStackTrace();
 				System.err.println("Error creating display");
