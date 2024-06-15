@@ -2,6 +2,7 @@ package com.alexian123.engine;
 
 import java.util.List;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector4f;
@@ -15,11 +16,14 @@ import com.alexian123.rendering.WaterRenderer;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.util.Clock;
 import com.alexian123.util.Constants;
+import com.alexian123.util.Fbo;
 import com.alexian123.util.Scene;
 import com.alexian123.water.Water;
 import com.alexian123.water.WaterFrameBuffers;
 
 public class RenderingManager {
+	
+	private static Fbo fbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
 	
 	private static TerrainRenderer terrainRenderer;
 	private static WaterRenderer waterRenderer;
@@ -35,6 +39,7 @@ public class RenderingManager {
 			TextManager.init(loader);
 			ShadowManager.init(camera);
 			EntityManager.init(ShadowManager.getShadowMap());
+			PostProcessingManager.init(loader);
 			terrainRenderer = new TerrainRenderer(ShadowManager.getShadowMap());
 			waterRenderer = new WaterRenderer(loader);
 			skyBoxRenderer = new SkyBoxRenderer(loader, clock);
@@ -46,9 +51,14 @@ public class RenderingManager {
 	public static void renderScene(Scene scene, Camera camera, List<GUITexture> guis) {
 		ShadowManager.render(scene.getEntities(), scene.getLights().get(0));
 		renderWaterFX(scene, camera);
+		
+		fbo.bindFrameBuffer();
 		renderFrame(scene, camera, new Vector4f(0, -1, 0, 1000));
 		waterRenderer.render(scene.getWaters(), camera, scene.getLights());
 		ParticleManager.renderParticles(camera);
+		fbo.unbindFrameBuffer();
+		PostProcessingManager.doPostProcessing(fbo.getColourTexture());
+		
 		guiRenderer.render(guis);
 		TextManager.renderText();
 	}
@@ -59,6 +69,7 @@ public class RenderingManager {
 		TextManager.cleanup();
 		Water.cleanup();
 		ShadowManager.cleanup();
+		PostProcessingManager.cleanup();
 		terrainRenderer.cleanup();
 		waterRenderer.cleanup();
 		skyBoxRenderer.cleanup();

@@ -12,27 +12,27 @@ public class ParticleShader extends ShaderProgram{
 	}
 	
 	public void loadProjectionMatrix(Matrix4f matrix) {
-		loadMatrix(uniforms.get(Uniform.PROJECTION_MATRIX.getName()), matrix);
+		loadMatrix(uniforms.get(Uniform.PROJECTION_MATRIX), matrix);
 	}
 	
 	public void loadAtlasDimension(float dimension) {
-		loadFloat(uniforms.get(Uniform.ATLAS_DIMENSION.getName()), dimension);
+		loadFloat(uniforms.get(Uniform.ATLAS_DIMENSION), dimension);
 	}
 
 	@Override
 	protected int setAttributes() {
 		int attribNo = 0;
-		attributes.put(Attribute.POSITION.getName(), attribNo++);
-		attributes.put(Attribute.MODEL_VIEW_MATRIX.getName(), attribNo);
+		attributes.put(Attribute.POSITION, attribNo++);
+		attributes.put(Attribute.MODEL_VIEW_MATRIX, attribNo);
 		attribNo += 4;
-		attributes.put(Attribute.ATLAS_OFFSETS.getName(), attribNo++);
-		attributes.put(Attribute.BLEND_FACTOR.getName(), attribNo++);
+		attributes.put(Attribute.ATLAS_OFFSETS, attribNo++);
+		attributes.put(Attribute.BLEND_FACTOR, attribNo++);
 		return attribNo;
 	}
 
 	@Override
 	protected void setUniforms() {
-		uniforms.put(Uniform.PROJECTION_MATRIX.getName(), NEW_UNIFORM);
-		uniforms.put(Uniform.ATLAS_DIMENSION.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.PROJECTION_MATRIX, NEW_UNIFORM);
+		uniforms.put(Uniform.ATLAS_DIMENSION, NEW_UNIFORM);
 	}
 }

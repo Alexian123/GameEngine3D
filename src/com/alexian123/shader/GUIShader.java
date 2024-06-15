@@ -12,18 +12,18 @@ public class GUIShader extends ShaderProgram {
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix){
-		loadMatrix(uniforms.get(Uniform.TRANSFORMATION_MATRIX.getName()), matrix);
+		loadMatrix(uniforms.get(Uniform.TRANSFORMATION_MATRIX), matrix);
 	}
 	
 	@Override
 	protected int setAttributes() {
 		int attribNo = 0;
-		attributes.put(Attribute.POSITION.getName(), attribNo++);
+		attributes.put(Attribute.POSITION, attribNo++);
 		return attribNo;
 	}
 
 	@Override
 	protected void setUniforms() {
-		uniforms.put(Uniform.TRANSFORMATION_MATRIX.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.TRANSFORMATION_MATRIX, NEW_UNIFORM);
 	}
 }

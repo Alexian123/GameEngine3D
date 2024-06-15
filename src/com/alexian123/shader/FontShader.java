@@ -13,48 +13,48 @@ public class FontShader extends ShaderProgram {
 	}
 	
 	public void loadTranslation(Vector2f translation) {
-		loadVector(uniforms.get(Uniform.TRANSLATION.getName()), translation);
+		loadVector(uniforms.get(Uniform.TRANSLATION), translation);
 	}
 	
 	public void loadColor(Vector3f color) {
-		loadVector(uniforms.get(Uniform.COLOR.getName()), color);
+		loadVector(uniforms.get(Uniform.COLOR), color);
 	}
 	
 	public void loadOutlineColor(Vector3f color) {
-		loadVector(uniforms.get(Uniform.OUTLINE_COLOR.getName()), color);
+		loadVector(uniforms.get(Uniform.OUTLINE_COLOR), color);
 	}
 	
 	public void loadOffset(Vector2f offset) {
-		loadVector(uniforms.get(Uniform.OFFSET.getName()), offset);
+		loadVector(uniforms.get(Uniform.OFFSET), offset);
 	}
 	
 	public void loadCharacterDimensions(float width, float edge) {
-		loadFloat(uniforms.get(Uniform.CHARACTER_WIDTH.getName()), width);
-		loadFloat(uniforms.get(Uniform.CHARACTER_EDGE.getName()), edge);
+		loadFloat(uniforms.get(Uniform.CHARACTER_WIDTH), width);
+		loadFloat(uniforms.get(Uniform.CHARACTER_EDGE), edge);
 	}
 	
 	public void loadBorderDimensions(float width, float edge) {
-		loadFloat(uniforms.get(Uniform.BORDER_WIDTH.getName()), width);
-		loadFloat(uniforms.get(Uniform.BORDER_EDGE.getName()), edge);
+		loadFloat(uniforms.get(Uniform.BORDER_WIDTH), width);
+		loadFloat(uniforms.get(Uniform.BORDER_EDGE), edge);
 	}
 
 	@Override
 	protected int setAttributes() {
 		int attribNo = 0;
-		attributes.put(Attribute.POSITION.getName(), attribNo++);
-		attributes.put(Attribute.TEXTURE_COORD.getName(), attribNo++);
+		attributes.put(Attribute.POSITION, attribNo++);
+		attributes.put(Attribute.TEXTURE_COORD, attribNo++);
 		return attribNo;
 	}
 	
 	@Override
 	protected void setUniforms() {
-		uniforms.put(Uniform.TRANSLATION.getName(), NEW_UNIFORM);
-		uniforms.put(Uniform.COLOR.getName(), NEW_UNIFORM);
-		uniforms.put(Uniform.OUTLINE_COLOR.getName(), NEW_UNIFORM);
-		uniforms.put(Uniform.OFFSET.getName(), NEW_UNIFORM);
-		uniforms.put(Uniform.CHARACTER_WIDTH.getName(), NEW_UNIFORM);
-		uniforms.put(Uniform.CHARACTER_EDGE.getName(), NEW_UNIFORM);
-		uniforms.put(Uniform.BORDER_WIDTH.getName(), NEW_UNIFORM);
-		uniforms.put(Uniform.BORDER_EDGE.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.TRANSLATION, NEW_UNIFORM);
+		uniforms.put(Uniform.COLOR, NEW_UNIFORM);
+		uniforms.put(Uniform.OUTLINE_COLOR, NEW_UNIFORM);
+		uniforms.put(Uniform.OFFSET, NEW_UNIFORM);
+		uniforms.put(Uniform.CHARACTER_WIDTH, NEW_UNIFORM);
+		uniforms.put(Uniform.CHARACTER_EDGE, NEW_UNIFORM);
+		uniforms.put(Uniform.BORDER_WIDTH, NEW_UNIFORM);
+		uniforms.put(Uniform.BORDER_EDGE, NEW_UNIFORM);
 	}
 }

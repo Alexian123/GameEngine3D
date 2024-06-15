@@ -12,21 +12,21 @@ public class ShadowShader extends ShaderProgram {
 	}
 	
 	public void loadMvpMatrix(Matrix4f mvpMatrix){
-		loadMatrix(uniforms.get(Uniform.MVP_MATRIX.getName()), mvpMatrix);
+		loadMatrix(uniforms.get(Uniform.MVP_MATRIX), mvpMatrix);
 	}
 
 	@Override
 	protected int setAttributes() {
 		int attribNo = 0;
-		attributes.put(Attribute.POSITION.getName(), attribNo++);
-		attributes.put(Attribute.TEXTURE_COORD.getName(), attribNo++);
+		attributes.put(Attribute.POSITION, attribNo++);
+		attributes.put(Attribute.TEXTURE_COORD, attribNo++);
 		return attribNo;
 		
 	}
 
 	@Override
 	protected void setUniforms() {
-		uniforms.put(Uniform.MVP_MATRIX.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.MVP_MATRIX, NEW_UNIFORM);
 	}
 
 }

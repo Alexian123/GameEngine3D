@@ -25,9 +25,9 @@ public abstract class ShaderProgram {
 	
 	private static FloatBuffer matrix4fBuffer = BufferUtils.createFloatBuffer(16);
 	
-	protected final Map<String, Integer> attributes = new HashMap<>();
-	protected final Map<String, Integer> uniforms = new HashMap<>();
-	protected final Map<String, List<Integer>> uniformArrays = new HashMap<>();
+	protected final Map<Attribute, Integer> attributes = new HashMap<>();
+	protected final Map<Uniform, Integer> uniforms = new HashMap<>();
+	protected final Map<Uniform, List<Integer>> uniformArrays = new HashMap<>();
 	
 	private final int programID;
 	private final int vertexShaderID;
@@ -113,19 +113,19 @@ public abstract class ShaderProgram {
 	}
 	
 	private void bindAttributes() {
-		for (String attribName : attributes.keySet()) {
-			GL20.glBindAttribLocation(programID, attributes.get(attribName), attribName);
+		for (Attribute attrib : attributes.keySet()) {
+			GL20.glBindAttribLocation(programID, attributes.get(attrib), attrib.getName());
 		}
 	}
 	
 	private void getAllUniformLocations() {
-		for (String uniformName : uniforms.keySet()) {
-			uniforms.replace(uniformName, GL20.glGetUniformLocation(programID, uniformName));
+		for (Uniform uniform : uniforms.keySet()) {
+			uniforms.replace(uniform, GL20.glGetUniformLocation(programID, uniform.getName()));
 		}
-		for (String uniformArrayName : uniformArrays.keySet()) {
-			List<Integer> uniformArray = uniformArrays.get(uniformArrayName);
+		for (Uniform uniform : uniformArrays.keySet()) {
+			List<Integer> uniformArray = uniformArrays.get(uniform);
 			for (int i = 0; i < uniformArray.size(); ++i) {
-				uniformArray.set(i, GL20.glGetUniformLocation(programID, uniformArrayName + "[" + i + "]"));
+				uniformArray.set(i, GL20.glGetUniformLocation(programID, uniform.getName() + "[" + i + "]"));
 			}
 		}
 	}

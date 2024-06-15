@@ -21,7 +21,7 @@ public class EntityShaderNM extends EntityShader {
 	@Override
 	public int connectTextureUnits() {
 		int textureNo = super.connectTextureUnits();
-		loadInt(uniforms.get(Uniform.NORMAL_MAP.getName()), textureNo++);
+		loadInt(uniforms.get(Uniform.NORMAL_MAP), textureNo++);
 		return textureNo;
 	}
 	
@@ -30,13 +30,13 @@ public class EntityShaderNM extends EntityShader {
 		for (int i = 0; i < Constants.MAX_LIGHTS; ++i) {
 			if (i < lights.size()) {
 				Light light = lights.get(i);
-				loadVector(uniformArrays.get(Uniform.LIGHT_POSITION.getName()).get(i), getEyeSpaceLightPosition(light, viewMatrix));
-				loadVector(uniformArrays.get(Uniform.LIGHT_COLOR.getName()).get(i), light.getColor());
-				loadVector(uniformArrays.get(Uniform.ATTENUATION.getName()).get(i), light.getAttenuation());
+				loadVector(uniformArrays.get(Uniform.LIGHT_POSITION).get(i), getEyeSpaceLightPosition(light, viewMatrix));
+				loadVector(uniformArrays.get(Uniform.LIGHT_COLOR).get(i), light.getColor());
+				loadVector(uniformArrays.get(Uniform.ATTENUATION).get(i), light.getAttenuation());
 			} else {
-				loadVector(uniformArrays.get(Uniform.LIGHT_POSITION.getName()).get(i), getEyeSpaceLightPosition(Light.NO_LIGHT, viewMatrix));
-				loadVector(uniformArrays.get(Uniform.LIGHT_COLOR.getName()).get(i), Light.NO_LIGHT.getColor());
-				loadVector(uniformArrays.get(Uniform.ATTENUATION.getName()).get(i), Light.NO_LIGHT.getAttenuation());
+				loadVector(uniformArrays.get(Uniform.LIGHT_POSITION).get(i), getEyeSpaceLightPosition(Light.NO_LIGHT, viewMatrix));
+				loadVector(uniformArrays.get(Uniform.LIGHT_COLOR).get(i), Light.NO_LIGHT.getColor());
+				loadVector(uniformArrays.get(Uniform.ATTENUATION).get(i), Light.NO_LIGHT.getAttenuation());
 			}
 		}
 	}
@@ -44,14 +44,14 @@ public class EntityShaderNM extends EntityShader {
 	@Override
 	protected int setAttributes() {
 		int attribNo = super.setAttributes();
-		attributes.put(Attribute.TANGENT.getName(), attribNo++);
+		attributes.put(Attribute.TANGENT, attribNo++);
 		return attribNo;
 	}
 	
 	@Override
 	protected void setUniforms() {
 		super.setUniforms();
-		uniforms.put(Uniform.NORMAL_MAP.getName(), NEW_UNIFORM);
+		uniforms.put(Uniform.NORMAL_MAP, NEW_UNIFORM);
 	}
 	
 	private Vector3f getEyeSpaceLightPosition(Light light, Matrix4f viewMatrix) {
