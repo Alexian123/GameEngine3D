@@ -1,8 +1,9 @@
 package com.alexian123.shader;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,30 +134,32 @@ public abstract class ShaderProgram {
 		return new ArrayList<>(Collections.nCopies(size, NEW_UNIFORM));
 	}
 
-	@SuppressWarnings("deprecation")
-	private static int loadShader(String fileName, int type) {
+	 private static int loadShader(String fileName, int type) {
 		final String SHADER_TYPE_NAME = type == GL20.GL_VERTEX_SHADER ? "vertex" : "fragment";
 		StringBuilder shaderCode = new StringBuilder();
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(fileName));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				shaderCode.append(line).append("\n");
-			}
-			reader.close();
+		
+		try (InputStream in = ShaderProgram.class.getResourceAsStream(fileName);
+		     BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+		    String line;
+		    while ((line = reader.readLine()) != null) {
+		        shaderCode.append(line).append(System.lineSeparator());
+		    }
 		} catch (IOException e) {
-			System.err.println("Error loading " + SHADER_TYPE_NAME + " shader: " + fileName);
-			e.printStackTrace();
-			System.exit(-1);
+		    System.err.println("Error loading " + SHADER_TYPE_NAME + " shader: " + fileName);
+		    e.printStackTrace();
+		    System.exit(-1);
 		}
+		
 		int shaderID = GL20.glCreateShader(type);
 		GL20.glShaderSource(shaderID, shaderCode);
 		GL20.glCompileShader(shaderID);
-		if (GL20.glGetShader(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-			System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
-			System.err.println("Error compiling " + SHADER_TYPE_NAME + " shader: " + fileName);
-			System.exit(-1);
+		
+		if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
+		    System.err.println("Error compiling " + SHADER_TYPE_NAME + " shader: " + fileName);
+		    System.err.println(GL20.glGetShaderInfoLog(shaderID, 500));
+		    System.exit(-1);
 		}
+		
 		return shaderID;
-	}
+	 }
 }

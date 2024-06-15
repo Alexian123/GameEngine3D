@@ -1,8 +1,7 @@
 package com.alexian123.loader;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -114,7 +113,7 @@ public class Loader {
 	public int loadTexture(String fileName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/textures/" + fileName + ".png"));
+			texture = TextureLoader.getTexture("PNG", Loader.class.getResourceAsStream("/res/textures/" + fileName + ".png"));
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0f);
@@ -137,7 +136,7 @@ public class Loader {
 	public FontType loadFont(String fontName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/fonts/" + fontName + ".png"));
+			texture = TextureLoader.getTexture("PNG", Loader.class.getResourceAsStream("/res/fonts/" + fontName + ".png"));
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0f);
@@ -148,7 +147,7 @@ public class Loader {
 		}
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
-		return new FontType(textureID, new File("res/fonts/" + fontName + ".fnt"));
+		return new FontType(textureID, "/res/fonts/" + fontName + ".fnt");
 	}
 	
 	/** 
@@ -161,7 +160,7 @@ public class Loader {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, id);
 		for (int i = 0; i < fileNames.length; ++i) {
-			TextureData data = decodeTexture("res/textures/" + fileNames[i] + ".png");
+			TextureData data = decodeTexture("/res/textures/" + fileNames[i] + ".png");
 			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, 
 					data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
 			
@@ -241,7 +240,7 @@ public class Loader {
 		int width = 0, height = 0;
 		ByteBuffer buffer = null;
 		try {
-			FileInputStream in = new FileInputStream(fileName);
+			InputStream in = Loader.class.getResourceAsStream(fileName);
 			PNGDecoder decoder = new PNGDecoder(in);
 			width = decoder.getWidth();
 			height = decoder.getHeight();

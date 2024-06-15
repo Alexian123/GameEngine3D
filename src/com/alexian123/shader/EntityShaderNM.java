@@ -11,8 +11,8 @@ import com.alexian123.util.Constants;
 
 public class EntityShaderNM extends EntityShader {
 	
-	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/vertex/entity_nm.vert";
-	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/fragment/entity_nm.frag";
+	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/entity_nm.vert";
+	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/entity_nm.frag";
 	
 	public EntityShaderNM() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

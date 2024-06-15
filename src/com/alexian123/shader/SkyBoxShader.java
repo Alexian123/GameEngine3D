@@ -9,8 +9,8 @@ import com.alexian123.util.Maths;
 
 public class SkyBoxShader extends ShaderProgram{
 	
-	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/vertex/skybox.vert";
-	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/fragment/skybox.frag";
+	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/skybox.vert";
+	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/skybox.frag";
 	
 	private static final float ROTATION_INCREMENT = 0.1f;
 	

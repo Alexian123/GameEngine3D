@@ -4,8 +4,8 @@ import org.lwjgl.util.vector.Matrix4f;
 
 public class ParticleShader extends ShaderProgram{
 	
-	private static final String VERTEX_SHADER_FILE = "src/com/alexian123/shader/glsl/vertex/particle.vert";
-	private static final String FRAGMENT_SHADER_FILE = "src/com/alexian123/shader/glsl/fragment/particle.frag";
+	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/particle.vert";
+	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/particle.frag";
 
 	public ParticleShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

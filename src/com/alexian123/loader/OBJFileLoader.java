@@ -1,10 +1,8 @@
 package com.alexian123.loader;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,18 +11,10 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class OBJFileLoader {
 	
-	private static final String RES_LOC = "res/models/regular/";
+	private static final String RES_LOC = "/res/models/regular/";
 
 	public static ModelData loadOBJ(String objFileName) {
-		FileReader isr = null;
-		File objFile = new File(RES_LOC + objFileName + ".obj");
-		try {
-			isr = new FileReader(objFile);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.err.println("File not found in res; don't use any extention");
-			System.exit(-1);
-		}
+		InputStreamReader isr = new InputStreamReader(OBJFileLoader.class.getResourceAsStream(RES_LOC + objFileName + ".obj"));
 		BufferedReader reader = new BufferedReader(isr);
 		String line;
 		List<Vertex> vertices = new ArrayList<>();
