@@ -24,7 +24,8 @@ import com.alexian123.water.WaterFrameBuffers;
 
 public class RenderingManager {
 	
-	private static Fbo fbo = new Fbo(Display.getWidth(), Display.getHeight(), DepthBufferType.DEPTH_RENDER_BUFFER, false);
+	private static Fbo multisampledFbo = new Fbo(Display.getWidth(), Display.getHeight());
+	private static Fbo outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), DepthBufferType.DEPTH_TEXTURE, false);
 	
 	private static TerrainRenderer terrainRenderer;
 	private static WaterRenderer waterRenderer;
@@ -53,12 +54,13 @@ public class RenderingManager {
 		ShadowManager.render(scene.getEntities(), scene.getLights().get(0));
 		renderWaterFX(scene, camera);
 		
-		fbo.bindFrameBuffer();
+		multisampledFbo.bindFrameBuffer();
 		renderFrame(scene, camera, new Vector4f(0, -1, 0, 1000));
 		waterRenderer.render(scene.getWaters(), camera, scene.getLights());
 		ParticleManager.renderParticles(camera);
-		fbo.unbindFrameBuffer();
-		PostProcessingManager.doPostProcessing(fbo.getColorTexture());
+		multisampledFbo.unbindFrameBuffer();
+		multisampledFbo.resolveToFbo(outputFbo);
+		PostProcessingManager.doPostProcessing(outputFbo.getColorTexture());
 		
 		guiRenderer.render(guis);
 		TextManager.renderText();
@@ -71,6 +73,8 @@ public class RenderingManager {
 		Water.cleanup();
 		ShadowManager.cleanup();
 		PostProcessingManager.cleanup();
+		multisampledFbo.cleanup();
+		outputFbo.cleanup();
 		terrainRenderer.cleanup();
 		waterRenderer.cleanup();
 		skyBoxRenderer.cleanup();

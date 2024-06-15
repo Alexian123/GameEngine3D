@@ -33,5 +33,7 @@ public class Constants {
 	
 	public static final int BLUR_LEVEL = 4;
 	
+	public static final int NUM_MULTISAMPLES = 4;
+	
 	public static final float MILLISECONDS_PER_SECOND = 1000.0f;
 }

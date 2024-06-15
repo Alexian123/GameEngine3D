@@ -35,9 +35,10 @@ public class PostProcessingManager {
 	
 	public static void doPostProcessing(int colourTexture) {
 		start();
-		hBlur.run(colourTexture);
-		vBlur.run(hBlur.getOutputTexture());
-		contrastChanger.run(vBlur.getOutputTexture());
+		//hBlur.run(colourTexture);
+		//vBlur.run(hBlur.getOutputTexture());
+		//contrastChanger.run(vBlur.getOutputTexture());
+		contrastChanger.run(colourTexture);
 		end();
 	}
 	
