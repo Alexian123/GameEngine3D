@@ -9,21 +9,19 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL30;
 
 public class Fbo {
-
-	public static final int NONE = 0;
-	public static final int DEPTH_TEXTURE = 1;
-	public static final int DEPTH_RENDER_BUFFER = 2;
-
+	
 	private final int width;
 	private final int height;
+	
+	private final boolean textureTiling;
 
 	private int frameBuffer;
 
-	private int colourTexture;
+	private int colorTexture;
 	private int depthTexture;
 
 	private int depthBuffer;
-	private int colourBuffer;
+	private int colorBuffer;
 
 	/**
 	 * Creates an FBO of a specified width and height, with the desired type of
@@ -34,13 +32,17 @@ public class Fbo {
 	 * @param height
 	 *            - the height of the FBO.
 	 * @param depthBufferType
-	 *            - an int indicating the type of depth buffer attachment that
+	 *            - an integer indicating the type of depth buffer attachment that
 	 *            this FBO should use.
+	 * @param textureTiling
+	 *            - if true, tile the texture if the coordinates exceed the dimension;
+	 *            - if false, stretch the edge pixels to fill the extra space
 	 */
-	public Fbo(int width, int height, int depthBufferType) {
+	public Fbo(int width, int height, DepthBufferType type, boolean textureTiling) {
 		this.width = width;
 		this.height = height;
-		initialiseFrameBuffer(depthBufferType);
+		this.textureTiling = textureTiling;
+		initialiseFrameBuffer(type);
 	}
 
 	/**
@@ -48,10 +50,10 @@ public class Fbo {
 	 */
 	public void cleanup() {
 		GL30.glDeleteFramebuffers(frameBuffer);
-		GL11.glDeleteTextures(colourTexture);
+		GL11.glDeleteTextures(colorTexture);
 		GL11.glDeleteTextures(depthTexture);
 		GL30.glDeleteRenderbuffers(depthBuffer);
-		GL30.glDeleteRenderbuffers(colourBuffer);
+		GL30.glDeleteRenderbuffers(colorBuffer);
 	}
 
 	/**
@@ -74,7 +76,7 @@ public class Fbo {
 	}
 
 	/**
-	 * Binds the current FBO to be read from (not used in tutorial 43).
+	 * Binds the current FBO to be read from.
 	 */
 	public void bindToRead() {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
@@ -85,8 +87,8 @@ public class Fbo {
 	/**
 	 * @return The ID of the texture containing the colour buffer of the FBO.
 	 */
-	public int getColourTexture() {
-		return colourTexture;
+	public int getColorTexture() {
+		return colorTexture;
 	}
 
 	/**
@@ -104,13 +106,19 @@ public class Fbo {
 	 *            - the type of depth buffer attachment to be attached to the
 	 *            FBO.
 	 */
-	private void initialiseFrameBuffer(int type) {
+	private void initialiseFrameBuffer(DepthBufferType type) {
 		createFrameBuffer();
 		createTextureAttachment();
-		if (type == DEPTH_RENDER_BUFFER) {
-			createDepthBufferAttachment();
-		} else if (type == DEPTH_TEXTURE) {
-			createDepthTextureAttachment();
+		switch (type) {
+			case DEPTH_RENDER_BUFFER:
+				createDepthBufferAttachment();
+				break;
+			case DEPTH_TEXTURE:
+				createDepthTextureAttachment();
+				break;
+			case NONE:
+			default:
+				break;
 		}
 		unbindFrameBuffer();
 	}
@@ -132,15 +140,17 @@ public class Fbo {
 	 * FBO.
 	 */
 	private void createTextureAttachment() {
-		colourTexture = GL11.glGenTextures();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, colourTexture);
+		colorTexture = GL11.glGenTextures();
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, colorTexture);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,
 				(ByteBuffer) null);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colourTexture,
+		if (!textureTiling) {
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);	
+		}
+		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colorTexture,
 				0);
 	}
 
@@ -155,6 +165,10 @@ public class Fbo {
 				GL11.GL_FLOAT, (ByteBuffer) null);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		if (!textureTiling) {
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);	
+		}
 		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthTexture, 0);
 	}
 

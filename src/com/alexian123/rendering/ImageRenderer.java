@@ -2,6 +2,7 @@ package com.alexian123.rendering;
 
 import org.lwjgl.opengl.GL11;
 
+import com.alexian123.util.DepthBufferType;
 import com.alexian123.util.Fbo;
 
 public class ImageRenderer {
@@ -9,7 +10,7 @@ public class ImageRenderer {
 	private final Fbo fbo;
 
 	public ImageRenderer(int width, int height) {
-		this.fbo = new Fbo(width, height, Fbo.NONE);
+		this.fbo = new Fbo(width, height, DepthBufferType.NONE, false);
 	}
 
 	public ImageRenderer() {
@@ -28,7 +29,7 @@ public class ImageRenderer {
 	}
 
 	public int getOutputTexture() {
-		return fbo.getColourTexture();
+		return fbo.getColorTexture();
 	}
 
 	public void cleanup() {

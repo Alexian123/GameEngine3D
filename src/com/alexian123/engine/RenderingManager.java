@@ -16,6 +16,7 @@ import com.alexian123.rendering.WaterRenderer;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.util.Clock;
 import com.alexian123.util.Constants;
+import com.alexian123.util.DepthBufferType;
 import com.alexian123.util.Fbo;
 import com.alexian123.util.Scene;
 import com.alexian123.water.Water;
@@ -23,7 +24,7 @@ import com.alexian123.water.WaterFrameBuffers;
 
 public class RenderingManager {
 	
-	private static Fbo fbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
+	private static Fbo fbo = new Fbo(Display.getWidth(), Display.getHeight(), DepthBufferType.DEPTH_RENDER_BUFFER, false);
 	
 	private static TerrainRenderer terrainRenderer;
 	private static WaterRenderer waterRenderer;
@@ -57,7 +58,7 @@ public class RenderingManager {
 		waterRenderer.render(scene.getWaters(), camera, scene.getLights());
 		ParticleManager.renderParticles(camera);
 		fbo.unbindFrameBuffer();
-		PostProcessingManager.doPostProcessing(fbo.getColourTexture());
+		PostProcessingManager.doPostProcessing(fbo.getColorTexture());
 		
 		guiRenderer.render(guis);
 		TextManager.renderText();

@@ -35,12 +35,12 @@ public class WaterRenderer {
 	private RawModel quad;
 	private WaterShader shader;
 	private int dudvTexture;
-	private int normalTexture;
+	private int normalMap;
 	
 	public WaterRenderer(Loader loader) {
 		this.shader = new WaterShader();
 		this.dudvTexture = loader.loadTexture(DUDV_MAP_FILE);
-		this.normalTexture = loader.loadTexture(NORMAL_MAP_FILE);
+		this.normalMap = loader.loadTexture(NORMAL_MAP_FILE);
 		shader.start();
 		this.numTextures = shader.connectTextureUnits();
 		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
@@ -51,7 +51,7 @@ public class WaterRenderer {
 		shader.stop();
 		setUpVAO(loader);		
 		textures[0] = dudvTexture;
-		textures[1] = normalTexture;
+		textures[1] = normalMap;
 	}
 
 	public void render(List<Water> waters, Camera camera, List<Light> lights) {
