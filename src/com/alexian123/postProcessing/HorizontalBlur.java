@@ -4,19 +4,21 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 import com.alexian123.rendering.ImageRenderer;
-import com.alexian123.shader.ContrastShader;
+import com.alexian123.shader.HorizontalBlurShader;
 
-public class ContrastChanger {
+public class HorizontalBlur {
 
-	private final ContrastShader shader = new ContrastShader();
-	private final ImageRenderer renderer = new ImageRenderer();
+	private final HorizontalBlurShader shader = new HorizontalBlurShader();
+	private final ImageRenderer renderer;
 	
-	public ContrastChanger(float contrastValue) {
+	public HorizontalBlur(int targetFboWidth, int targetFboHeight) {
+		this.renderer = new ImageRenderer(targetFboWidth, targetFboHeight);
 		shader.start();
-		shader.loadContrast(contrastValue);
+		shader.loadTargetWidth(targetFboHeight);
 		shader.stop();
 	}
 
+	
 	public void run(int texture) {
 		shader.start();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -25,8 +27,13 @@ public class ContrastChanger {
 		shader.stop();
 	}
 	
+	public int getOutputTexture() {
+		return renderer.getOutputTexture();
+	}
+	
 	public void cleanup() {
 		renderer.cleanup();
 		shader.cleanup();
 	}
+	
 }

@@ -2,12 +2,12 @@
 
 in vec2 textureCoord;
 
-out vec4 outColour;
+out vec4 outColor;
 
 uniform sampler2D colourTexture;
 uniform float contrast;
 
 void main(void) {
-	outColour = texture(colourTexture, textureCoord);
-	outColour.rgb = (outColour.rgb - 0.5) * (1.0 + contrast) + 0.5;
+	outColor = texture(colourTexture, textureCoord);
+	outColor.rgb = (outColor.rgb - 0.5) * (1.0 + contrast) + 0.5;
 }

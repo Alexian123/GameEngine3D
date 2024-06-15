@@ -31,5 +31,7 @@ public class Constants {
 	public static final float SHADOW_TRANSITION = 10f;
 	public static final float SHADOWBOX_OFFSET = 20f;
 	
+	public static final int BLUR_LEVEL = 4;
+	
 	public static final float MILLISECONDS_PER_SECOND = 1000.0f;
 }

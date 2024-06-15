@@ -17,7 +17,7 @@ public class ImageRenderer {
 		this.fbo = null;
 	}
 
-	public void render() {
+	public void renderQuad() {
 		if (fbo != null) {
 			fbo.bindFrameBuffer();
 		}
