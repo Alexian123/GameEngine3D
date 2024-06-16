@@ -1,4 +1,4 @@
-#version 400 core
+#version 330 core
 
 #define MAX_LIGHTS 4
 
@@ -8,7 +8,8 @@ in vec3 toCameraVector;
 in vec3 fromLightVector[MAX_LIGHTS];
 in float visibility;
 
-out vec4 outColor;
+layout (location = 0) out vec4 outColor;
+layout (location = 1) out vec4 outBrightColor;
 
 uniform sampler2D reflectionTexture;
 uniform sampler2D refractionTexture;
@@ -73,4 +74,5 @@ void main(void) {
 	outColor.a = clamp(waterDepth / 5.0, 0.0, 1.0);
 
 	outColor = mix(vec4(fogColor, 1.0), outColor, visibility);
+	outBrightColor = vec4(0.0);
 }

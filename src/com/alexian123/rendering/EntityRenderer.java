@@ -97,7 +97,7 @@ public class EntityRenderer {
 		shader.loadAtlasDimension(texture.getAtlasDimension());
 		shader.loadUseFakeLighting(texture.isFakeLighting());
 		shader.loadShineParameters(texture.getShineDamper(), texture.getReflectivity());
-		shader.loadUseLightingMap(texture.isUsingSpecularMap(), texture.isUsingDiffuseMap());
+		shader.loadUseLightingMap(texture.isUsingLightingMap());
 	}
 	
 	protected void unbind() {

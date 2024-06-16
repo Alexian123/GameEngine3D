@@ -1,4 +1,4 @@
-#version 400 core
+#version 330 core
 
 #define MAX_LIGHTS 4
 
@@ -8,7 +8,8 @@ in vec3 toCameraVector;
 in vec4 shadowMapCoord;
 in float visibility;
 
-out vec4 outColor;
+layout (location = 0) out vec4 outColor;
+layout (location = 1) out vec4 outBrightColor;
 
 uniform sampler2D modelTexture;
 uniform sampler2D lightingMap;
@@ -22,8 +23,7 @@ uniform int shadowMapSize;
 uniform int pcfCount;
 uniform float shineDamper;
 uniform float reflectivity;
-uniform float useSpecularMap;
-uniform float useDiffuseMap;
+uniform float useLightingMap;
 uniform float ambientLight;
 
 void main(void) {
@@ -76,14 +76,12 @@ void main(void) {
 		discard;
 	}
 
-	vec4 lightingMapInfo = vec4(0.0);
-	if (useSpecularMap > 0.5 || useDiffuseMap > 0.5) {
-		lightingMapInfo = texture(lightingMap, passTextureCoord);
-		if (useSpecularMap > 0.5) {
-			specular *= lightingMapInfo.r;
-		}
-		if (useDiffuseMap > 0.5) {
-			diffuse = max(diffuse * lightingMapInfo.g, ambientLight);
+	if (useLightingMap > 0.5) {
+		vec4 lightingMapInfo = texture(lightingMap, passTextureCoord);
+		specular *= lightingMapInfo.r;
+		if (lightingMapInfo.g > 0.5) {
+			outBrightColor = textureColor + vec4(specular, 1.0);
+			diffuse = vec3(1.0);
 		}
 	}
 

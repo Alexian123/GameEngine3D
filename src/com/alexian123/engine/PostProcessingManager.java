@@ -39,10 +39,10 @@ public class PostProcessingManager {
 		}
 	}
 	
-	public static void doPostProcessing(int colourTexture) {
+	public static void doPostProcessing(int colourTexture, int brightTexture) {
 		start();
-		brightFilter.run(colourTexture);
-		hBlur.run(brightFilter.getOutputTexture());
+		//brightFilter.run(colourTexture);
+		hBlur.run(brightTexture);
 		vBlur.run(hBlur.getOutputTexture());
 		combineFilter.run(colourTexture, vBlur.getOutputTexture());
 		end();

@@ -24,8 +24,12 @@ import com.alexian123.water.WaterFrameBuffers;
 
 public class RenderingManager {
 	
-	private static Fbo multisampledFbo = new Fbo(Display.getWidth(), Display.getHeight());
-	private static Fbo outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), DepthBufferType.DEPTH_TEXTURE, false);
+	private static final int NUM_FBOS = 3;
+	private static final int MULTISAMPLE_FBO = 0;
+	private static final int OUTPUT_FBO_1 = 1;
+	private static final int OUTPUT_FBO_2 = 2;
+	
+	private static final Fbo[] FBO = new Fbo[NUM_FBOS];
 	
 	private static TerrainRenderer terrainRenderer;
 	private static WaterRenderer waterRenderer;
@@ -42,6 +46,9 @@ public class RenderingManager {
 			ShadowManager.init(camera);
 			EntityManager.init(ShadowManager.getShadowMap());
 			PostProcessingManager.init(loader);
+			FBO[MULTISAMPLE_FBO] = new Fbo(Display.getWidth(), Display.getHeight(), false, true);
+			FBO[OUTPUT_FBO_1] = new Fbo(Display.getWidth(), Display.getHeight(), DepthBufferType.DEPTH_TEXTURE, false);
+			FBO[OUTPUT_FBO_2] = new Fbo(Display.getWidth(), Display.getHeight(), DepthBufferType.DEPTH_TEXTURE, false);
 			terrainRenderer = new TerrainRenderer(ShadowManager.getShadowMap());
 			waterRenderer = new WaterRenderer(loader);
 			skyBoxRenderer = new SkyBoxRenderer(loader, clock);
@@ -54,13 +61,14 @@ public class RenderingManager {
 		ShadowManager.render(scene.getEntities(), scene.getLights().get(0));
 		renderWaterFX(scene, camera);
 		
-		multisampledFbo.bindFrameBuffer();
+		FBO[MULTISAMPLE_FBO].bindFrameBuffer();
 		renderFrame(scene, camera, new Vector4f(0, -1, 0, 1000));
 		waterRenderer.render(scene.getWaters(), camera, scene.getLights());
 		ParticleManager.renderParticles(camera);
-		multisampledFbo.unbindFrameBuffer();
-		multisampledFbo.resolveToFbo(outputFbo);
-		PostProcessingManager.doPostProcessing(outputFbo.getColorTexture());
+		FBO[MULTISAMPLE_FBO].unbindFrameBuffer();
+		FBO[MULTISAMPLE_FBO].resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, FBO[OUTPUT_FBO_1]);
+		FBO[MULTISAMPLE_FBO].resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, FBO[OUTPUT_FBO_2]);
+		PostProcessingManager.doPostProcessing(FBO[OUTPUT_FBO_1].getColorTexture(), FBO[OUTPUT_FBO_2].getColorTexture());
 		
 		guiRenderer.render(guis);
 		TextManager.renderText();
@@ -73,12 +81,13 @@ public class RenderingManager {
 		Water.cleanup();
 		ShadowManager.cleanup();
 		PostProcessingManager.cleanup();
-		multisampledFbo.cleanup();
-		outputFbo.cleanup();
 		terrainRenderer.cleanup();
 		waterRenderer.cleanup();
 		skyBoxRenderer.cleanup();
 		guiRenderer.cleanup();
+		for (int i = 0; i < NUM_FBOS; ++i) {
+			FBO[i].cleanup();
+		}
 	}
 	
 	public static void enableCulling() {

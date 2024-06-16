@@ -172,7 +172,7 @@ public class TestGame extends Game {
 		// lamps
 		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("lantern"));
 		texture = new ModelTexture(loader.loadTexture("entities/lantern"), false, true);
-		texture.setLightingMap(loader.loadTexture("maps/lanternDiffuse"), ModelTexture.DIFFUSE_MAP);
+		texture.setLightingMap(loader.loadTexture("maps/lanternDiffuse"));
 		texturedModel = new TexturedModel(rawModel, texture);
 		lamps = new LightEntity[3];
 		lamps[0] = new LightEntity(texturedModel, new Vector3f(329, terrainGrid.getHeightAt(329, 476), 476), new Vector3f(0, 0, 0), 1, 0.7f, new Vector3f(0.5f, 0.25f, 0), new Vector3f(1, 0.01f, 0.002f));
@@ -185,7 +185,7 @@ public class TestGame extends Game {
 		// NM barrel
 		rawModel = loader.loadToVao(OBJFileLoaderNM.loadOBJ("barrel"));	
 		texture = new ModelTexture(loader.loadTexture("entities/barrel"), loader.loadTexture("maps/barrelNormal"), 10f, 0.5f);
-		texture.setLightingMap(loader.loadTexture("maps/barrelSpecular"), ModelTexture.SPECULAR_MAP);
+		texture.setLightingMap(loader.loadTexture("maps/barrelSpecular"));
 		texturedModel = new TexturedModel(rawModel, texture);
 		barrel = new Entity(texturedModel, new Vector3f(334, terrainGrid.getHeightAt(334, 290) + 10f, 290), new Vector3f(0, 0, 0), 1);
 		entities.add(barrel);

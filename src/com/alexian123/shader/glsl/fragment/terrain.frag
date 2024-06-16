@@ -1,4 +1,4 @@
-#version 400 core
+#version 330 core
 
 #define MAX_LIGHTS 4
 
@@ -9,7 +9,8 @@ in vec3 toCameraVector;
 in vec4 shadowMapCoord;
 in float visibility;
 
-out vec4 outColor;
+layout (location = 0) out vec4 outColor;
+layout (location = 1) out vec4 outBrightColor;
 
 uniform sampler2D bgTexture;
 uniform sampler2D rTexture;
@@ -83,4 +84,5 @@ void main(void) {
 
 	outColor = vec4(diffuse, 1.0) * totalColor + vec4(specular, 1.0);
 	outColor = mix(vec4(fogColor, 1.0), outColor, visibility);
+	outBrightColor = vec4(0.0);
 }

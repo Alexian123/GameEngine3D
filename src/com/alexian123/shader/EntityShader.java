@@ -102,9 +102,8 @@ public class EntityShader extends ShaderProgram {
 		loadInt(uniforms.get(Uniform.PCF_COUNT), pcfCount);
 	}
 	
-	public void loadUseLightingMap(boolean useSpecularMap, boolean useDiffuseMap) {
-		loadBoolean(uniforms.get(Uniform.USE_SPECULAR_MAP), useSpecularMap);
-		loadBoolean(uniforms.get(Uniform.USE_DIFFUSE_MAP), useDiffuseMap);
+	public void loadUseLightingMap(boolean useLightingMap) {
+		loadBoolean(uniforms.get(Uniform.USE_LIGHTING_MAP), useLightingMap);
 	}
 	
 	public void loadAmbientLight(float ambientLight) {
@@ -142,8 +141,7 @@ public class EntityShader extends ShaderProgram {
 		uniforms.put(Uniform.SHADOW_MAP_SIZE, NEW_UNIFORM);
 		uniforms.put(Uniform.PCF_COUNT, NEW_UNIFORM);
 		uniforms.put(Uniform.LIGHTING_MAP, NEW_UNIFORM);
-		uniforms.put(Uniform.USE_SPECULAR_MAP, NEW_UNIFORM);
-		uniforms.put(Uniform.USE_DIFFUSE_MAP, NEW_UNIFORM);
+		uniforms.put(Uniform.USE_LIGHTING_MAP, NEW_UNIFORM);
 		uniforms.put(Uniform.AMBIENT_LIGHT, NEW_UNIFORM);
 	
 		uniformArrays.put(Uniform.LIGHT_POSITION, createNewUniformArray(Constants.MAX_LIGHTS));

@@ -4,9 +4,6 @@ public class ModelTexture {
 	
 	public static final int NO_TEXTURE = -1;
 	
-	public static final int SPECULAR_MAP = 0x1;
-	public static final int DIFFUSE_MAP = 0x2;
-	
 	private final int id;
 	
 	private int normalMap = NO_TEXTURE;
@@ -19,8 +16,6 @@ public class ModelTexture {
 	
 	private boolean usingTransparency = false;
 	private boolean usingFakeLighting = false;
-	
-	private int mapType = 0;
 	
 	public ModelTexture(int id) {
 		this.id = id;
@@ -122,16 +117,11 @@ public class ModelTexture {
 		return lightingMap;
 	}
 
-	public void setLightingMap(int lightingMap, int mapType) {
+	public void setLightingMap(int lightingMap) {
 		this.lightingMap = lightingMap;
-		this.mapType = mapType;
 	}
-
-	public boolean isUsingSpecularMap() {
-		return (mapType & SPECULAR_MAP) != 0;
-	}
-
-	public boolean isUsingDiffuseMap() {
-		return (mapType & DIFFUSE_MAP) != 0;
+	
+	public boolean isUsingLightingMap() {
+		return lightingMap != NO_TEXTURE;
 	}
 }
