@@ -1,16 +1,12 @@
 package com.alexian123.shader;
 
-public class ContrastShader extends ShaderProgram {
+public class BrightFilterShader extends ShaderProgram{
 
 	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/simple_quad.vert";
-	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/contrast.frag";
+	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/bright_filter.frag";
 
-	public ContrastShader() {
+	public BrightFilterShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
-	}
-	
-	public void loadContrast(float contrast) {
-		loadFloat(uniforms.get(Uniform.CONTRAST), contrast);
 	}
 	
 	@Override
@@ -19,9 +15,10 @@ public class ContrastShader extends ShaderProgram {
 		attributes.put(Attribute.POSITION, attribNo++);
 		return attribNo;
 	}
-	
+
 	@Override
 	protected void setUniforms() {
-		uniforms.put(Uniform.CONTRAST, NEW_UNIFORM);
+
 	}
+	
 }

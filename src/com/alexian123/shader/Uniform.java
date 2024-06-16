@@ -61,6 +61,9 @@ public enum Uniform {
 	USE_SPECULAR_MAP("useSpecularMap"),
 	USE_DIFFUSE_MAP("useDiffuseMap"),
 	AMBIENT_LIGHT("ambientLight"),
+	COLOR_TEXTURE("colorTexture"),
+	HIGHLIGHT_TEXTURE("highlightTexture"),
+	BLOOM_FACTOR("bloomFactor"),
 	;
 
 	private final String name;

@@ -25,10 +25,10 @@ public class EntityRenderer {
 	
 	private static final int MAX_NUM_TEXTURES = 4;
 
-	protected final EntityShader shader;
+	private final EntityShader shader;
 	
-	protected final int numTextures;
-	protected final int[] textures = new int[MAX_NUM_TEXTURES];
+	private final int numTextures;
+	private final int[] textures = new int[MAX_NUM_TEXTURES];
 	
 	public EntityRenderer(int shadowMapID) {
 		this(new EntityShader(), shadowMapID);
