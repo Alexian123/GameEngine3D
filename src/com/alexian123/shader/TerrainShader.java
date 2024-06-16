@@ -90,6 +90,10 @@ public class TerrainShader extends ShaderProgram {
 		loadInt(uniforms.get(Uniform.PCF_COUNT), pcfCount);
 	}
 	
+	public void loadAmbientLight(float ambientLight) {
+		loadFloat(uniforms.get(Uniform.AMBIENT_LIGHT), ambientLight);
+	}
+	
 	@Override
 	protected int setAttributes() {
 		int attribNo = 0;
@@ -121,6 +125,7 @@ public class TerrainShader extends ShaderProgram {
 		uniforms.put(Uniform.SHADOW_TRANSITION, NEW_UNIFORM);
 		uniforms.put(Uniform.SHADOW_MAP_SIZE, NEW_UNIFORM);
 		uniforms.put(Uniform.PCF_COUNT, NEW_UNIFORM);
+		uniforms.put(Uniform.AMBIENT_LIGHT, NEW_UNIFORM);
 		
 		uniformArrays.put(Uniform.LIGHT_POSITION, createNewUniformArray(Constants.MAX_LIGHTS));
 		uniformArrays.put(Uniform.LIGHT_COLOR, createNewUniformArray(Constants.MAX_LIGHTS));

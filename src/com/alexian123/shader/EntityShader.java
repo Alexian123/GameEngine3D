@@ -25,8 +25,9 @@ public class EntityShader extends ShaderProgram {
 	
 	public int connectTextureUnits() {
 		int textureNo = 0;
-		loadInt(uniforms.get(Uniform.MODEL_TEXTURE), textureNo++);
 		loadInt(uniforms.get(Uniform.SHADOW_MAP), textureNo++);
+		loadInt(uniforms.get(Uniform.MODEL_TEXTURE), textureNo++);
+		loadInt(uniforms.get(Uniform.LIGHTING_MAP), textureNo++);
 		return textureNo;
 	}
 	
@@ -101,6 +102,15 @@ public class EntityShader extends ShaderProgram {
 		loadInt(uniforms.get(Uniform.PCF_COUNT), pcfCount);
 	}
 	
+	public void loadUseLightingMap(boolean useSpecularMap, boolean useDiffuseMap) {
+		loadBoolean(uniforms.get(Uniform.USE_SPECULAR_MAP), useSpecularMap);
+		loadBoolean(uniforms.get(Uniform.USE_DIFFUSE_MAP), useDiffuseMap);
+	}
+	
+	public void loadAmbientLight(float ambientLight) {
+		loadFloat(uniforms.get(Uniform.AMBIENT_LIGHT), ambientLight);
+	}
+	
 	@Override
 	protected int setAttributes() {
 		int attribNo = 0;
@@ -131,6 +141,10 @@ public class EntityShader extends ShaderProgram {
 		uniforms.put(Uniform.SHADOW_TRANSITION, NEW_UNIFORM);
 		uniforms.put(Uniform.SHADOW_MAP_SIZE, NEW_UNIFORM);
 		uniforms.put(Uniform.PCF_COUNT, NEW_UNIFORM);
+		uniforms.put(Uniform.LIGHTING_MAP, NEW_UNIFORM);
+		uniforms.put(Uniform.USE_SPECULAR_MAP, NEW_UNIFORM);
+		uniforms.put(Uniform.USE_DIFFUSE_MAP, NEW_UNIFORM);
+		uniforms.put(Uniform.AMBIENT_LIGHT, NEW_UNIFORM);
 	
 		uniformArrays.put(Uniform.LIGHT_POSITION, createNewUniformArray(Constants.MAX_LIGHTS));
 		uniformArrays.put(Uniform.LIGHT_COLOR, createNewUniformArray(Constants.MAX_LIGHTS));

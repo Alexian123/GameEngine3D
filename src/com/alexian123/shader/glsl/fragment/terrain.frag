@@ -25,6 +25,7 @@ uniform int shadowMapSize;
 uniform int pcfCount;
 uniform float shineDamper;
 uniform float reflectivity;
+uniform float ambientLight;
 
 
 void main(void) {
@@ -78,7 +79,7 @@ void main(void) {
 		float dampedFactor = pow(specularFactor, shineDamper);
 		specular += dampedFactor * reflectivity * lightColor[i] / attenuationFactor;
 	}
-	diffuse = max(diffuse * lightFactor, 0.2); // minimum value = ambient light
+	diffuse = max(diffuse * lightFactor, ambientLight); // minimum value = ambient light
 
 	outColor = vec4(diffuse, 1.0) * totalColor + vec4(specular, 1.0);
 	outColor = mix(vec4(fogColor, 1.0), outColor, visibility);

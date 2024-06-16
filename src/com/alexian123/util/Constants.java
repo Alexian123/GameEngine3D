@@ -21,6 +21,8 @@ public class Constants {
 	public static final float FOV = 70.0f;
 	public static final Matrix4f PROJECTION_MATRIX = Maths.createProjectionMatrix(FOV, FAR_PLANE, NEAR_PLANE);
 	
+	public static final float AMBIENT_LIGHT = 0.4f;
+	
 	public static final Vector3f FOG_COLOR = new Vector3f(0.5444f, 0.62f, 0.69f);
 	public static final float FOG_DENSITY = 0.003f;
 	public static final float FOG_GRADIENT = 5.0f;

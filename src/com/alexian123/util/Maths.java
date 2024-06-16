@@ -9,6 +9,10 @@ import com.alexian123.entity.Camera;
 
 public class Maths {
 	
+	public static float clamp(float val, float lower, float upper) {
+		return Math.max(Math.min(val, upper), lower);
+	}
+	
 	public static Matrix4f createProjectionMatrix(float fov, float farPlane, float nearPlane) {
 		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
 		float xScale = (float) (1.0f / Math.tan(Math.toRadians(fov / 2.0f)));

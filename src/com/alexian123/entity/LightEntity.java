@@ -4,10 +4,13 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.lighting.Light;
 import com.alexian123.model.TexturedModel;
+import com.alexian123.util.Maths;
 
 public class LightEntity extends Entity {
 	
 	private final Light light;
+	
+	private float lightYFactor;
 
 	/**
 	 * Creates a new LightEntity object
@@ -30,11 +33,8 @@ public class LightEntity extends Entity {
 	public LightEntity(TexturedModel model, Vector3f position, Vector3f rotation, float scale, 
 			float lightYFactor, Vector3f color, Vector3f attenuation) {
 		super(model, position, rotation, scale, true);
-		lightYFactor = Math.min(lightYFactor, 1.0f);
-		lightYFactor = Math.max(lightYFactor, 0.0f);
-		Vector3f lightPoition = new Vector3f(position);
-		lightPoition.y += lightYFactor * scale * model.getRawModel().getHeight();
-		this.light = new Light(lightPoition, color, attenuation);
+		this.lightYFactor = Maths.clamp(lightYFactor, 0.0f, 1.0f);
+		this.light = new Light(getUpdatedLightPosition(position), color, attenuation);
 	}
 	
 	/**
@@ -43,5 +43,40 @@ public class LightEntity extends Entity {
 	 */
 	public Light getLight() {
 		return light;
+	}
+	
+	/**
+	 * 
+	 * @return The light Y factor
+	 */
+	public float getLightYFactor() {
+		return lightYFactor;
+	}
+
+	/**
+	 * Sets the Y factor for the light
+	 * 
+	 * @param lightYFactor
+	 */
+	public void setLightYFactor(float lightYFactor) {
+		this.lightYFactor = Maths.clamp(lightYFactor, 0.0f, 1.0f);
+	}
+
+	@Override
+	public void incrementPosition(float x, float y, float z) {
+		super.incrementPosition(x, y, z);
+		light.setPosition(getUpdatedLightPosition(position));
+	}
+	
+	@Override
+	public void setPosition(Vector3f position) {
+		super.setPosition(position);
+		light.setPosition(getUpdatedLightPosition(position));
+	}
+	
+	private Vector3f getUpdatedLightPosition(Vector3f entityPosition) {
+		Vector3f lightPoition = new Vector3f(entityPosition);
+		lightPoition.y += this.lightYFactor * getScale() * getModel().getRawModel().getHeight();
+		return lightPoition;
 	}
 }

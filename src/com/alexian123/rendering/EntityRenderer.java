@@ -23,7 +23,7 @@ import com.alexian123.util.Maths;
 
 public class EntityRenderer {
 	
-	private static final int MAX_NUM_TEXTURES = 3;
+	private static final int MAX_NUM_TEXTURES = 4;
 
 	protected final EntityShader shader;
 	
@@ -40,8 +40,9 @@ public class EntityRenderer {
 		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
 		shader.loadShadowParameters(Constants.SHADOW_DISTANCE, Constants.SHADOW_TRANSITION);
 		shader.loadShadowMapSize(Constants.SHADOW_MAP_SIZE);
+		shader.loadAmbientLight(Constants.AMBIENT_LIGHT);
 		this.numTextures = shader.connectTextureUnits();
-		textures[1] = shadowMapID;
+		textures[0] = shadowMapID;
 		shader.stop();
 	}
 	
@@ -75,22 +76,28 @@ public class EntityRenderer {
 	protected void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 		ModelTexture texture = model.getTexture();
-		textures[0] = texture.getID();
-		textures[2] = texture.getNormalMap();
+		textures[1] = texture.getID();
+		textures[2] = texture.getLightingMap();
+		textures[3] = texture.getNormalMap();
+		
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		for (int i = 0; i < shader.getNumAttributes(); ++i) {
 			GL20.glEnableVertexAttribArray(i);
 		}
-		shader.loadAtlasDimension(texture.getAtlasDimension());
+		
 		if (texture.isTransparency()) {
 			RenderingManager.disableCulling();
 		}
-		shader.loadUseFakeLighting(texture.isFakeLighting());
-		shader.loadShineParameters(texture.getShineDamper(), texture.getReflectivity());
+		
 		for (int i = 0; i < numTextures; ++i) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0 + i);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textures[i]);
 		}
+		
+		shader.loadAtlasDimension(texture.getAtlasDimension());
+		shader.loadUseFakeLighting(texture.isFakeLighting());
+		shader.loadShineParameters(texture.getShineDamper(), texture.getReflectivity());
+		shader.loadUseLightingMap(texture.isUsingSpecularMap(), texture.isUsingDiffuseMap());
 	}
 	
 	protected void unbind() {

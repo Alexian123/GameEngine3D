@@ -57,6 +57,10 @@ public enum Uniform {
 	CONTRAST("contrast"),
 	TARGET_WIDTH("targetWidth"),
 	TARGET_HEIGHT("targetHeight"),
+	LIGHTING_MAP("lightingMap"),
+	USE_SPECULAR_MAP("useSpecularMap"),
+	USE_DIFFUSE_MAP("useDiffuseMap"),
+	AMBIENT_LIGHT("ambientLight"),
 	;
 
 	private final String name;

@@ -4,14 +4,23 @@ public class ModelTexture {
 	
 	public static final int NO_TEXTURE = -1;
 	
+	public static final int SPECULAR_MAP = 0x1;
+	public static final int DIFFUSE_MAP = 0x2;
+	
 	private final int id;
 	
 	private int normalMap = NO_TEXTURE;
+	private int lightingMap = NO_TEXTURE;
+	
+	private int atlasDimension = 1;
+	
 	private float shineDamper = 1;
 	private float reflectivity = 0;
-	private boolean transparency = false;
-	private boolean fakeLighting = false;
-	private int atlasDimension = 1;
+	
+	private boolean usingTransparency = false;
+	private boolean usingFakeLighting = false;
+	
+	private int mapType = 0;
 	
 	public ModelTexture(int id) {
 		this.id = id;
@@ -36,24 +45,24 @@ public class ModelTexture {
 	
 	public ModelTexture(int id, boolean transparency, boolean fakeLighting) {
 		this.id = id;
-		this.transparency = transparency;
-		this.fakeLighting = fakeLighting;
+		this.usingTransparency = transparency;
+		this.usingFakeLighting = fakeLighting;
 	}
 	
 	public ModelTexture(int id, float shineDamper, float reflectivity, boolean transparency, boolean fakeLighting) {
 		this.id = id;
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
-		this.transparency = transparency;
-		this.fakeLighting = fakeLighting;
+		this.usingTransparency = transparency;
+		this.usingFakeLighting = fakeLighting;
 	}
 	
 	public ModelTexture(int id, float shineDamper, float reflectivity, boolean transparency, boolean fakeLighting, int atlasDimension) {
 		this.id = id;
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
-		this.transparency = transparency;
-		this.fakeLighting = fakeLighting;
+		this.usingTransparency = transparency;
+		this.usingFakeLighting = fakeLighting;
 		this.atlasDimension = atlasDimension;
 	}
 	
@@ -86,19 +95,19 @@ public class ModelTexture {
 	}
 
 	public boolean isTransparency() {
-		return transparency;
+		return usingTransparency;
 	}
 
 	public void setTransparency(boolean transparency) {
-		this.transparency = transparency;
+		this.usingTransparency = transparency;
 	}
 
 	public boolean isFakeLighting() {
-		return fakeLighting;
+		return usingFakeLighting;
 	}
 
 	public void setFakeLighting(boolean fakeLighting) {
-		this.fakeLighting = fakeLighting;
+		this.usingFakeLighting = fakeLighting;
 	}
 
 	public int getAtlasDimension() {
@@ -107,5 +116,22 @@ public class ModelTexture {
 
 	public void setAtlasDimension(int atlasDimension) {
 		this.atlasDimension = atlasDimension;
+	}
+
+	public int getLightingMap() {
+		return lightingMap;
+	}
+
+	public void setLightingMap(int lightingMap, int mapType) {
+		this.lightingMap = lightingMap;
+		this.mapType = mapType;
+	}
+
+	public boolean isUsingSpecularMap() {
+		return (mapType & SPECULAR_MAP) != 0;
+	}
+
+	public boolean isUsingDiffuseMap() {
+		return (mapType & DIFFUSE_MAP) != 0;
 	}
 }

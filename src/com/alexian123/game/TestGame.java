@@ -48,7 +48,6 @@ public class TestGame extends Game {
 	private List<Water> waters = new ArrayList<>();
 	private List<GUITexture> guis = new ArrayList<>();
 	
-	private Entity lastTree;
 	private Entity barrel;
 	private Entity crate;
 	private Entity boulder;
@@ -83,7 +82,7 @@ public class TestGame extends Game {
 		mousePicker.update();
 		Vector3f terrainPoint = mousePicker.getCurrentTerrainPoint();
 		if (terrainPoint != null && Mouse.isButtonDown(0)) {
-			lastTree.setPosition(terrainPoint);
+			lamps[0].setPosition(terrainPoint);
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
@@ -151,14 +150,13 @@ public class TestGame extends Game {
 		entities.add(player);
 		
 		// trees
-		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("tree"));
-		texture = new ModelTexture(loader.loadTexture("entities/tree"), 1, 0);
+		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("cherry"));
+		texture = new ModelTexture(loader.loadTexture("entities/cherry"), 1, 0);
 		texturedModel = new TexturedModel(rawModel, texture);
-		for (int i = 0; i < 1000; ++i) {
+		for (int i = 0; i < 250; ++i) {
 			float x = random.nextFloat() * 1600 - 800; 
 			float z = random.nextFloat() * 1600 - 800;
-			lastTree = new Entity(texturedModel, new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z) - 0.5f, z), new Vector3f(0, 0, 0), 10);
-			entities.add(lastTree);
+			entities.add(new Entity(texturedModel, new Vector3f(x, terrainGrid.getTerrainAt(x, z).getHeightAtPosition(x, z), z), new Vector3f(0, 0, 0), 5));
 		}
 		
 		// ferns
@@ -172,20 +170,22 @@ public class TestGame extends Game {
 		}
 		
 		// lamps
-		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("lamp"));
-		texture = new ModelTexture(loader.loadTexture("entities/lamp"), false, true);
+		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("lantern"));
+		texture = new ModelTexture(loader.loadTexture("entities/lantern"), false, true);
+		texture.setLightingMap(loader.loadTexture("maps/lanternDiffuse"), ModelTexture.DIFFUSE_MAP);
 		texturedModel = new TexturedModel(rawModel, texture);
 		lamps = new LightEntity[3];
-		lamps[0] = new LightEntity(texturedModel, new Vector3f(329, terrainGrid.getHeightAt(329, 476), 476), new Vector3f(0, 0, 0), 1, 0.9f, new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
-		lamps[1] = new LightEntity(texturedModel, new Vector3f(370, terrainGrid.getHeightAt(370, 300), 300), new Vector3f(0, 0, 0), 1, 0.9f, new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
-		lamps[2] = new LightEntity(texturedModel, new Vector3f(293, terrainGrid.getHeightAt(293, 305), 305), new Vector3f(0, 0, 0), 1, 0.9f, new Vector3f(2, 1, 0), new Vector3f(1, 0.01f, 0.002f));
+		lamps[0] = new LightEntity(texturedModel, new Vector3f(329, terrainGrid.getHeightAt(329, 476), 476), new Vector3f(0, 0, 0), 1, 0.7f, new Vector3f(0.5f, 0.25f, 0), new Vector3f(1, 0.01f, 0.002f));
+		lamps[1] = new LightEntity(texturedModel, new Vector3f(370, terrainGrid.getHeightAt(370, 300), 300), new Vector3f(0, 0, 0), 1, 0.7f, new Vector3f(0.5f, 0.25f, 0), new Vector3f(1, 0.01f, 0.002f));
+		lamps[2] = new LightEntity(texturedModel, new Vector3f(293, terrainGrid.getHeightAt(293, 305), 305), new Vector3f(0, 0, 0), 1, 0.7f, new Vector3f(0.5f, 0.25f, 0), new Vector3f(1, 0.01f, 0.002f));
 		entities.add(lamps[0]);
 		entities.add(lamps[1]);
 		entities.add(lamps[2]);
 		
 		// NM barrel
 		rawModel = loader.loadToVao(OBJFileLoaderNM.loadOBJ("barrel"));	
-		texture = new ModelTexture(loader.loadTexture("entities/barrel"), loader.loadTexture("maps/barrelNormal"), 10f, 0.5f);;
+		texture = new ModelTexture(loader.loadTexture("entities/barrel"), loader.loadTexture("maps/barrelNormal"), 10f, 0.5f);
+		texture.setLightingMap(loader.loadTexture("maps/barrelSpecular"), ModelTexture.SPECULAR_MAP);
 		texturedModel = new TexturedModel(rawModel, texture);
 		barrel = new Entity(texturedModel, new Vector3f(334, terrainGrid.getHeightAt(334, 290) + 10f, 290), new Vector3f(0, 0, 0), 1);
 		entities.add(barrel);

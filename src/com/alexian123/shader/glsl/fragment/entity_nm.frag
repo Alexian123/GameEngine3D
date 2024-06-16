@@ -11,6 +11,7 @@ in float visibility;
 out vec4 outColor;
 
 uniform sampler2D modelTexture;
+uniform sampler2D lightingMap;
 uniform sampler2D shadowMap;
 uniform sampler2D normalMap;
 
@@ -21,6 +22,9 @@ uniform int shadowMapSize;
 uniform int pcfCount;
 uniform float shineDamper;
 uniform float reflectivity;
+uniform float useSpecularMap;
+uniform float useDiffuseMap;
+uniform float ambientLight;
 
 void main(void) {
 	float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
@@ -65,11 +69,22 @@ void main(void) {
 		float dampedFactor = pow(specularFactor, shineDamper);
 		specular += dampedFactor * reflectivity * lightColor[i] / attenuationFactor;
 	}
-	diffuse = max(diffuse * lightFactor, 0.2); // minimum value = ambient light
+	diffuse = max(diffuse * lightFactor, ambientLight); // minimum value = ambient light
 
 	vec4 textureColor = texture(modelTexture, passTextureCoord);
 	if (textureColor.a < 0.5) {	// transparency
 		discard;
+	}
+
+	vec4 lightingMapInfo = vec4(0.0);
+	if (useSpecularMap > 0.5 || useDiffuseMap > 0.5) {
+		lightingMapInfo = texture(lightingMap, passTextureCoord);
+		if (useSpecularMap > 0.5) {
+			specular *= lightingMapInfo.r;
+		}
+		if (useDiffuseMap > 0.5) {
+			diffuse = max(diffuse * lightingMapInfo.g, ambientLight);
+		}
 	}
 
 	outColor = vec4(diffuse, 1.0) * textureColor + vec4(specular, 1.0);
