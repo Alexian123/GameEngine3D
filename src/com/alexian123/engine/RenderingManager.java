@@ -16,9 +16,9 @@ import com.alexian123.rendering.WaterRenderer;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.util.Clock;
 import com.alexian123.util.Constants;
-import com.alexian123.util.DepthBufferType;
 import com.alexian123.util.Fbo;
 import com.alexian123.util.Scene;
+import com.alexian123.util.enums.DepthBufferType;
 import com.alexian123.water.Water;
 import com.alexian123.water.WaterFrameBuffers;
 

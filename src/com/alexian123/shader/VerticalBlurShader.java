@@ -1,5 +1,8 @@
 package com.alexian123.shader;
 
+import com.alexian123.util.enums.Attribute;
+import com.alexian123.util.enums.Uniform;
+
 public class VerticalBlurShader extends ShaderProgram {
 	
 	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/blur_v.vert";

@@ -13,6 +13,7 @@ import java.util.Map;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
@@ -24,8 +25,12 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import com.alexian123.font.FontType;
+import com.alexian123.loader.data.MeshData;
+import com.alexian123.loader.data.ModelData;
+import com.alexian123.loader.data.ModelDataNM;
 import com.alexian123.model.RawModel;
 import com.alexian123.texture.TextureData;
+import com.alexian123.util.Constants;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
@@ -87,6 +92,18 @@ public class Loader {
 		return new RawModel(vaoID, indices.length, modelHeight);
 	}
 	
+	public RawModel loadToVao(float[] vertices, float[] textureCoords, float[] normals, int[] jointIds, float[] vertexWeights, int[] indices) {
+		int vaoID = createVao();
+		bindIndicesBuffer(indices, vaos.get(vaoID));
+		storeDataInAttributeList(0, 3, vertices, vaos.get(vaoID));
+		storeDataInAttributeList(1, 2, textureCoords, vaos.get(vaoID));
+		storeDataInAttributeList(2, 3, normals, vaos.get(vaoID));
+		storeDataInAttributeList(3, 3, jointIds, vaos.get(vaoID));
+		storeDataInAttributeList(4, 3, vertexWeights, vaos.get(vaoID));
+		unbindVAO();
+		return new RawModel(vaoID, indices.length);
+	}
+	
 	public int loadToVao(float[] vertices, float[] textureCoords) {
 		int vaoID = createVao();
 		storeDataInAttributeList(0, 2, vertices, vaos.get(vaoID));
@@ -110,10 +127,15 @@ public class Loader {
 		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getTangents(), data.getIndices(), data.calculateHeight());
 	}
 	
+	public RawModel loadToVao(MeshData data) {
+		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getJointIds(), data.getVertexWeights(), data.getIndices());
+	}
+	
 	public int loadTexture(String fileName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", Loader.class.getResourceAsStream("/res/textures/" + fileName + ".png"));
+			texture = TextureLoader.getTexture(Constants.TEXTURE_FILE_TYPE, Loader.class.getResourceAsStream(
+					Constants.TEXTURES_DIR + fileName + Constants.TEXTURE_FILE_EXTENSION));
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0f);
@@ -136,7 +158,8 @@ public class Loader {
 	public FontType loadFont(String fontName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", Loader.class.getResourceAsStream("/res/fonts/" + fontName + ".png"));
+			texture = TextureLoader.getTexture(Constants.TEXTURE_FILE_TYPE, Loader.class.getResourceAsStream(
+					Constants.FONTS_DIR + fontName + Constants.TEXTURE_FILE_EXTENSION));
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0f);
@@ -147,7 +170,7 @@ public class Loader {
 		}
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
-		return new FontType(textureID, "/res/fonts/" + fontName + ".fnt");
+		return new FontType(textureID, Constants.FONTS_DIR + fontName + Constants.FONT_FILE_EXTENSION);
 	}
 	
 	/** 
@@ -160,20 +183,24 @@ public class Loader {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, id);
 		for (int i = 0; i < fileNames.length; ++i) {
-			TextureData data = decodeTexture("/res/textures/" + fileNames[i] + ".png");
+			TextureData data = decodeTexture(Constants.TEXTURES_DIR + fileNames[i] + Constants.TEXTURE_FILE_EXTENSION);
 			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, 
 					data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
 			
 		}
 		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL12.GL_TEXTURE_WRAP_R, GL12.GL_CLAMP_TO_EDGE);
 		textures.add(id);
 		return id;
 	}
 	
 	public void cleanup() {
 		for (int vao : vaos.keySet()) {
-			deleteVao(vao);
+			deleteVbos(vao);
+			GL30.glDeleteVertexArrays(vao);
 		}
 		vaos.clear();
 		for (int texture : textures) {
@@ -183,14 +210,24 @@ public class Loader {
 	}
 	
 	public void deleteVao(int vaoID) {
+		deleteVbos(vaoID);
+		vaos.remove(vaoID);
+		GL30.glDeleteVertexArrays(vaoID);
+	}
+	
+	public void deleteVbos(int vaoID) {
 		List<Integer> vbos = vaos.get(vaoID);
 		if (vbos != null) {
 			for (int vbo : vbos) {
 				GL15.glDeleteBuffers(vbo);
 			}
 			vbos.clear();
-			GL30.glDeleteVertexArrays(vaoID);
 		}
+	}
+	
+	public void deleteTexture(int textureID) {
+		textures.remove(textureID);
+		GL11.glDeleteTextures(textureID);
 	}
 	
 	private int createVao() {
@@ -207,6 +244,16 @@ public class Loader {
 		FloatBuffer buffer = storeDataInFloatBuffer(data);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(attributeNum, size, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
+	private void storeDataInAttributeList(int attributeNum, int size, int[] data, List<Integer> vbos) {
+		int vboID = GL15.glGenBuffers();
+		vbos.add(vboID);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		IntBuffer buffer = storeDataInIntBuffer(data);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+		GL30.glVertexAttribIPointer(attributeNum, size, GL11.GL_INT, size * 4, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	

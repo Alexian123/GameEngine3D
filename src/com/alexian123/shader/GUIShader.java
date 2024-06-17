@@ -2,6 +2,9 @@ package com.alexian123.shader;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+import com.alexian123.util.enums.Attribute;
+import com.alexian123.util.enums.Uniform;
+
 public class GUIShader extends ShaderProgram {
 	
 	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/gui.vert";

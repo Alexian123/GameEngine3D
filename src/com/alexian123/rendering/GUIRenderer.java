@@ -12,7 +12,7 @@ import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.shader.GUIShader;
 import com.alexian123.texture.GUITexture;
-import com.alexian123.util.Maths;
+import com.alexian123.util.mathematics.MatrixCreator;
 
 public class GUIRenderer {
 	
@@ -36,7 +36,7 @@ public class GUIRenderer {
 		for (GUITexture gui : guis) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getID());
-			Matrix4f transformationMatrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
+			Matrix4f transformationMatrix = MatrixCreator.createTransformationMatrix(gui.getPosition(), gui.getScale());
 			shader.loadTransformationMatrix(transformationMatrix);
 			GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		}

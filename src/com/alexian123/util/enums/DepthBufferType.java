@@ -1,4 +1,4 @@
-package com.alexian123.util;
+package com.alexian123.util.enums;
 
 public enum DepthBufferType {
 	NONE,

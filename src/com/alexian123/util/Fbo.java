@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import com.alexian123.util.enums.DepthBufferType;
+
 public class Fbo {
 	
 	private static final int MAX_COLOR_BUFFERS = 2;

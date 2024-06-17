@@ -3,8 +3,9 @@ package com.alexian123.entity;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.lighting.Light;
+import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
-import com.alexian123.util.Maths;
+import com.alexian123.util.mathematics.Maths;
 
 public class LightEntity extends Entity {
 	
@@ -76,7 +77,8 @@ public class LightEntity extends Entity {
 	
 	private Vector3f getUpdatedLightPosition(Vector3f entityPosition) {
 		Vector3f lightPoition = new Vector3f(entityPosition);
-		lightPoition.y += this.lightYFactor * getScale() * getModel().getRawModel().getHeight();
+		RawModel rawModel = texturedModel.getRawModel();
+		lightPoition.y += this.lightYFactor * getScale() * rawModel.getHeight();
 		return lightPoition;
 	}
 }

@@ -6,7 +6,9 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.util.Constants;
-import com.alexian123.util.Maths;
+import com.alexian123.util.enums.Attribute;
+import com.alexian123.util.enums.Uniform;
+import com.alexian123.util.mathematics.MatrixCreator;
 import com.alexian123.entity.Camera;
 import com.alexian123.lighting.Light;
 
@@ -20,7 +22,7 @@ public class WaterShader extends ShaderProgram {
 	}
 	
 	public void loadViewMatrix(Camera camera) {
-		super.loadMatrix(uniforms.get(Uniform.VIEW_MATRIX), Maths.createViewMatrix(camera));
+		super.loadMatrix(uniforms.get(Uniform.VIEW_MATRIX), MatrixCreator.createViewMatrix(camera));
 		super.loadVector(uniforms.get(Uniform.CAMERA_POSITION), camera.getPosition());
 	}
 	

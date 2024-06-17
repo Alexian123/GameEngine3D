@@ -1,4 +1,4 @@
-package com.alexian123.loader;
+package com.alexian123.loader.obj;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,12 +9,15 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.loader.data.ModelData;
+import com.alexian123.loader.data.Vertex;
+import com.alexian123.util.Constants;
+
 public class OBJFileLoader {
-	
-	private static final String RES_LOC = "/res/models/regular/";
 
 	public static ModelData loadOBJ(String objFileName) {
-		InputStreamReader isr = new InputStreamReader(OBJFileLoader.class.getResourceAsStream(RES_LOC + objFileName + ".obj"));
+		InputStreamReader isr = new InputStreamReader(OBJFileLoader.class.getResourceAsStream(
+				Constants.REGULAR_MODELS_DIR + objFileName + Constants.MODEL_FILE_EXTENSION));
 		BufferedReader reader = new BufferedReader(isr);
 		String line;
 		List<Vertex> vertices = new ArrayList<>();

@@ -1,4 +1,4 @@
-package com.alexian123.loader;
+package com.alexian123.loader.obj;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,15 +9,18 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.loader.data.ModelDataNM;
+import com.alexian123.loader.data.VertexT;
+import com.alexian123.util.Constants;
+
 public class OBJFileLoaderNM {
 
-	private static final String RES_LOC = "/res/models/normal_mapping/";
-
 	public static ModelDataNM loadOBJ(String objFileName) {
-		InputStreamReader isr = new InputStreamReader(OBJFileLoader.class.getResourceAsStream(RES_LOC + objFileName + ".obj"));
+		InputStreamReader isr = new InputStreamReader(OBJFileLoader.class.getResourceAsStream(
+				Constants.NM_MODELS_DIR + objFileName + Constants.MODEL_FILE_EXTENSION));
 		BufferedReader reader = new BufferedReader(isr);
 		String line;
-		List<VertexNM> vertices = new ArrayList<>();
+		List<VertexT> vertices = new ArrayList<>();
 		List<Vector2f> textures = new ArrayList<>();
 		List<Vector3f> normals = new ArrayList<>();
 		List<Integer> indices = new ArrayList<>();
@@ -29,7 +32,7 @@ public class OBJFileLoaderNM {
 					Vector3f vertex = new Vector3f((float) Float.valueOf(currentLine[1]),
 							(float) Float.valueOf(currentLine[2]),
 							(float) Float.valueOf(currentLine[3]));
-					VertexNM newVertex = new VertexNM(vertices.size(), vertex);
+					VertexT newVertex = new VertexT(vertices.size(), vertex);
 					vertices.add(newVertex);
 
 				} else if (line.startsWith("vt ")) {
@@ -52,9 +55,9 @@ public class OBJFileLoaderNM {
 				String[] vertex1 = currentLine[1].split("/");
 				String[] vertex2 = currentLine[2].split("/");
 				String[] vertex3 = currentLine[3].split("/");
-				VertexNM v0 = processVertex(vertex1, vertices, indices);
-				VertexNM v1 = processVertex(vertex2, vertices, indices);
-				VertexNM v2 = processVertex(vertex3, vertices, indices);
+				VertexT v0 = processVertex(vertex1, vertices, indices);
+				VertexT v1 = processVertex(vertex2, vertices, indices);
+				VertexT v2 = processVertex(vertex3, vertices, indices);
 				calculateTangents(v0, v1, v2, textures);
 				line = reader.readLine();
 			}
@@ -77,7 +80,7 @@ public class OBJFileLoaderNM {
 	}
 
 	//NEW 
-	private static void calculateTangents(VertexNM v0, VertexNM v1, VertexNM v2,
+	private static void calculateTangents(VertexT v0, VertexT v1, VertexT v2,
 			List<Vector2f> textures) {
 		Vector3f delatPos1 = Vector3f.sub(v1.getPosition(), v0.getPosition(), null);
 		Vector3f delatPos2 = Vector3f.sub(v2.getPosition(), v0.getPosition(), null);
@@ -97,9 +100,9 @@ public class OBJFileLoaderNM {
 		v2.addTangent(tangent);
 	}
 
-	private static VertexNM processVertex(String[] vertex, List<VertexNM> vertices, List<Integer> indices) {
+	private static VertexT processVertex(String[] vertex, List<VertexT> vertices, List<Integer> indices) {
 		int index = Integer.parseInt(vertex[0]) - 1;
-		VertexNM currentVertex = vertices.get(index);
+		VertexT currentVertex = vertices.get(index);
 		int textureIndex = Integer.parseInt(vertex[1]) - 1;
 		int normalIndex = Integer.parseInt(vertex[2]) - 1;
 		if (!currentVertex.isSet()) {
@@ -120,12 +123,12 @@ public class OBJFileLoaderNM {
 		return indicesArray;
 	}
 
-	private static float convertDataToArrays(List<VertexNM> vertices, List<Vector2f> textures,
+	private static float convertDataToArrays(List<VertexT> vertices, List<Vector2f> textures,
 			List<Vector3f> normals, float[] verticesArray, float[] texturesArray,
 			float[] normalsArray, float[] tangentsArray) {
 		float furthestPoint = 0;
 		for (int i = 0; i < vertices.size(); i++) {
-			VertexNM currentVertex = vertices.get(i);
+			VertexT currentVertex = vertices.get(i);
 			if (currentVertex.getLength() > furthestPoint) {
 				furthestPoint = currentVertex.getLength();
 			}
@@ -148,17 +151,17 @@ public class OBJFileLoaderNM {
 		return furthestPoint;
 	}
 
-	private static VertexNM dealWithAlreadyProcessedVertex(VertexNM previousVertex, int newTextureIndex,
-			int newNormalIndex, List<Integer> indices, List<VertexNM> vertices) {
+	private static VertexT dealWithAlreadyProcessedVertex(VertexT previousVertex, int newTextureIndex,
+			int newNormalIndex, List<Integer> indices, List<VertexT> vertices) {
 		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
 			indices.add(previousVertex.getIndex());
 			return previousVertex;
 		} else {
-			VertexNM anotherVertex = (VertexNM) previousVertex.getDuplicateVertex();
+			VertexT anotherVertex = (VertexT) previousVertex.getDuplicateVertex();
 			if (anotherVertex != null) {
 				return dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex, newNormalIndex, indices, vertices);
 			} else {
-				VertexNM duplicateVertex = previousVertex.duplicate(vertices.size());//NEW
+				VertexT duplicateVertex = previousVertex.duplicate(vertices.size());//NEW
 				duplicateVertex.setTextureIndex(newTextureIndex);
 				duplicateVertex.setNormalIndex(newNormalIndex);
 				previousVertex.setDuplicateVertex(duplicateVertex);
@@ -169,8 +172,8 @@ public class OBJFileLoaderNM {
 		}
 	}
 
-	private static void removeUnusedVertices(List<VertexNM> vertices) {
-		for (VertexNM vertex : vertices) {
+	private static void removeUnusedVertices(List<VertexT> vertices) {
+		for (VertexT vertex : vertices) {
 			vertex.averageTangents();
 			if (!vertex.isSet()) {
 				vertex.setTextureIndex(0);

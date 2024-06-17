@@ -17,7 +17,7 @@ import com.alexian123.shader.TerrainShader;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.Constants;
-import com.alexian123.util.Maths;
+import com.alexian123.util.mathematics.MatrixCreator;
 
 public class TerrainRenderer {
 	
@@ -95,7 +95,7 @@ public class TerrainRenderer {
 	}
 	
 	private void loadModelMatrix(Terrain terrain) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(new Vector3f(terrain.getX(), 0, terrain.getZ()), new Vector3f(0, 0, 0), 1);
+		Matrix4f transformationMatrix = MatrixCreator.createTransformationMatrix(new Vector3f(terrain.getX(), 0, terrain.getZ()), new Vector3f(0, 0, 0), 1);
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 }

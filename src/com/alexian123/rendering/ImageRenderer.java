@@ -2,8 +2,8 @@ package com.alexian123.rendering;
 
 import org.lwjgl.opengl.GL11;
 
-import com.alexian123.util.DepthBufferType;
 import com.alexian123.util.Fbo;
+import com.alexian123.util.enums.DepthBufferType;
 
 public class ImageRenderer {
 

@@ -9,7 +9,9 @@ import org.lwjgl.util.vector.Vector4f;
 import com.alexian123.entity.Camera;
 import com.alexian123.lighting.Light;
 import com.alexian123.util.Constants;
-import com.alexian123.util.Maths;
+import com.alexian123.util.enums.Attribute;
+import com.alexian123.util.enums.Uniform;
+import com.alexian123.util.mathematics.MatrixCreator;
 
 public class TerrainShader extends ShaderProgram {
 
@@ -42,7 +44,7 @@ public class TerrainShader extends ShaderProgram {
 	}
 	
 	public void loadViewMatrix(Camera camera) {
-		loadMatrix(uniforms.get(Uniform.VIEW_MATRIX), Maths.createViewMatrix(camera));
+		loadMatrix(uniforms.get(Uniform.VIEW_MATRIX), MatrixCreator.createViewMatrix(camera));
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {

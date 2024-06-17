@@ -11,7 +11,7 @@ import com.alexian123.model.RawModel;
 import com.alexian123.shader.SkyBoxShader;
 import com.alexian123.util.Clock;
 import com.alexian123.util.Constants;
-import com.alexian123.util.TimeOfDay;
+import com.alexian123.util.enums.TimeOfDay;
 
 public class SkyBoxRenderer {
 	

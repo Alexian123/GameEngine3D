@@ -3,16 +3,19 @@ package com.alexian123.entity;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.animation.Animation;
 import com.alexian123.engine.GameManager;
-import com.alexian123.model.TexturedModel;
+import com.alexian123.model.animated.AnimatedModel;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.util.Constants;
 
-public class Player extends Entity {
+public class Player extends AnimatedEntity {
 	
 	private static final float RUN_SPEED = 20.0f;	// units/s
 	private static final float TURN_SPEED = 160.0f;	// degrees/s
 	private static final float JUMP_POWER = 20.0f;
+	
+	private Animation animation;
 	
 	private float currentRunSpeed = 0;
 	private float currentTurnSpeed = 0;
@@ -20,8 +23,9 @@ public class Player extends Entity {
 	
 	private boolean isAirborne = false;
 
-	public Player(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
+	public Player(AnimatedModel model, Animation animation, Vector3f position, Vector3f rotation, float scale) {
 		super(model, position, rotation, scale);
+		setAnimation(animation);
 	}
 	
 	public void move(Terrain terrain) {
@@ -45,10 +49,21 @@ public class Player extends Entity {
 		}
 	}
 	
+	public void setAnimation(Animation animation) {
+		this.animation = animation;
+		animatedModel.doAnimation(animation);
+	}
+	
+	public Animation getAnimation() {
+		return animation;
+	}
+
 	private void getKeyboardInput() {
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+			animatedModel.update();
 			currentRunSpeed = RUN_SPEED;
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+			animatedModel.update();
 			currentRunSpeed = -RUN_SPEED;
 		} else {
 			currentRunSpeed = 0;

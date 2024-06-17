@@ -3,6 +3,9 @@ package com.alexian123.shader;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.util.enums.Attribute;
+import com.alexian123.util.enums.Uniform;
+
 public class FontShader extends ShaderProgram {
 
 	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/font.vert";

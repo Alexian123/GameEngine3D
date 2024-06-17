@@ -1,7 +1,7 @@
 package com.alexian123.water;
 
-import com.alexian123.util.DepthBufferType;
 import com.alexian123.util.Fbo;
+import com.alexian123.util.enums.DepthBufferType;
 
 public class WaterFrameBuffers {
 

@@ -15,7 +15,7 @@ import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.ShadowShader;
 import com.alexian123.texture.ModelTexture;
-import com.alexian123.util.Maths;
+import com.alexian123.util.mathematics.MatrixCreator;
 
 public class ShadowRenderer {
 
@@ -102,7 +102,7 @@ public class ShadowRenderer {
 	 *            - the entity to be prepared for rendering.
 	 */
 	private void prepareInstance(Entity entity) {
-		Matrix4f modelMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
+		Matrix4f modelMatrix = MatrixCreator.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		Matrix4f mvpMatrix = Matrix4f.mul(projectionViewMatrix, modelMatrix, null);
 		shader.loadMvpMatrix(mvpMatrix);
 	}

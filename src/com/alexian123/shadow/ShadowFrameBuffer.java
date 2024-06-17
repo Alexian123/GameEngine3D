@@ -1,7 +1,7 @@
 package com.alexian123.shadow;
 
-import com.alexian123.util.DepthBufferType;
 import com.alexian123.util.Fbo;
+import com.alexian123.util.enums.DepthBufferType;
 
 /**
  * The frame buffer for the shadow pass. This class sets up the depth texture

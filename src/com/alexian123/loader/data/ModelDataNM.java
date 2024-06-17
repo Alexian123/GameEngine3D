@@ -1,4 +1,4 @@
-package com.alexian123.loader;
+package com.alexian123.loader.data;
 
 public class ModelDataNM extends ModelData {
 

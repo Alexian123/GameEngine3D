@@ -23,11 +23,12 @@ public class GameManager {
 			isInitialized = false;
 		}
 	}
+
 	
-	public static void run() {
+	public static void run() {	
 		while (!DisplayManager.displayShouldClose() && game.isRunning()) {
 			game.update();
-			RenderingManager.renderScene(game.getCurrentScene(), game.getCamera(), game.getGUI());
+			RenderingManager.renderScene(game.getCurrentScene(), game.getCamera(), game.getGUI());	
 			DisplayManager.updateDisplay();
 			updateFrameTime();
 		}

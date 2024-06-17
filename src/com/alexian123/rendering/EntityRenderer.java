@@ -19,7 +19,7 @@ import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.EntityShader;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.util.Constants;
-import com.alexian123.util.Maths;
+import com.alexian123.util.mathematics.MatrixCreator;
 
 public class EntityRenderer {
 	
@@ -51,7 +51,7 @@ public class EntityRenderer {
 		shader.loadClipPlane(clipPlane);
 		shader.loadToShadowMapSpaceMatrix(toShadowMapSpace);
 		shader.loadFog(Constants.FOG_DENSITY, Constants.FOG_GRADIENT, Constants.FOG_COLOR);
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+		Matrix4f viewMatrix = MatrixCreator.createViewMatrix(camera);
 		shader.loadLights(lights, viewMatrix);
 		shader.loadViewMatrix(viewMatrix);
 		for (TexturedModel model : entities.keySet()) {
@@ -69,11 +69,7 @@ public class EntityRenderer {
 		shader.cleanup();
 	}
 	
-	public EntityShader getShader() {
-		return shader;
-	}
-	
-	protected void prepareTexturedModel(TexturedModel model) {
+	private void prepareTexturedModel(TexturedModel model) {
 		RawModel rawModel = model.getRawModel();
 		ModelTexture texture = model.getTexture();
 		textures[1] = texture.getID();
@@ -100,18 +96,18 @@ public class EntityRenderer {
 		shader.loadUseLightingMap(texture.isUsingLightingMap());
 	}
 	
-	protected void unbind() {
+	private void prepareEntity(Entity entity) {
+		Matrix4f transformationMatrix = MatrixCreator.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
+		shader.loadTransformationMatrix(transformationMatrix);
+		shader.loadAtlasOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
+		shader.loadPcfCount(entity.isNoShading() ? -1 : Constants.PCF_COUNT);
+	}
+	
+	private void unbind() {
 		RenderingManager.enableCulling();
 		for (int i = 0; i < shader.getNumAttributes(); ++i) {
 			GL20.glDisableVertexAttribArray(i);
 		}
 		GL30.glBindVertexArray(0);
-	}
-	
-	private void prepareEntity(Entity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
-		shader.loadTransformationMatrix(transformationMatrix);
-		shader.loadAtlasOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
-		shader.loadPcfCount(entity.isNoShading() ? -1 : Constants.PCF_COUNT);
 	}
 }

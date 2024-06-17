@@ -19,6 +19,9 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import com.alexian123.util.enums.Attribute;
+import com.alexian123.util.enums.Uniform;
+
 public abstract class ShaderProgram {
 	
 	protected static final int NEW_UNIFORM = -1;

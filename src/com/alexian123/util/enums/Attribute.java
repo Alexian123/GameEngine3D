@@ -1,4 +1,4 @@
-package com.alexian123.shader;
+package com.alexian123.util.enums;
 
 public enum Attribute {
 	POSITION("position"),
@@ -8,6 +8,8 @@ public enum Attribute {
 	MODEL_VIEW_MATRIX("modelViewMatrix"),
 	ATLAS_OFFSETS("atlasOffsets"),
 	BLEND_FACTOR("blendFactor"),
+	JOINT_INDICES("jointIndices"),
+	WEIGHTS("weights"),
 	;
 
 	private final String name;

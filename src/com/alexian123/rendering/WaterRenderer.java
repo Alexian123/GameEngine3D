@@ -16,7 +16,7 @@ import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.shader.WaterShader;
 import com.alexian123.util.Constants;
-import com.alexian123.util.Maths;
+import com.alexian123.util.mathematics.MatrixCreator;
 import com.alexian123.water.Water;
 import com.alexian123.water.WaterFrameBuffers;
 
@@ -59,7 +59,7 @@ public class WaterRenderer {
 		moveFactor %= 1;
 		for (Water water : waters) {
 			prepareRender(camera, water.getFbos(), lights);
-			Matrix4f modelMatrix = Maths.createTransformationMatrix(
+			Matrix4f modelMatrix = MatrixCreator.createTransformationMatrix(
 					new Vector3f(water.getX(), water.getHeight(), water.getZ()), new Vector3f(0, 0, 0), Water.TILE_SIZE);
 			shader.loadModelMatrix(modelMatrix);
 			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, quad.getVertexCount());

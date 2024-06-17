@@ -9,6 +9,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.animation.Animation;
+import com.alexian123.entity.AnimatedEntity;
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
 import com.alexian123.entity.LightEntity;
@@ -17,10 +19,13 @@ import com.alexian123.font.FontType;
 import com.alexian123.font.GUIText;
 import com.alexian123.lighting.Light;
 import com.alexian123.loader.Loader;
-import com.alexian123.loader.OBJFileLoader;
-import com.alexian123.loader.OBJFileLoaderNM;
+import com.alexian123.loader.collada.AnimatedModelFileLoader;
+import com.alexian123.loader.collada.AnimationFileLoader;
+import com.alexian123.loader.obj.OBJFileLoader;
+import com.alexian123.loader.obj.OBJFileLoaderNM;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
+import com.alexian123.model.animated.AnimatedModel;
 import com.alexian123.particle.ParticleSystem;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.TerrainGrid;
@@ -139,13 +144,14 @@ public class TestGame extends Game {
 		RawModel rawModel;
 		ModelTexture texture;
 		TexturedModel texturedModel;
+		AnimatedModel animatedModel;
+		Animation animation;
 		Random random = new Random();
 		
 		// player
-		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("person"));
-		texture = new ModelTexture(loader.loadTexture("entities/playerTexture"));
-		texturedModel = new TexturedModel(rawModel, texture);
-		player = new Player(texturedModel, new Vector3f(376, 0, 423), new Vector3f(0, 0, 0), 0.6f);
+		animatedModel = AnimatedModelFileLoader.loadEntity(loader, "cowboy", "entities/cowboy");
+		animation = AnimationFileLoader.loadAnimation("cowboy");
+		player = new Player(animatedModel, animation, new Vector3f(376, 0, 423), new Vector3f(0, 0, 0), 0.6f);
 		camera.setPlayer(player);
 		entities.add(player);
 		

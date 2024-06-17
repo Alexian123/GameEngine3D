@@ -1,4 +1,4 @@
-package com.alexian123.shader;
+package com.alexian123.util.enums;
 
 public enum Uniform {
 	MODEL_TEXTURE("modelTexture"),
@@ -63,6 +63,7 @@ public enum Uniform {
 	COLOR_TEXTURE("colorTexture"),
 	HIGHLIGHT_TEXTURE("highlightTexture"),
 	BLOOM_FACTOR("bloomFactor"),
+	JOINT_TRANSFORMS("jointTransforms"),
 	;
 
 	private final String name;

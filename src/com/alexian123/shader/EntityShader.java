@@ -9,6 +9,8 @@ import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.lighting.Light;
 import com.alexian123.util.Constants;
+import com.alexian123.util.enums.Attribute;
+import com.alexian123.util.enums.Uniform;
 
 public class EntityShader extends ShaderProgram {
 	

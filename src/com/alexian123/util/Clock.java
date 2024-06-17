@@ -1,6 +1,7 @@
 package com.alexian123.util;
 
 import com.alexian123.engine.GameManager;
+import com.alexian123.util.enums.TimeOfDay;
 
 public class Clock {
 

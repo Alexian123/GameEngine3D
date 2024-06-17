@@ -156,7 +156,7 @@ public class ShadowManager {
 	}
 	
 	private static void processEntity(Entity entity) {
-		TexturedModel model = entity.getModel();
+		TexturedModel model = entity.getTexturedModel();
 		List<Entity> batch = entitiesMap.get(model);
 		if (batch == null) {
 			batch = new ArrayList<>();

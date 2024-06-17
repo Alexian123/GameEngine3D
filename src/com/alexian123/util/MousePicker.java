@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector4f;
 import com.alexian123.entity.Camera;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.TerrainGrid;
+import com.alexian123.util.mathematics.MatrixCreator;
 
 public class MousePicker {
 	
@@ -27,7 +28,7 @@ public class MousePicker {
 	public MousePicker(Camera camera, TerrainGrid terrainGrid) {
 		this.camera = camera;
 		this.terrainGrid = terrainGrid;
-		this.viewMatrix = Maths.createViewMatrix(camera);
+		this.viewMatrix = MatrixCreator.createViewMatrix(camera);
 		this.currentRay = new Vector3f();
 	}
 
@@ -40,7 +41,7 @@ public class MousePicker {
 	}
 	
 	public void update() {
-		viewMatrix = Maths.createViewMatrix(camera);
+		viewMatrix = MatrixCreator.createViewMatrix(camera);
 		currentRay = calculateMouseRay();
 		if (intersectionInRange(0, RAY_RANGE, currentRay)) {
 			currentTerrainPoint = binarySearch(0, 0, RAY_RANGE, currentRay);

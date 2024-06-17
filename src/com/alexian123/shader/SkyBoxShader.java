@@ -5,7 +5,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.engine.GameManager;
 import com.alexian123.entity.Camera;
-import com.alexian123.util.Maths;
+import com.alexian123.util.enums.Attribute;
+import com.alexian123.util.enums.Uniform;
+import com.alexian123.util.mathematics.MatrixCreator;
 
 public class SkyBoxShader extends ShaderProgram{
 	
@@ -25,7 +27,7 @@ public class SkyBoxShader extends ShaderProgram{
 	}
 	
 	public void loadViewMatrix(Camera camera) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+		Matrix4f viewMatrix = MatrixCreator.createViewMatrix(camera);
 		// disable translation
 		viewMatrix.m30 = 0;
 		viewMatrix.m31 = 0;

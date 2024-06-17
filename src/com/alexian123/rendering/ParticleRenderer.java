@@ -21,7 +21,7 @@ import com.alexian123.particle.ParticleSystem;
 import com.alexian123.shader.ParticleShader;
 import com.alexian123.texture.ParticleTexture;
 import com.alexian123.util.Constants;
-import com.alexian123.util.Maths;
+import com.alexian123.util.mathematics.MatrixCreator;
 
 public class ParticleRenderer {
 	
@@ -51,7 +51,7 @@ public class ParticleRenderer {
 	}
 	
 	public void render(List<ParticleSystem> systemsOrder, Map<ParticleSystem, List<Particle>> particles, Camera camera) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+		Matrix4f viewMatrix = MatrixCreator.createViewMatrix(camera);
 		prepare();
 		for (ParticleSystem system : systemsOrder) {
 			bindTexture(system.getTexture());

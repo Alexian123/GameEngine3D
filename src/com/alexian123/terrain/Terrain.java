@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.texture.TerrainTexturePack;
-import com.alexian123.util.Maths;
+import com.alexian123.util.mathematics.Maths;
 import com.alexian123.texture.TerrainTexture;
 
 public class Terrain {
