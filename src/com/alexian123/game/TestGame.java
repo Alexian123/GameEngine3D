@@ -10,7 +10,6 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.animation.Animation;
-import com.alexian123.entity.AnimatedEntity;
 import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
 import com.alexian123.entity.LightEntity;

@@ -64,6 +64,7 @@ public enum Uniform {
 	HIGHLIGHT_TEXTURE("highlightTexture"),
 	BLOOM_FACTOR("bloomFactor"),
 	JOINT_TRANSFORMS("jointTransforms"),
+	IS_ANIMATED("isAnimated"),
 	;
 
 	private final String name;

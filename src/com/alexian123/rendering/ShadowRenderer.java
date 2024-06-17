@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
 import com.alexian123.engine.RenderingManager;
+import com.alexian123.entity.AnimatedEntity;
 import com.alexian123.entity.Entity;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;
@@ -105,6 +106,12 @@ public class ShadowRenderer {
 		Matrix4f modelMatrix = MatrixCreator.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		Matrix4f mvpMatrix = Matrix4f.mul(projectionViewMatrix, modelMatrix, null);
 		shader.loadMvpMatrix(mvpMatrix);
+		boolean isAnimated = entity.isAnimated();
+		shader.loadIsAnimated(isAnimated);
+		if (isAnimated) {
+			AnimatedEntity animatedEntity = (AnimatedEntity) entity;
+			shader.loadJointTransforms(animatedEntity.getAnimatedModel().getJointTransforms());
+		}
 	}
 
 }
