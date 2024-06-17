@@ -20,6 +20,9 @@ public class Constants {
 	public static final String TEXTURES_DIR = "/res/textures/";
 	public static final String FONTS_DIR = "/res/fonts/";
 	public static final String ANIMATIONS_DIR = ANIMATED_MODELS_DIR;
+	public static final String SHADERS_DIR = "/com/alexian123/shader/glsl/";
+	public static final String VERTEX_SHADERS_DIR = SHADERS_DIR + "vertex/";
+	public static final String FRAGMENT_SHADERS_DIR = SHADERS_DIR + "fragment/";
 	
 	public static final String TEXTURE_FILE_TYPE = "PNG";
 	
@@ -28,6 +31,9 @@ public class Constants {
 	public static final String TEXTURE_FILE_EXTENSION = ".png";
 	public static final String FONT_FILE_EXTENSION = ".fnt";
 	public static final String ANIMATION_FILE_EXTENSION = ANIMATED_MODEL_FILE_EXTENSION;
+	
+	public static final String VERTEX_SHADER_SUFFIX = "_vertex.glsl";
+	public static final String FRAGMENT_SHADER_SUFFIX = "_fragment.glsl";
 	
 	public static final float GRAVITY = -50.0f;
 	

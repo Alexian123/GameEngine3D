@@ -8,8 +8,8 @@ import com.alexian123.util.enums.Uniform;
 
 public class AnimatedEntityShader extends EntityShader {
 	
-	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/animated_entity.vert";
-	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/entity.frag";
+	private static final String VERTEX_SHADER_FILE = "animated_entity";
+	private static final String FRAGMENT_SHADER_FILE = "entity";
 
 	public AnimatedEntityShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

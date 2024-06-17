@@ -19,6 +19,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import com.alexian123.util.Constants;
 import com.alexian123.util.enums.Attribute;
 import com.alexian123.util.enums.Uniform;
 
@@ -41,8 +42,8 @@ public abstract class ShaderProgram {
 	private boolean isRunning = false;
 	
 	protected ShaderProgram(String vertexShader, String fragmentShader) {
-		vertexShaderID = loadShader(vertexShader, GL20.GL_VERTEX_SHADER);
-		fragmentShaderID = loadShader(fragmentShader, GL20.GL_FRAGMENT_SHADER);
+		vertexShaderID = loadShader(Constants.VERTEX_SHADERS_DIR + vertexShader + Constants.VERTEX_SHADER_SUFFIX, GL20.GL_VERTEX_SHADER);
+		fragmentShaderID = loadShader(Constants.FRAGMENT_SHADERS_DIR + fragmentShader + Constants.FRAGMENT_SHADER_SUFFIX, GL20.GL_FRAGMENT_SHADER);
 		programID = GL20.glCreateProgram();
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);

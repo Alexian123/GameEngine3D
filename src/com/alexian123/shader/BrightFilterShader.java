@@ -4,8 +4,8 @@ import com.alexian123.util.enums.Attribute;
 
 public class BrightFilterShader extends ShaderProgram{
 
-	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/simple_quad.vert";
-	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/bright_filter.frag";
+	private static final String VERTEX_SHADER_FILE = "simple_quad";
+	private static final String FRAGMENT_SHADER_FILE = "bright_filter";
 
 	public BrightFilterShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

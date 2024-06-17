@@ -8,8 +8,8 @@ import com.alexian123.util.enums.Uniform;
 
 public class FontShader extends ShaderProgram {
 
-	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/font.vert";
-	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/font.frag";
+	private static final String VERTEX_SHADER_FILE = "font";
+	private static final String FRAGMENT_SHADER_FILE = "font";
 	
 	public FontShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

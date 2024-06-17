@@ -7,8 +7,8 @@ import com.alexian123.util.enums.Uniform;
 
 public class GUIShader extends ShaderProgram {
 	
-	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/gui.vert";
-	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/gui.frag";
+	private static final String VERTEX_SHADER_FILE = "gui";
+	private static final String FRAGMENT_SHADER_FILE = "gui";
 
 	public GUIShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

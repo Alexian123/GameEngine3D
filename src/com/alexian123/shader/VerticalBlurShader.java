@@ -5,8 +5,8 @@ import com.alexian123.util.enums.Uniform;
 
 public class VerticalBlurShader extends ShaderProgram {
 	
-	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/blur_v.vert";
-	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/blur.frag";
+	private static final String VERTEX_SHADER_FILE = "blur_v";
+	private static final String FRAGMENT_SHADER_FILE = "blur";
 
 	public VerticalBlurShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

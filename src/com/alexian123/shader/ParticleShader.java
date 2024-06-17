@@ -7,8 +7,8 @@ import com.alexian123.util.enums.Uniform;
 
 public class ParticleShader extends ShaderProgram{
 	
-	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/particle.vert";
-	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/particle.frag";
+	private static final String VERTEX_SHADER_FILE = "particle";
+	private static final String FRAGMENT_SHADER_FILE = "particle";
 
 	public ParticleShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);

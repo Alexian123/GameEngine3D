@@ -5,8 +5,8 @@ import com.alexian123.util.enums.Uniform;
 
 public class ContrastShader extends ShaderProgram {
 
-	private static final String VERTEX_SHADER_FILE = "/com/alexian123/shader/glsl/vertex/simple_quad.vert";
-	private static final String FRAGMENT_SHADER_FILE = "/com/alexian123/shader/glsl/fragment/contrast.frag";
+	private static final String VERTEX_SHADER_FILE = "simple_quad";
+	private static final String FRAGMENT_SHADER_FILE = "contrast";
 
 	public ContrastShader() {
 		super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
