@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.engine.GameManager;
-import com.alexian123.entity.Camera;
+import com.alexian123.game.Camera;
 import com.alexian123.texture.ParticleTexture;
 import com.alexian123.util.Constants;
 

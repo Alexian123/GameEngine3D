@@ -35,15 +35,6 @@ public class Entity {
 		this.animated = false;
 	}
 	
-	protected Entity(TexturedModel texturedModel, Vector3f position, Vector3f rotation, float scale, boolean noShading) {
-		this.texturedModel = texturedModel;
-		this.position = position;
-		this.rotation = rotation;
-		this.scale = scale;
-		this.noShading = noShading;
-		this.animated = false;
-	}
-	
 	protected Entity(AnimatedModel animatedModel, Vector3f position, Vector3f rotation, float scale) {
 		this.texturedModel = animatedModel.getTexturedModel();
 		this.position = position;

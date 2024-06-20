@@ -8,7 +8,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.alexian123.loader.data.MeshData;
+import com.alexian123.loader.data.AnimatedMeshData;
 import com.alexian123.loader.data.VertexSkinData;
 import com.alexian123.loader.data.VertexT;
 import com.alexian123.util.xml.XmlNode;
@@ -43,14 +43,14 @@ public class GeometryLoader {
 		this.meshData = geometryNode.getChild("geometry").getChild("mesh");
 	}
 	
-	public MeshData extractModelData() {
+	public AnimatedMeshData extractModelData() {
 		readRawData();
 		assembleVertices();
 		removeUnusedVertices();
 		initArrays();
 		convertDataToArrays();
 		convertIndicesListToArray();
-		return new MeshData(verticesArray, texturesArray, normalsArray, indicesArray, jointIdsArray, weightsArray);
+		return new AnimatedMeshData(verticesArray, texturesArray, normalsArray, indicesArray, jointIdsArray, weightsArray);
 	}
 
 	private void readRawData() {

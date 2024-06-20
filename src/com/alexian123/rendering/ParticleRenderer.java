@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL31;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.entity.Camera;
+import com.alexian123.game.Camera;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.particle.Particle;

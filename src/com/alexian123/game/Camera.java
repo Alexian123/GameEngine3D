@@ -1,7 +1,9 @@
-package com.alexian123.entity;
+package com.alexian123.game;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
+
+import com.alexian123.entity.Player;
 
 public class Camera {
 	

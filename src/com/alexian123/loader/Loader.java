@@ -25,7 +25,7 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import com.alexian123.font.FontType;
-import com.alexian123.loader.data.MeshData;
+import com.alexian123.loader.data.AnimatedMeshData;
 import com.alexian123.loader.data.ModelData;
 import com.alexian123.loader.data.ModelDataNM;
 import com.alexian123.model.RawModel;
@@ -127,7 +127,7 @@ public class Loader {
 		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getTangents(), data.getIndices(), data.calculateHeight());
 	}
 	
-	public RawModel loadToVao(MeshData data) {
+	public RawModel loadToVao(AnimatedMeshData data) {
 		return loadToVao(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getJointIds(), data.getVertexWeights(), data.getIndices());
 	}
 	

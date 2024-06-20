@@ -1,4 +1,4 @@
-package com.alexian123.game;
+package com.alexian123.test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,15 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.animation.Animation;
-import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
 import com.alexian123.entity.LightEntity;
 import com.alexian123.entity.Player;
 import com.alexian123.font.FontType;
 import com.alexian123.font.GUIText;
+import com.alexian123.game.Camera;
+import com.alexian123.game.Clock;
+import com.alexian123.game.Game;
+import com.alexian123.game.Scene;
 import com.alexian123.lighting.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.loader.collada.AnimatedModelFileLoader;
@@ -33,9 +36,7 @@ import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.ParticleTexture;
 import com.alexian123.texture.TerrainTexture;
 import com.alexian123.texture.TerrainTexturePack;
-import com.alexian123.util.Clock;
 import com.alexian123.util.MousePicker;
-import com.alexian123.util.Scene;
 import com.alexian123.water.Water;
 
 public class TestGame extends Game {
@@ -176,7 +177,7 @@ public class TestGame extends Game {
 		
 		// lamps
 		rawModel = loader.loadToVao(OBJFileLoader.loadOBJ("lantern"));
-		texture = new ModelTexture(loader.loadTexture("entities/lantern"), false, true);
+		texture = new ModelTexture(loader.loadTexture("entities/lantern"));
 		texture.setLightingMap(loader.loadTexture("maps/lanternDiffuse"));
 		texturedModel = new TexturedModel(rawModel, texture);
 		lamps = new LightEntity[3];

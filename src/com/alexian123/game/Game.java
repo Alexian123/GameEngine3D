@@ -3,11 +3,8 @@ package com.alexian123.game;
 import java.util.List;
 
 import com.alexian123.engine.GameManager;
-import com.alexian123.entity.Camera;
 import com.alexian123.loader.Loader;
 import com.alexian123.texture.GUITexture;
-import com.alexian123.util.Clock;
-import com.alexian123.util.Scene;
 
 public abstract class Game {
 	

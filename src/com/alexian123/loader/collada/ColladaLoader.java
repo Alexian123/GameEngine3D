@@ -2,7 +2,7 @@ package com.alexian123.loader.collada;
 
 import com.alexian123.loader.data.AnimatedModelData;
 import com.alexian123.loader.data.AnimationData;
-import com.alexian123.loader.data.MeshData;
+import com.alexian123.loader.data.AnimatedMeshData;
 import com.alexian123.loader.data.SkeletonData;
 import com.alexian123.loader.data.SkinningData;
 import com.alexian123.util.Constants;
@@ -21,7 +21,7 @@ public class ColladaLoader {
 		SkeletonData jointsData = jointsLoader.extractBoneData();
 
 		GeometryLoader g = new GeometryLoader(node.getChild("library_geometries"), skinningData.verticesSkinData);
-		MeshData meshData = g.extractModelData();
+		AnimatedMeshData meshData = g.extractModelData();
 
 		return new AnimatedModelData(meshData, jointsData);
 	}

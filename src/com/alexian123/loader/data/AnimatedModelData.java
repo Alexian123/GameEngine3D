@@ -8,9 +8,9 @@ package com.alexian123.loader.data;
 public class AnimatedModelData {
 
 	private final SkeletonData joints;
-	private final MeshData mesh;
+	private final AnimatedMeshData mesh;
 	
-	public AnimatedModelData(MeshData mesh, SkeletonData joints) {
+	public AnimatedModelData(AnimatedMeshData mesh, SkeletonData joints) {
 		this.joints = joints;
 		this.mesh = mesh;
 	}
@@ -19,7 +19,7 @@ public class AnimatedModelData {
 		return joints;
 	}
 	
-	public MeshData getMeshData() {
+	public AnimatedMeshData getMeshData() {
 		return mesh;
 	}
 	

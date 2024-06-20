@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.alexian123.entity.Camera;
+import com.alexian123.game.Camera;
 import com.alexian123.loader.Loader;
 import com.alexian123.particle.Particle;
 import com.alexian123.particle.ParticleSorter;

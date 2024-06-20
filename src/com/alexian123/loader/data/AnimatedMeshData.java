@@ -6,7 +6,7 @@ package com.alexian123.loader.data;
  * @author Karl
  *
  */
-public class MeshData {
+public class AnimatedMeshData {
 
 	private static final int DIMENSIONS = 3;
 
@@ -17,7 +17,7 @@ public class MeshData {
 	private int[] jointIds;
 	private float[] vertexWeights;
 
-	public MeshData(float[] vertices, float[] textureCoords, float[] normals, int[] indices,
+	public AnimatedMeshData(float[] vertices, float[] textureCoords, float[] normals, int[] indices,
 			int[] jointIds, float[] vertexWeights) {
 		this.vertices = vertices;
 		this.textureCoords = textureCoords;

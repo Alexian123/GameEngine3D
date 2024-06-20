@@ -7,7 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.alexian123.entity.Camera;
+import com.alexian123.game.Camera;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.TerrainGrid;
 import com.alexian123.util.mathematics.MatrixCreator;

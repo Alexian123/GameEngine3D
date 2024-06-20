@@ -9,7 +9,7 @@ import com.alexian123.util.Constants;
 import com.alexian123.util.enums.Attribute;
 import com.alexian123.util.enums.Uniform;
 import com.alexian123.util.mathematics.MatrixCreator;
-import com.alexian123.entity.Camera;
+import com.alexian123.game.Camera;
 import com.alexian123.lighting.Light;
 
 public class WaterShader extends ShaderProgram {

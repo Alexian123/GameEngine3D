@@ -10,8 +10,8 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.entity.Camera;
 import com.alexian123.entity.Entity;
+import com.alexian123.game.Camera;
 import com.alexian123.lighting.Light;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.rendering.ShadowRenderer;

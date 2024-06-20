@@ -11,7 +11,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.engine.RenderingManager;
 import com.alexian123.entity.AnimatedEntity;
-import com.alexian123.entity.Camera;
+import com.alexian123.game.Camera;
 import com.alexian123.lighting.Light;
 import com.alexian123.model.RawModel;
 import com.alexian123.model.TexturedModel;

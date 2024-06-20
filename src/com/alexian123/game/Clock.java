@@ -1,4 +1,4 @@
-package com.alexian123.util;
+package com.alexian123.game;
 
 import com.alexian123.engine.GameManager;
 import com.alexian123.util.enums.TimeOfDay;

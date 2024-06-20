@@ -5,11 +5,11 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import com.alexian123.entity.Camera;
+import com.alexian123.game.Camera;
+import com.alexian123.game.Clock;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.RawModel;
 import com.alexian123.shader.SkyBoxShader;
-import com.alexian123.util.Clock;
 import com.alexian123.util.Constants;
 import com.alexian123.util.enums.TimeOfDay;
 
