@@ -10,6 +10,7 @@ import com.alexian123.font.GUIText;
 import com.alexian123.font.TextMeshData;
 import com.alexian123.loader.Loader;
 import com.alexian123.rendering.FontRenderer;
+import com.alexian123.util.gl.Vao;
 
 public class TextManager {
 
@@ -40,7 +41,7 @@ public class TextManager {
 	public static void loadText(GUIText text) {
 		FontType font = text.getFont();
 		TextMeshData data = font.loadText(text);
-		int vao = loader.loadToVao(data.getVertexPositions(), data.getTextureCoords());
+		Vao vao = loader.loadToVao(data.getVertexPositions(), data.getTextureCoords());
 		text.setMeshInfo(vao, data.getVertexCount());
 		List<GUIText> batch = texts.get(font);
 		if (batch == null) {
@@ -55,7 +56,7 @@ public class TextManager {
 		if (batch != null) {
 			batch.remove(text);
 			if (batch.isEmpty()) {
-				loader.deleteVao(text.getMesh());	// delete VAO and associated VBO's from memory 
+				text.getMesh().delete(); // delete VAO and associated VBO's from memory 
 				texts.remove(text.getFont());
 			}
 		}

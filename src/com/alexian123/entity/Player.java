@@ -23,7 +23,7 @@ public class Player extends AnimatedEntity {
 	
 	private boolean isAirborne = false;
 
-	public Player(AnimatedModel model, Animation animation, Vector3f position, Vector3f rotation, float scale) {
+	public Player(AnimatedModel model, Vector3f position, Vector3f rotation, float scale, Animation animation) {
 		super(model, position, rotation, scale);
 		setAnimation(animation);
 	}
@@ -51,7 +51,7 @@ public class Player extends AnimatedEntity {
 	
 	public void setAnimation(Animation animation) {
 		this.animation = animation;
-		animatedModel.doAnimation(animation);
+		model.doAnimation(animation);
 	}
 	
 	public Animation getAnimation() {
@@ -60,10 +60,10 @@ public class Player extends AnimatedEntity {
 
 	private void getKeyboardInput() {
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			animatedModel.update();
+			model.updateAnimation();
 			currentRunSpeed = RUN_SPEED;
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			animatedModel.update();
+			model.updateAnimation();
 			currentRunSpeed = -RUN_SPEED;
 		} else {
 			currentRunSpeed = 0;

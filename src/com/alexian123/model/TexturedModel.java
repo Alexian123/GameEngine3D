@@ -4,20 +4,19 @@ import com.alexian123.texture.ModelTexture;
 
 public class TexturedModel {
 	
-	private RawModel rawModel;
+	private ModelMesh mesh;
 	private ModelTexture texture;
 
-	public TexturedModel(RawModel rawModel, ModelTexture texture) {
-		this.rawModel = rawModel;
+	public TexturedModel(ModelMesh mesh, ModelTexture texture) {
+		this.mesh = mesh;
 		this.texture = texture;
 	}
 
-	public RawModel getRawModel() {
-		return rawModel;
+	public ModelMesh getMesh() {
+		return mesh;
 	}
 
 	public ModelTexture getTexture() {
 		return texture;
 	}
-	
 }

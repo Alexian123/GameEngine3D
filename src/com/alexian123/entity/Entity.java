@@ -3,12 +3,13 @@ package com.alexian123.entity;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.model.TexturedModel;
-import com.alexian123.model.animated.AnimatedModel;
 import com.alexian123.texture.ModelTexture;
+import com.alexian123.util.enums.EntityType;
 
 public class Entity {
 	
-	protected TexturedModel texturedModel;
+	protected final TexturedModel model;
+	
 	protected Vector3f position;
 	protected Vector3f rotation;
 	
@@ -16,41 +17,29 @@ public class Entity {
 	private int textureIndex = 0;
 	private boolean noShading = false;
 	
-	private final boolean animated;
-	
-	public Entity(TexturedModel texturedModel, Vector3f position, Vector3f rotation, float scale) {
-		this.texturedModel = texturedModel;
+	public Entity(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
+		this.model = model;
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
-		this.animated = false;
 	}
 	
-	public Entity(TexturedModel texturedModel, int textureIndex, Vector3f position, Vector3f rotation, float scale) {
-		this.texturedModel = texturedModel;
+	public Entity(TexturedModel model, int textureIndex, Vector3f position, Vector3f rotation, float scale) {
+		this.model = model;
 		this.textureIndex = textureIndex;
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
-		this.animated = false;
-	}
-	
-	protected Entity(AnimatedModel animatedModel, Vector3f position, Vector3f rotation, float scale) {
-		this.texturedModel = animatedModel.getTexturedModel();
-		this.position = position;
-		this.rotation = rotation;
-		this.scale = scale;
-		this.animated = true;
 	}
 	
 	public float getTextureXOffset() {
-		ModelTexture texture = texturedModel.getTexture();
+		ModelTexture texture = model.getTexture();
 		int col = textureIndex % texture.getAtlasDimension();
 		return (float) col / (float) texture.getAtlasDimension();
 	}
 	
 	public float getTextureYOffset() {
-		ModelTexture texture = texturedModel.getTexture();
+		ModelTexture texture = model.getTexture();
 		int row = textureIndex / texture.getAtlasDimension();
 		return (float) row / (float) texture.getAtlasDimension();
 	}
@@ -67,12 +56,8 @@ public class Entity {
 		rotation.z += z;
 	}
 
-	public TexturedModel getTexturedModel() {
-		return texturedModel;
-	}
-
-	public void setModel(TexturedModel texturedModel) {
-		this.texturedModel = texturedModel;
+	public TexturedModel getModel() {
+		return model;
 	}
 
 	public Vector3f getPosition() {
@@ -115,7 +100,7 @@ public class Entity {
 		this.noShading = noShading;
 	}
 	
-	public boolean isAnimated() {
-		return animated;
+	public EntityType getType() {
+		return EntityType.STATIC;
 	}
 }

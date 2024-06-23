@@ -1,11 +1,15 @@
 package com.alexian123.game;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.entity.Player;
+import com.alexian123.util.mathematics.MatrixCreator;
 
 public class Camera {
+	
+	private Matrix4f viewMatrix = new Matrix4f();
 	
 	private Vector3f position = new Vector3f(0, 0, 0);
 	private float pitch = 20.0f; // high/low
@@ -60,6 +64,14 @@ public class Camera {
 	
 	public void invertPitch() {
 		this.pitch = -pitch;
+	}
+	
+	public void update() {
+		viewMatrix = MatrixCreator.createViewMatrix(position, pitch, yaw);
+	}
+	
+	public Matrix4f getViewMatrix() {
+		return viewMatrix;
 	}
 
 	private void calculateZoom() {

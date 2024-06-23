@@ -1,9 +1,9 @@
 package com.alexian123.rendering;
 
-import org.lwjgl.opengl.GL11;
-
-import com.alexian123.util.Fbo;
 import com.alexian123.util.enums.DepthBufferType;
+import com.alexian123.util.gl.Fbo;
+import com.alexian123.util.gl.GLControl;
+import com.alexian123.util.gl.TextureSampler;
 
 public class ImageRenderer {
 
@@ -21,20 +21,14 @@ public class ImageRenderer {
 		if (fbo != null) {
 			fbo.bindFrameBuffer();
 		}
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, 4);
+		GLControl.clearColorBuffer();
+		GLControl.drawArraysTS(4);
 		if (fbo != null) {
 			fbo.unbindFrameBuffer();
 		}
 	}
 
-	public int getOutputTexture() {
+	public TextureSampler getOutputTexture() {
 		return fbo.getColorTexture();
-	}
-
-	public void cleanup() {
-		if (fbo != null) {
-			fbo.cleanup();
-		}
 	}
 }

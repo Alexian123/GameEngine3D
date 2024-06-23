@@ -5,8 +5,6 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.alexian123.game.Camera;
-
 public class MatrixCreator {
 	
 	public static Matrix4f createProjectionMatrix(float fov, float farPlane, float nearPlane) {
@@ -43,13 +41,12 @@ public class MatrixCreator {
 		return matrix;
 	}
 	
-	public static Matrix4f createViewMatrix(Camera camera) {
+	public static Matrix4f createViewMatrix(Vector3f position, float pitch, float yaw) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
-		Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0), matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0), matrix, matrix);
-		Vector3f pos = camera.getPosition();
-		Vector3f negPos = new Vector3f(-pos.x, -pos.y, -pos.z);
+		Matrix4f.rotate((float) Math.toRadians(pitch), new Vector3f(1, 0, 0), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(yaw), new Vector3f(0, 1, 0), matrix, matrix);
+		Vector3f negPos = new Vector3f(-position.x, -position.y, -position.z);
 		Matrix4f.translate(negPos, matrix, matrix);
 		return matrix;
 	}

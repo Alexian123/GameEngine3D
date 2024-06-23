@@ -1,13 +1,12 @@
 package com.alexian123.texture;
 
+import com.alexian123.util.gl.TextureSampler;
+
 public class ModelTexture {
 	
-	public static final int NO_TEXTURE = -1;
-	
-	private final int id;
-	
-	private int normalMap = NO_TEXTURE;
-	private int lightingMap = NO_TEXTURE;
+	private final TextureSampler colorTexture;
+	private TextureSampler normalMap;
+	private TextureSampler lightingMap;
 	
 	private int atlasDimension = 1;
 	
@@ -17,43 +16,43 @@ public class ModelTexture {
 	private boolean usingTransparency = false;
 	private boolean usingFakeLighting = false;
 	
-	public ModelTexture(int id) {
-		this.id = id;
+	public ModelTexture(TextureSampler colorTexture) {
+		this.colorTexture = colorTexture;
 	}
 	
-	public ModelTexture(int id, int normalMap) {
-		this.id = id;
+	public ModelTexture(TextureSampler colorTexture, TextureSampler normalMap) {
+		this.colorTexture = colorTexture;
 		this.normalMap = normalMap;
 	}
 
-	public ModelTexture(int id, float shineDamper, float reflectivity) {
-		this.id = id;
+	public ModelTexture(TextureSampler colorTexture, float shineDamper, float reflectivity) {
+		this.colorTexture = colorTexture;
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
 	}
-	public ModelTexture(int id, int normalMap, float shineDamper, float reflectivity) {
-		this.id = id;
+	public ModelTexture(TextureSampler colorTexture, TextureSampler normalMap, float shineDamper, float reflectivity) {
+		this.colorTexture = colorTexture;
 		this.normalMap = normalMap;
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
 	}
 	
-	public ModelTexture(int id, boolean transparency, boolean fakeLighting) {
-		this.id = id;
+	public ModelTexture(TextureSampler colorTexture, boolean transparency, boolean fakeLighting) {
+		this.colorTexture = colorTexture;
 		this.usingTransparency = transparency;
 		this.usingFakeLighting = fakeLighting;
 	}
 	
-	public ModelTexture(int id, float shineDamper, float reflectivity, boolean transparency, boolean fakeLighting) {
-		this.id = id;
+	public ModelTexture(TextureSampler colorTexture, float shineDamper, float reflectivity, boolean transparency, boolean fakeLighting) {
+		this.colorTexture = colorTexture;
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
 		this.usingTransparency = transparency;
 		this.usingFakeLighting = fakeLighting;
 	}
 	
-	public ModelTexture(int id, float shineDamper, float reflectivity, boolean transparency, boolean fakeLighting, int atlasDimension) {
-		this.id = id;
+	public ModelTexture(TextureSampler colorTexture, float shineDamper, float reflectivity, boolean transparency, boolean fakeLighting, int atlasDimension) {
+		this.colorTexture = colorTexture;
 		this.shineDamper = shineDamper;
 		this.reflectivity = reflectivity;
 		this.usingTransparency = transparency;
@@ -61,15 +60,19 @@ public class ModelTexture {
 		this.atlasDimension = atlasDimension;
 	}
 	
-	public int getID() {
-		return id;
+	public TextureSampler getColorTexture() {
+		return colorTexture;
 	}
 
-	public int getNormalMap() {
+	public TextureSampler getNormalMap() {
 		return normalMap;
 	}
+	
+	public boolean hasNormalMap() {
+		return normalMap != null;
+	}
 
-	public void setNormalMap(int normalMap) {
+	public void setNormalMap(TextureSampler normalMap) {
 		this.normalMap = normalMap;
 	}
 
@@ -89,20 +92,20 @@ public class ModelTexture {
 		this.reflectivity = reflectivity;
 	}
 
-	public boolean isTransparency() {
+	public boolean isUsingTransparency() {
 		return usingTransparency;
 	}
 
-	public void setTransparency(boolean transparency) {
-		this.usingTransparency = transparency;
+	public void setIsUsingTransparency(boolean usingTransparency) {
+		this.usingTransparency = usingTransparency;
 	}
 
-	public boolean isFakeLighting() {
+	public boolean isUsingFakeLighting() {
 		return usingFakeLighting;
 	}
 
-	public void setFakeLighting(boolean fakeLighting) {
-		this.usingFakeLighting = fakeLighting;
+	public void setIsUsingFakeLighting(boolean usingFakeLighting) {
+		this.usingFakeLighting = usingFakeLighting;
 	}
 
 	public int getAtlasDimension() {
@@ -113,15 +116,15 @@ public class ModelTexture {
 		this.atlasDimension = atlasDimension;
 	}
 
-	public int getLightingMap() {
+	public TextureSampler getLightingMap() {
 		return lightingMap;
 	}
 
-	public void setLightingMap(int lightingMap) {
+	public void setLightingMap(TextureSampler lightingMap) {
 		this.lightingMap = lightingMap;
 	}
 	
-	public boolean isUsingLightingMap() {
-		return lightingMap != NO_TEXTURE;
+	public boolean hasLightingMap() {
+		return lightingMap != null;
 	}
 }

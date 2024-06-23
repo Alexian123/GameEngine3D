@@ -1,7 +1,8 @@
 package com.alexian123.shadow;
 
-import com.alexian123.util.Fbo;
 import com.alexian123.util.enums.DepthBufferType;
+import com.alexian123.util.gl.Fbo;
+import com.alexian123.util.gl.TextureSampler;
 
 /**
  * The frame buffer for the shadow pass. This class sets up the depth texture
@@ -28,7 +29,7 @@ public class ShadowFrameBuffer extends Fbo {
 	/**
 	 * @return The ID of the shadow map texture.
 	 */
-	public int getShadowMap() {
+	public TextureSampler getShadowMap() {
 		return getDepthTexture();
 	}
 }

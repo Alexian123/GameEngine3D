@@ -1,57 +1,68 @@
 package com.alexian123.rendering;
 
-import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL31;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.game.Camera;
 import com.alexian123.loader.Loader;
-import com.alexian123.model.RawModel;
+import com.alexian123.model.ModelMesh;
 import com.alexian123.particle.Particle;
 import com.alexian123.particle.ParticleSystem;
-import com.alexian123.shader.ParticleShader;
+import com.alexian123.shader.ShaderProgram;
 import com.alexian123.texture.ParticleTexture;
 import com.alexian123.util.Constants;
-import com.alexian123.util.mathematics.MatrixCreator;
+import com.alexian123.util.enums.AttributeName;
+import com.alexian123.util.enums.UniformName;
+import com.alexian123.util.gl.GLControl;
+import com.alexian123.util.gl.uniforms.UniformFloat;
+import com.alexian123.util.gl.uniforms.UniformMat4;
 
 public class ParticleRenderer {
 	
 	private static final float[] VERTICES = { -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
 	private static final int INSTANCE_DATA_LENGTH = 21;
 	
-	private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(Constants.MAX_PARTICLES * INSTANCE_DATA_LENGTH);
+	private static final String VERTEX_SHADER_FILE = "particle";
+	private static final String FRAGMENT_SHADER_FILE = "particle";
 	
-	private final Loader loader;
-	private final int vbo;
+	private final Map<Integer, AttributeName> attributes = new HashMap<>();
 	
-	private final RawModel quad;
-	private final ParticleShader shader = new ParticleShader();
+	private final ModelMesh quad;
+	
+	private final ShaderProgram shader;
+	private final UniformMat4 projectionMatrix;
+	private final UniformFloat atlasDimension;
 	
 	private int pointer = 0;
 	
 	public ParticleRenderer(Loader loader) {
-		this.loader = loader;
-		this.vbo = loader.createEmptyVbo(INSTANCE_DATA_LENGTH * Constants.MAX_PARTICLES);
+		attributes.put(0, AttributeName.POSITION);
+		attributes.put(1, AttributeName.MODEL_VIEW_MATRIX);
+		attributes.put(5, AttributeName.ATLAS_OFFSETS);
+		attributes.put(6, AttributeName.BLEND_FACTOR);
+		
 		quad = loader.loadToVao(VERTICES, 2);
+		quad.getVao().createInstancedBuffer(INSTANCE_DATA_LENGTH * Constants.MAX_PARTICLES);
 		for (int i = 1; i <= 6; ++i) {
-			loader.addInstancedAttribute(quad.getVaoID(), vbo, i, i != 6 ? 4 : 1, INSTANCE_DATA_LENGTH, (i - 1) * 4);
+			quad.getVao().addInstancedAttribute(i, i != 6 ? 4 : 1, INSTANCE_DATA_LENGTH, (i - 1) * 4);
 		}
+		
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		int id = shader.getProgramID();
+		projectionMatrix = new UniformMat4(UniformName.PROJECTION_MATRIX, id);
+		atlasDimension = new UniformFloat(UniformName.ATLAS_DIMENSION, id);
+		
 		shader.start();
-		shader.loadProjectionMatrix(Constants.PROJECTION_MATRIX);
+		projectionMatrix.load(Constants.PROJECTION_MATRIX);
 		shader.stop();
 	}
 	
 	public void render(List<ParticleSystem> systemsOrder, Map<ParticleSystem, List<Particle>> particles, Camera camera) {
-		Matrix4f viewMatrix = MatrixCreator.createViewMatrix(camera);
+		Matrix4f viewMatrix = camera.getViewMatrix();
 		prepare();
 		for (ParticleSystem system : systemsOrder) {
 			bindTexture(system.getTexture());
@@ -64,8 +75,8 @@ public class ParticleRenderer {
 				updateModelViewMatrix(particle, viewMatrix, vboData);
 				updateAtlasInfo(particle, vboData);
 			}
-			loader.updateVbo(vbo, vboData, buffer);
-			GL31.glDrawArraysInstanced(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount(), size);
+			quad.getVao().updateInstancedBuffer(vboData);
+			GLControl.drawArraysInstancedTS(quad.getVertexCount(), size);
 		}
 		endRendering();
 	}
@@ -76,23 +87,18 @@ public class ParticleRenderer {
 	
 	private void prepare() {
 		shader.start();
-		GL30.glBindVertexArray(quad.getVaoID());
-		for (int i = 0; i < shader.getNumAttributes(); ++i) {
-			GL20.glEnableVertexAttribArray(i);
-		}
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDepthMask(false);
+		quad.getVao().bind(0, 1, 2, 3, 4, 5, 6);
+		GLControl.disableDepthMask();
 	}
 	
 	private void bindTexture(ParticleTexture texture) {
-		shader.loadAtlasDimension(texture.getAtlasDimension());
+		atlasDimension.load((float) texture.getAtlasDimension());
 		if (texture.isAdditiveBlending()) {
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GLControl.enableAdditiveBlending();
 		} else {
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GLControl.enableBlending();
 		}
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
+		texture.getAtlas().bindToUnit(0);
 	}
 
 	private void updateModelViewMatrix(Particle particle, Matrix4f viewMatrix, float[] vboData) {
@@ -146,11 +152,8 @@ public class ParticleRenderer {
 	
 	private void endRendering() {
 		shader.stop();
-		for (int i = 0; i < shader.getNumAttributes(); ++i) {
-			GL20.glDisableVertexAttribArray(i);
-		}
-		GL30.glBindVertexArray(0);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glDepthMask(true);
+		quad.getVao().unbind(0, 1, 2, 3, 4, 5, 6);
+		GLControl.disableBlending();
+		GLControl.enableDepthMask();
 	}
 }

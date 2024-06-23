@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -18,6 +17,8 @@ import com.alexian123.rendering.ShadowRenderer;
 import com.alexian123.shadow.ShadowBox;
 import com.alexian123.shadow.ShadowFrameBuffer;
 import com.alexian123.util.Constants;
+import com.alexian123.util.gl.GLControl;
+import com.alexian123.util.gl.TextureSampler;
 
 /**
  * This class is in charge of using all of the classes in the shadows package to
@@ -103,11 +104,10 @@ public class ShadowManager {
 	}
 
 	/**
-	 * Clean up the shader and FBO on closing.
+	 * Clean up the shader
 	 */
 	public static void cleanup() {
 		renderer.cleanup();
-		fbo.cleanup();
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class ShadowManager {
 	 *         same, even when the contents of the shadow map texture change
 	 *         each frame.
 	 */
-	public static int getShadowMap() {
+	public static TextureSampler getShadowMap() {
 		return fbo.getShadowMap();
 	}
 
@@ -151,12 +151,12 @@ public class ShadowManager {
 		updateLightViewMatrix(lightDirection, box.getCenter());
 		Matrix4f.mul(projectionMatrix, lightViewMatrix, projectionViewMatrix);
 		fbo.bindFrameBuffer();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+		GLControl.enableDepthTest();
+		GLControl.clearDepthBuffer();
 	}
 	
 	private static void processEntity(Entity entity) {
-		TexturedModel model = entity.getTexturedModel();
+		TexturedModel model = entity.getModel();
 		List<Entity> batch = entitiesMap.get(model);
 		if (batch == null) {
 			batch = new ArrayList<>();

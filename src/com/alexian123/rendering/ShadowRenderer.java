@@ -1,27 +1,40 @@
 package com.alexian123.rendering;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
-import com.alexian123.engine.RenderingManager;
 import com.alexian123.entity.AnimatedEntity;
 import com.alexian123.entity.Entity;
-import com.alexian123.model.RawModel;
+import com.alexian123.model.ModelMesh;
 import com.alexian123.model.TexturedModel;
-import com.alexian123.shader.ShadowShader;
+import com.alexian123.shader.ShaderProgram;
 import com.alexian123.texture.ModelTexture;
+import com.alexian123.util.Constants;
+import com.alexian123.util.enums.AttributeName;
+import com.alexian123.util.enums.EntityType;
+import com.alexian123.util.enums.UniformName;
+import com.alexian123.util.gl.GLControl;
+import com.alexian123.util.gl.uniforms.UniformArrayMat4;
+import com.alexian123.util.gl.uniforms.UniformBoolean;
+import com.alexian123.util.gl.uniforms.UniformMat4;
 import com.alexian123.util.mathematics.MatrixCreator;
 
 public class ShadowRenderer {
+	
+	private static final String VERTEX_SHADER_FILE = "shadow";
+	private static final String FRAGMENT_SHADER_FILE = "shadow";
+	
+	private final Map<Integer, AttributeName> attributes = new HashMap<>();
 
-	private final ShadowShader shader = new ShadowShader();
 	private final Matrix4f projectionViewMatrix;
+	
+	private final ShaderProgram shader;
+	private final UniformMat4 mvpMatrix;
+	private final UniformArrayMat4 jointTransforms;
+	private final UniformBoolean isAnimated;
 
 	/**
 	 * @param shader
@@ -31,8 +44,19 @@ public class ShadowRenderer {
 	 *            - the orthographic projection matrix multiplied by the light's
 	 *            "view" matrix.
 	 */
-	public ShadowRenderer(Matrix4f projectionViewMatrix) {
+	public ShadowRenderer(Matrix4f projectionViewMatrix) {	
 		this.projectionViewMatrix = projectionViewMatrix;
+		
+		attributes.put(0, AttributeName.POSITION);
+		attributes.put(1, AttributeName.TEXTURE_COORD);
+		attributes.put(4, AttributeName.JOINT_INDICES);
+		attributes.put(5, AttributeName.WEIGHTS);
+		
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		int id = shader.getProgramID();
+		mvpMatrix = new UniformMat4(UniformName.MVP_MATRIX, id);
+		jointTransforms = new UniformArrayMat4(UniformName.JOINT_TRANSFORMS, Constants.MAX_JOINTS, id);
+		isAnimated = new UniformBoolean(UniformName.IS_ANIMATED, id);
 	}
 
 	/**
@@ -45,48 +69,25 @@ public class ShadowRenderer {
 	public void render(Map<TexturedModel, List<Entity>> entities) {
 		shader.start();
 		for (TexturedModel model : entities.keySet()) {
-			RawModel rawModel = model.getRawModel();
+			ModelMesh rawModel = model.getMesh();
 			ModelTexture texture = model.getTexture();
-			bindModel(rawModel);
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
-			if (texture.isTransparency()) {
-				RenderingManager.disableCulling();
+			rawModel.getVao().bind(0, 1, 4, 5);
+			texture.getColorTexture().bindToUnit(0);
+			if (texture.isUsingTransparency()) {
+				GLControl.disableCulling();
 			}
 			for (Entity entity : entities.get(model)) {
 				prepareInstance(entity);
-				GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(),
-						GL11.GL_UNSIGNED_INT, 0);
+				GLControl.drawElementsT(rawModel.getVertexCount());
 			}
 			
-			if (texture.isTransparency()) {
-				RenderingManager.enableCulling();
+			if (texture.isUsingTransparency()) {
+				GLControl.enableCulling();
 			}
+			
+			rawModel.getVao().unbind(0, 1, 4, 5);
 		}
-		unbind();
 		shader.stop();
-	}
-
-	/**
-	 * Binds a raw model before rendering. Only the attribute 0 is enabled here
-	 * because that is where the positions are stored in the VAO, and only the
-	 * positions are required in the vertex shader.
-	 * 
-	 * @param rawModel
-	 *            - the model to be bound.
-	 */
-	private void bindModel(RawModel rawModel) {
-		GL30.glBindVertexArray(rawModel.getVaoID());
-		for (int i = 0; i < shader.getNumAttributes(); ++i) {
-			GL20.glEnableVertexAttribArray(i);
-		}
-	}
-
-	private void unbind() {
-		for (int i = 0; i < shader.getNumAttributes(); ++i) {
-			GL20.glDisableVertexAttribArray(i);
-		}
-		GL30.glBindVertexArray(0);
 	}
 	
 	public void cleanup() {
@@ -104,13 +105,13 @@ public class ShadowRenderer {
 	 */
 	private void prepareInstance(Entity entity) {
 		Matrix4f modelMatrix = MatrixCreator.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
-		Matrix4f mvpMatrix = Matrix4f.mul(projectionViewMatrix, modelMatrix, null);
-		shader.loadMvpMatrix(mvpMatrix);
-		boolean isAnimated = entity.isAnimated();
-		shader.loadIsAnimated(isAnimated);
-		if (isAnimated) {
+		Matrix4f mvpMatrixVal = Matrix4f.mul(projectionViewMatrix, modelMatrix, null);
+		mvpMatrix.load(mvpMatrixVal);
+		boolean animated = entity.getType() == EntityType.ANIMATED;
+		isAnimated.load(animated);
+		if (animated) {
 			AnimatedEntity animatedEntity = (AnimatedEntity) entity;
-			shader.loadJointTransforms(animatedEntity.getAnimatedModel().getJointTransforms());
+			jointTransforms.load(animatedEntity.getModel().getJointTransforms());
 		}
 	}
 

@@ -1,23 +1,22 @@
 package com.alexian123.engine;
 
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 
 import com.alexian123.loader.Loader;
-import com.alexian123.model.RawModel;
-import com.alexian123.postProcessing.BrightFilter;
-import com.alexian123.postProcessing.CombineFilter;
-import com.alexian123.postProcessing.ContrastChanger;
-import com.alexian123.postProcessing.HorizontalBlur;
-import com.alexian123.postProcessing.VerticalBlur;
+import com.alexian123.model.ModelMesh;
+import com.alexian123.rendering.postProcessing.BrightFilter;
+import com.alexian123.rendering.postProcessing.CombineFilter;
+import com.alexian123.rendering.postProcessing.ContrastChanger;
+import com.alexian123.rendering.postProcessing.HorizontalBlur;
+import com.alexian123.rendering.postProcessing.VerticalBlur;
 import com.alexian123.util.Constants;
+import com.alexian123.util.gl.GLControl;
+import com.alexian123.util.gl.TextureSampler;
 
 public class PostProcessingManager {
 
 	private static final float[] VERTICES = { -1, 1, -1, -1, 1, 1, 1, -1 };	
-	private static RawModel quad;
+	private static ModelMesh quad;
 	
 	private static BrightFilter brightFilter;
 	private static HorizontalBlur hBlur;
@@ -39,7 +38,7 @@ public class PostProcessingManager {
 		}
 	}
 	
-	public static void doPostProcessing(int colourTexture, int brightTexture) {
+	public static void doPostProcessing(TextureSampler colourTexture, TextureSampler brightTexture) {
 		start();
 		//brightFilter.run(colourTexture);
 		hBlur.run(brightTexture);
@@ -57,14 +56,12 @@ public class PostProcessingManager {
 	}
 	
 	private static void start() {
-		GL30.glBindVertexArray(quad.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		quad.getVao().bind(0);
+		GLControl.disableDepthTest();
 	}
 	
 	private static void end() {
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL20.glDisableVertexAttribArray(0);
-		GL30.glBindVertexArray(0);
+		GLControl.enableDepthTest();
+		quad.getVao().unbind(0);
 	}
 }

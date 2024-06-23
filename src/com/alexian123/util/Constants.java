@@ -20,11 +20,9 @@ public class Constants {
 	public static final String TEXTURES_DIR = "/res/textures/";
 	public static final String FONTS_DIR = "/res/fonts/";
 	public static final String ANIMATIONS_DIR = ANIMATED_MODELS_DIR;
-	public static final String SHADERS_DIR = "/com/alexian123/shader/glsl/";
+	public static final String SHADERS_DIR = "/com/alexian123/shader/";
 	public static final String VERTEX_SHADERS_DIR = SHADERS_DIR + "vertex/";
 	public static final String FRAGMENT_SHADERS_DIR = SHADERS_DIR + "fragment/";
-	
-	public static final String TEXTURE_FILE_TYPE = "PNG";
 	
 	public static final String MODEL_FILE_EXTENSION = ".obj";
 	public static final String ANIMATED_MODEL_FILE_EXTENSION = ".dae";
@@ -58,7 +56,7 @@ public class Constants {
 	public static final float SHADOW_TRANSITION = 10f;
 	public static final float SHADOWBOX_OFFSET = 20f;
 	
-	public static final int BLUR_LEVEL = 5;
+	public static final int BLUR_LEVEL = 3;
 	
 	public static final int NUM_MULTISAMPLES = 4;
 	

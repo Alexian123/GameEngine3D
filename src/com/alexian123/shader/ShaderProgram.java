@@ -1,58 +1,35 @@
 package com.alexian123.shader;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.util.Constants;
-import com.alexian123.util.enums.Attribute;
-import com.alexian123.util.enums.Uniform;
+import com.alexian123.util.enums.AttributeName;
 
-public abstract class ShaderProgram {
-	
-	protected static final int NEW_UNIFORM = -1;
-	
-	private static FloatBuffer matrix4fBuffer = BufferUtils.createFloatBuffer(16);
-	
-	protected final Map<Attribute, Integer> attributes = new HashMap<>();
-	protected final Map<Uniform, Integer> uniforms = new HashMap<>();
-	protected final Map<Uniform, List<Integer>> uniformArrays = new HashMap<>();
+public class ShaderProgram {
 	
 	private final int programID;
 	private final int vertexShaderID;
 	private final int fragmentShaderID;
 	
-	private final int numAttributes;
-	
 	private boolean isRunning = false;
 	
-	protected ShaderProgram(String vertexShader, String fragmentShader) {
+	public ShaderProgram(String vertexShader, String fragmentShader, Map<Integer, AttributeName> attributes) {
 		vertexShaderID = loadShader(Constants.VERTEX_SHADERS_DIR + vertexShader + Constants.VERTEX_SHADER_SUFFIX, GL20.GL_VERTEX_SHADER);
 		fragmentShaderID = loadShader(Constants.FRAGMENT_SHADERS_DIR + fragmentShader + Constants.FRAGMENT_SHADER_SUFFIX, GL20.GL_FRAGMENT_SHADER);
 		programID = GL20.glCreateProgram();
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);
-		numAttributes = setAttributes();
-		bindAttributes();
+		for (int attribute : attributes.keySet()) {
+			GL20.glBindAttribLocation(programID, attribute, attributes.get(attribute).getName());
+		}
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
-		setUniforms();
-		getAllUniformLocations();
 	}
 	
 	public void start() {
@@ -78,77 +55,21 @@ public abstract class ShaderProgram {
 		GL20.glDeleteProgram(programID);
 	}
 	
-	public int getNumAttributes() {
-		return numAttributes;
-	}
-
-	protected abstract int setAttributes();
-	
-	protected abstract void setUniforms();
-	
-	protected void loadFloat(int location, float val) {
-		GL20.glUniform1f(location, val);
+	public int getProgramID() {
+		return programID;
 	}
 	
-	protected void loadInt(int location, int val) {
-		GL20.glUniform1i(location, val);
-	}
-	
-	protected void loadBoolean(int location, boolean val) {
-		GL20.glUniform1f(location, val ? 1.0f : 0.0f);
-	}
-	
-	protected void loadVector(int location, Vector2f vec) {
-		GL20.glUniform2f(location, vec.x, vec.y);
-	}
-	
-	protected void loadVector(int location, Vector3f vec) {
-		GL20.glUniform3f(location, vec.x, vec.y, vec.z);
-	}
-	
-	protected void loadVector(int location, Vector4f vec) {
-		GL20.glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
-	}
-	
-	protected void loadMatrix(int location, Matrix4f mat) {
-		mat.store(matrix4fBuffer);
-		matrix4fBuffer.flip();
-		GL20.glUniformMatrix4(location, false, matrix4fBuffer);
-	}
-	
-	private void bindAttributes() {
-		for (Attribute attrib : attributes.keySet()) {
-			GL20.glBindAttribLocation(programID, attributes.get(attrib), attrib.getName());
-		}
-	}
-	
-	private void getAllUniformLocations() {
-		for (Uniform uniform : uniforms.keySet()) {
-			uniforms.replace(uniform, GL20.glGetUniformLocation(programID, uniform.getName()));
-		}
-		for (Uniform uniform : uniformArrays.keySet()) {
-			List<Integer> uniformArray = uniformArrays.get(uniform);
-			for (int i = 0; i < uniformArray.size(); ++i) {
-				uniformArray.set(i, GL20.glGetUniformLocation(programID, uniform.getName() + "[" + i + "]"));
-			}
-		}
-	}
-	
-	protected static List<Integer> createNewUniformArray(int size) {
-		return new ArrayList<>(Collections.nCopies(size, NEW_UNIFORM));
-	}
-
-	 private static int loadShader(String fileName, int type) {
+	private static int loadShader(String fileName, int type) {
 		final String SHADER_TYPE_NAME = type == GL20.GL_VERTEX_SHADER ? "vertex" : "fragment";
 		StringBuilder shaderCode = new StringBuilder();
 		
 		try (InputStream in = ShaderProgram.class.getResourceAsStream(fileName);
-		     BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+		    BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
 		    String line;
 		    while ((line = reader.readLine()) != null) {
 		        shaderCode.append(line).append(System.lineSeparator());
 		    }
-		} catch (IOException e) {
+		} catch (Exception e) {
 		    System.err.println("Error loading " + SHADER_TYPE_NAME + " shader: " + fileName);
 		    e.printStackTrace();
 		    System.exit(-1);

@@ -1,5 +1,7 @@
 package com.alexian123.font;
 
+import com.alexian123.util.gl.TextureSampler;
+
 /**
  * Represents a font. It holds the font's texture atlas as well as having the
  * ability to create the quad vertices for any text using this font.
@@ -9,7 +11,7 @@ package com.alexian123.font;
  */
 public class FontType {
 
-	private int textureAtlas;
+	private TextureSampler textureAtlas;
 	private TextMeshCreator loader;
 
 	/**
@@ -22,7 +24,7 @@ public class FontType {
 	 *            - the font file containing information about each character in
 	 *            the texture atlas.
 	 */
-	public FontType(int textureAtlas, String fontFile) {
+	public FontType(TextureSampler textureAtlas, String fontFile) {
 		this.textureAtlas = textureAtlas;
 		this.loader = new TextMeshCreator(fontFile);
 	}
@@ -30,7 +32,7 @@ public class FontType {
 	/**
 	 * @return The font texture atlas.
 	 */
-	public int getTextureAtlas() {
+	public TextureSampler getTextureAtlas() {
 		return textureAtlas;
 	}
 

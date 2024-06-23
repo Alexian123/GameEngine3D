@@ -3,17 +3,24 @@ package com.alexian123.entity;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.model.animated.AnimatedModel;
+import com.alexian123.util.enums.EntityType;
 
 public class AnimatedEntity extends Entity {
 	
-	protected AnimatedModel animatedModel;
+	protected final AnimatedModel model;
+	
+	public AnimatedEntity(AnimatedModel model, Vector3f position, Vector3f rotation, float scale) {
+		super(model, position, rotation, scale);
+		this.model = model;
+	}
 
-	public AnimatedEntity(AnimatedModel animatedModel, Vector3f position, Vector3f rotation, float scale) {
-		super(animatedModel, position, rotation, scale);
-		this.animatedModel = animatedModel;
+	@Override
+	public AnimatedModel getModel() {
+		return model;
 	}
 	
-	public AnimatedModel getAnimatedModel() {
-		return animatedModel;
+	@Override
+	public EntityType getType() {
+		return EntityType.ANIMATED;
 	}
 }

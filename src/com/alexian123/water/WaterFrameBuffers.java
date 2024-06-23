@@ -1,7 +1,8 @@
 package com.alexian123.water;
 
-import com.alexian123.util.Fbo;
 import com.alexian123.util.enums.DepthBufferType;
+import com.alexian123.util.gl.Fbo;
+import com.alexian123.util.gl.TextureSampler;
 
 public class WaterFrameBuffers {
 
@@ -20,8 +21,8 @@ public class WaterFrameBuffers {
 	}
 
 	public void cleanup() { // call when closing the game
-		reflection.cleanup();
-		refraction.cleanup();
+		reflection.delete();
+		refraction.delete();
 	}
 
 	public void bindReflectionFrameBuffer() { // call before rendering to this FBO
@@ -37,15 +38,15 @@ public class WaterFrameBuffers {
 		refraction.unbindFrameBuffer();
 	}
 
-	public int getReflectionTexture() { // get the resulting texture
+	public TextureSampler getReflectionTexture() { // get the resulting texture
 		return reflection.getColorTexture();
 	}
 	
-	public int getRefractionTexture() { // get the resulting texture
+	public TextureSampler getRefractionTexture() { // get the resulting texture
 		return refraction.getColorTexture();
 	}
 	
-	public int getRefractionDepthTexture(){ //get the resulting depth texture
+	public TextureSampler getRefractionDepthTexture(){ //get the resulting depth texture
 		return refraction.getDepthTexture();
 	}
 }

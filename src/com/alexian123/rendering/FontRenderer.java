@@ -1,30 +1,51 @@
 package com.alexian123.rendering;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-
 import com.alexian123.font.FontType;
 import com.alexian123.font.GUIText;
-import com.alexian123.shader.FontShader;
+import com.alexian123.shader.ShaderProgram;
+import com.alexian123.util.enums.AttributeName;
+import com.alexian123.util.enums.UniformName;
+import com.alexian123.util.gl.GLControl;
+import com.alexian123.util.gl.Vao;
+import com.alexian123.util.gl.uniforms.UniformFloat;
+import com.alexian123.util.gl.uniforms.UniformVec2;
+import com.alexian123.util.gl.uniforms.UniformVec3;
 
 public class FontRenderer {
+	
+	private static final String VERTEX_SHADER_FILE = "font";
+	private static final String FRAGMENT_SHADER_FILE = "font";
 
-	private final FontShader shader;
+	private final Map<Integer, AttributeName> attributes = new HashMap<>();
+	
+	private final ShaderProgram shader;
+	private final UniformVec2 translation, offset;
+	private final UniformVec3 color, outlineColor;
+	private final UniformFloat charWidth, charEdge, borderWidth, borderEdge;
 
 	public FontRenderer() {
-		shader = new FontShader();
+		attributes.put(0, AttributeName.POSITION);
+		attributes.put(1, AttributeName.TEXTURE_COORD);
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		int id = shader.getProgramID();
+		translation = new UniformVec2(UniformName.TRANSLATION, id);
+		offset = new UniformVec2(UniformName.OFFSET, id);
+		color = new UniformVec3(UniformName.COLOR, id);
+		outlineColor = new UniformVec3(UniformName.OUTLINE_COLOR, id);
+		charWidth = new UniformFloat(UniformName.CHARACTER_WIDTH, id);
+		charEdge = new UniformFloat(UniformName.CHARACTER_EDGE, id);
+		borderWidth = new UniformFloat(UniformName.BORDER_WIDTH, id);
+		borderEdge = new UniformFloat(UniformName.BORDER_EDGE, id);
 	}
 	
 	public void render(Map<FontType, List<GUIText>> texts) {
 		prepare();
 		for (FontType font : texts.keySet()) {
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureAtlas());
+			font.getTextureAtlas().bindToUnit(0);
 			for (GUIText text : texts.get(font)) {
 				renderText(text);
 			}
@@ -37,33 +58,29 @@ public class FontRenderer {
 	}
 	
 	private void prepare() {
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GLControl.enableBlending();
+		GLControl.disableDepthTest();
 		shader.start();
 	}
 	
 	private void renderText(GUIText text) {
-		GL30.glBindVertexArray(text.getMesh());
-		for (int i = 0; i < shader.getNumAttributes(); ++i) {
-			GL20.glEnableVertexAttribArray(i);
-		}
-		shader.loadColor(text.getColor());
-		shader.loadOutlineColor(text.getOutlineColor());
-		shader.loadOffset(text.getOffset());
-		shader.loadTranslation(text.getPosition());
-		shader.loadCharacterDimensions(text.getCharacterWidth(), text.getCharacterEdge());
-		shader.loadBorderDimensions(text.getBorderWidth(), text.getBorderEdge());
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
-		for (int i = 0; i < shader.getNumAttributes(); ++i) {
-			GL20.glDisableVertexAttribArray(i);
-		}
-		GL30.glBindVertexArray(0);
+		Vao vao = text.getMesh();
+		vao.bind(0, 1);
+		color.load(text.getColor());
+		outlineColor.load(text.getOutlineColor());
+		offset.load(text.getOffset());
+		translation.load(text.getPosition());
+		charWidth.load(text.getCharacterWidth());
+		charEdge.load(text.getCharacterEdge());
+		borderWidth.load(text.getBorderWidth());
+		borderEdge.load(text.getBorderEdge());
+		GLControl.drawArraysT(text.getVertexCount());
+		vao.unbind(0, 1);
 	}
 	
 	private void endRendering() {
 		shader.stop();
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GLControl.disableBlending();
+		GLControl.enableDepthTest();
 	}
 }

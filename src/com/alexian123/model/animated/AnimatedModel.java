@@ -4,24 +4,11 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import com.alexian123.animation.Animation;
 import com.alexian123.animation.Animator;
+import com.alexian123.model.ModelMesh;
 import com.alexian123.model.TexturedModel;
+import com.alexian123.texture.ModelTexture;
 
-/**
- * 
- * This class represents an entity in the world that can be animated. It
- * contains the model's VAO which contains the mesh data, the texture, and the
- * root joint of the joint hierarchy, or "skeleton". It also holds an int which
- * represents the number of joints that the model's skeleton contains, and has
- * its own {@link Animator} instance which can be used to apply animations to
- * this entity.
- * 
- * @author Karl
- *
- */
-public class AnimatedModel {
-
-	// skin
-	private final TexturedModel model;
+public class AnimatedModel extends TexturedModel {
 
 	// skeleton
 	private final Joint rootJoint;
@@ -37,10 +24,7 @@ public class AnimatedModel {
 	 * that but inverted.
 	 * 
 	 * @param model
-	 *            - the VAO containing the mesh data for this entity. This
-	 *            includes vertex positions, normals, texture coords, IDs of
-	 *            joints that affect each vertex, and their corresponding
-	 *            weights.
+	 *            - the "skin" of the entity
 	 * @param texture
 	 *            - the diffuse texture for the entity.
 	 * @param rootJoint
@@ -51,19 +35,12 @@ public class AnimatedModel {
 	 *            this entity.
 	 * 
 	 */
-	public AnimatedModel(TexturedModel model, Joint rootJoint, int jointCount) {
-		this.model = model;
+	public AnimatedModel(ModelMesh mesh, ModelTexture texture, Joint rootJoint, int jointCount) {
+		super(mesh, texture);
 		this.rootJoint = rootJoint;
 		this.jointCount = jointCount;
 		this.animator = new Animator(this);
 		rootJoint.calcInverseBindTransform(new Matrix4f());
-	}
-	
-	/**
-	 * @return The TexturedModel for this entity.
-	 */
-	public TexturedModel getTexturedModel() {
-		return model;
 	}
 
 	/**
@@ -91,7 +68,7 @@ public class AnimatedModel {
 	 * Updates the animator for this entity, basically updating the animated
 	 * pose of the entity. Must be called every frame.
 	 */
-	public void update() {
+	public void updateAnimation() {
 		animator.update();
 	}
 

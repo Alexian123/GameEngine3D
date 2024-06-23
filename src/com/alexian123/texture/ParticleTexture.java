@@ -1,28 +1,30 @@
 package com.alexian123.texture;
 
+import com.alexian123.util.gl.TextureSampler;
+
 public class ParticleTexture {
 	
-	private int id;
+	private TextureSampler atlas;
 	private int atlasDimension = 1;
 	private boolean additiveBlending = false;
 	
-	public ParticleTexture(int id) {
-		this.id = id;
+	public ParticleTexture(TextureSampler atlas) {
+		this.atlas = atlas;
 	}
 	
-	public ParticleTexture(int id, int atlasDimension) {
-		this.id = id;
+	public ParticleTexture(TextureSampler atlas, int atlasDimension) {
+		this.atlas = atlas;
 		this.atlasDimension = atlasDimension;
 	}
 	
-	public ParticleTexture(int id, int atlasDimension, boolean additiveBlending) {
-		this.id = id;
+	public ParticleTexture(TextureSampler atlas, int atlasDimension, boolean additiveBlending) {
+		this.atlas = atlas;
 		this.atlasDimension = atlasDimension;
 		this.additiveBlending = additiveBlending;
 	}
 
-	public int getID() {
-		return id;
+	public TextureSampler getAtlas() {
+		return atlas;
 	}
 
 	public int getAtlasDimension() {

@@ -4,10 +4,10 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.alexian123.loader.Loader;
-import com.alexian123.model.RawModel;
+import com.alexian123.model.ModelMesh;
 import com.alexian123.texture.TerrainTexturePack;
+import com.alexian123.util.gl.TextureSampler;
 import com.alexian123.util.mathematics.Maths;
-import com.alexian123.texture.TerrainTexture;
 
 public class Terrain {
 	
@@ -19,13 +19,13 @@ public class Terrain {
 	private final float x;
 	private final float z;
 	private final HeightGenerator generator;
-	private final RawModel model;
+	private final ModelMesh model;
 	private final TerrainTexturePack texturePack;
-	private final TerrainTexture blendMap;
+	private final TextureSampler blendMap;
 	
 	private float heights[][];
 	
-	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap) {
+	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TextureSampler blendMap) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
@@ -34,7 +34,7 @@ public class Terrain {
 		this.model = generateTerrain(loader);
 	}
 	
-	public Terrain(TerrainGrid grid, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap) {
+	public Terrain(TerrainGrid grid, Loader loader, TerrainTexturePack texturePack, TextureSampler blendMap) {
 		int[] gridPos = grid.getNextPosition();
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
@@ -53,7 +53,7 @@ public class Terrain {
 		return z;
 	}
 
-	public RawModel getModel() {
+	public ModelMesh getModel() {
 		return model;
 	}
 
@@ -61,7 +61,7 @@ public class Terrain {
 		return texturePack;
 	}
 	
-	public TerrainTexture getBlendMap() {
+	public TextureSampler getBlendMap() {
 		return blendMap;
 	}
 
@@ -91,7 +91,7 @@ public class Terrain {
 		return height;
 	}
 	
-	private RawModel generateTerrain(Loader loader) {
+	private ModelMesh generateTerrain(Loader loader) {
 		heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];

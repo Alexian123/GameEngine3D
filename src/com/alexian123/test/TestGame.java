@@ -18,6 +18,7 @@ import com.alexian123.font.GUIText;
 import com.alexian123.game.Camera;
 import com.alexian123.game.Clock;
 import com.alexian123.game.Game;
+import com.alexian123.game.MousePicker;
 import com.alexian123.game.Scene;
 import com.alexian123.lighting.Light;
 import com.alexian123.loader.Loader;
@@ -25,7 +26,7 @@ import com.alexian123.loader.collada.AnimatedModelFileLoader;
 import com.alexian123.loader.collada.AnimationFileLoader;
 import com.alexian123.loader.obj.OBJFileLoader;
 import com.alexian123.loader.obj.OBJFileLoaderNM;
-import com.alexian123.model.RawModel;
+import com.alexian123.model.ModelMesh;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.model.animated.AnimatedModel;
 import com.alexian123.particle.ParticleSystem;
@@ -34,9 +35,8 @@ import com.alexian123.terrain.TerrainGrid;
 import com.alexian123.texture.GUITexture;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.texture.ParticleTexture;
-import com.alexian123.texture.TerrainTexture;
 import com.alexian123.texture.TerrainTexturePack;
-import com.alexian123.util.MousePicker;
+import com.alexian123.util.gl.TextureSampler;
 import com.alexian123.water.Water;
 
 public class TestGame extends Game {
@@ -72,7 +72,7 @@ public class TestGame extends Game {
 		initGUI();
 		initText();
 		currentScene = new Scene(entities, terrainGrid.asList(), waters, lights);
-		mousePicker = new MousePicker(camera, terrainGrid);
+		mousePicker = new MousePicker(terrainGrid);
 		clock.setTimeSpeed(1000);
 	}
 	
@@ -83,8 +83,10 @@ public class TestGame extends Game {
 			stop();
 		}
 		
+		camera.update();
 		clock.tick();
-		mousePicker.update();
+		mousePicker.update(camera);
+		
 		Vector3f terrainPoint = mousePicker.getCurrentTerrainPoint();
 		if (terrainPoint != null && Mouse.isButtonDown(0)) {
 			lamps[0].setPosition(terrainPoint);
@@ -127,11 +129,11 @@ public class TestGame extends Game {
 	}
 	
 	private void initTerrain() {
-		TerrainTexture bgTexture = new TerrainTexture(loader.loadTexture("terrain/grass2"));
-		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("terrain/dirt"));
-		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("terrain/flowers"));
-		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("terrain/path"));
-		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("maps/blendMap"));
+		TextureSampler bgTexture = loader.loadTexture("terrain/grass2");
+		TextureSampler rTexture = loader.loadTexture("terrain/dirt");
+		TextureSampler gTexture = loader.loadTexture("terrain/flowers");
+		TextureSampler bTexture = loader.loadTexture("terrain/path");
+		TextureSampler blendMap = loader.loadTexture("maps/blendMap");
 		TerrainTexturePack texturePack = new TerrainTexturePack(bgTexture, rTexture, gTexture, bTexture);
 		terrainGrid = new TerrainGrid(2);
 		new Terrain(terrainGrid, loader, texturePack, blendMap);
@@ -141,7 +143,7 @@ public class TestGame extends Game {
 	}
 	
 	private void initEntities() {
-		RawModel rawModel;
+		ModelMesh rawModel;
 		ModelTexture texture;
 		TexturedModel texturedModel;
 		AnimatedModel animatedModel;
@@ -151,7 +153,7 @@ public class TestGame extends Game {
 		// player
 		animatedModel = AnimatedModelFileLoader.loadEntity(loader, "cowboy", "entities/cowboy");
 		animation = AnimationFileLoader.loadAnimation("cowboy");
-		player = new Player(animatedModel, animation, new Vector3f(376, 0, 423), new Vector3f(0, 0, 0), 0.6f);
+		player = new Player(animatedModel, new Vector3f(376, 0, 423), new Vector3f(0, 0, 0), 0.6f, animation);
 		camera.setPlayer(player);
 		entities.add(player);
 		

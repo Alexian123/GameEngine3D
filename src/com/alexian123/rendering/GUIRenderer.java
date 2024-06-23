@@ -1,51 +1,51 @@
 package com.alexian123.rendering;
 
+import java.util.HashMap;
 import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.vector.Matrix4f;
+import java.util.Map;
 
 import com.alexian123.loader.Loader;
-import com.alexian123.model.RawModel;
-import com.alexian123.shader.GUIShader;
+import com.alexian123.model.ModelMesh;
+import com.alexian123.shader.ShaderProgram;
 import com.alexian123.texture.GUITexture;
+import com.alexian123.util.enums.AttributeName;
+import com.alexian123.util.enums.UniformName;
+import com.alexian123.util.gl.GLControl;
+import com.alexian123.util.gl.uniforms.UniformMat4;
 import com.alexian123.util.mathematics.MatrixCreator;
 
 public class GUIRenderer {
 	
-	private final GUIShader shader = new GUIShader();
+	private static final String VERTEX_SHADER_FILE = "gui";
+	private static final String FRAGMENT_SHADER_FILE = "gui";
 	
-	private RawModel quad = null;
+	private final Map<Integer, AttributeName> attributes = new HashMap<>();
+	
+	private final ModelMesh quad;
+	
+	private final ShaderProgram shader;
+	private final UniformMat4 transformationMatrix;
 	
 	public GUIRenderer(Loader loader) {
+		attributes.put(0, AttributeName.POSITION);
 		quad = loader.loadToVao(new float[] { -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f }, 2);
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		transformationMatrix = new UniformMat4(UniformName.TRANSFORMATION_MATRIX, shader.getProgramID());
 	}
 	
 	public void render(List<GUITexture> guis) {
 		shader.start();
-		GL30.glBindVertexArray(quad.getVaoID());
-		for (int i = 0; i < shader.getNumAttributes(); ++i) {
-			GL20.glEnableVertexAttribArray(i);
-		}
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		quad.getVao().bind(0);
+		GLControl.enableBlending();
+		GLControl.disableDepthTest();
 		for (GUITexture gui : guis) {
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getID());
-			Matrix4f transformationMatrix = MatrixCreator.createTransformationMatrix(gui.getPosition(), gui.getScale());
-			shader.loadTransformationMatrix(transformationMatrix);
-			GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+			gui.getSampler().bindToUnit(0);
+			transformationMatrix.load(MatrixCreator.createTransformationMatrix(gui.getPosition(), gui.getScale()));
+			GLControl.drawArraysTS(quad.getVertexCount());
 		}
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_BLEND);
-		for (int i = 0; i < shader.getNumAttributes(); ++i) {
-			GL20.glDisableVertexAttribArray(i);
-		}
-		GL30.glBindVertexArray(0);
+		GLControl.enableDepthTest();
+		GLControl.disableBlending();
+		quad.getVao().unbind(0);
 		shader.stop();
 	}
 
