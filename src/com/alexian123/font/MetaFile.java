@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.lwjgl.opengl.Display;
 
+import com.alexian123.engine.GameManager;
+
 /**
  * Provides functionality for getting the values from a font file.
  * 
@@ -20,8 +22,6 @@ public class MetaFile {
 	private static final int PAD_LEFT = 1;
 	private static final int PAD_BOTTOM = 2;
 	private static final int PAD_RIGHT = 3;
-
-	private static final int DESIRED_PADDING = 8;
 
 	private static final String SPLITTER = " ";
 	private static final String NUMBER_SEPARATOR = ",";
@@ -163,7 +163,7 @@ public class MetaFile {
 	private void loadLineSizes() {
 		processNextLine();
 		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
-		verticalPerPixelSize = TextMeshCreator.LINE_HEIGHT / (double) lineHeightPixels;
+		verticalPerPixelSize = GameManager.SETTINGS.lineHeight / (double) lineHeightPixels;
 		horizontalPerPixelSize = verticalPerPixelSize / aspectRatio;
 	}
 
@@ -200,16 +200,16 @@ public class MetaFile {
 			this.spaceWidth = (getValueOfVariable("xadvance") - paddingWidth) * horizontalPerPixelSize;
 			return null;
 		}
-		double xTex = ((double) getValueOfVariable("x") + (padding[PAD_LEFT] - DESIRED_PADDING)) / imageSize;
-		double yTex = ((double) getValueOfVariable("y") + (padding[PAD_TOP] - DESIRED_PADDING)) / imageSize;
-		int width = getValueOfVariable("width") - (paddingWidth - (2 * DESIRED_PADDING));
-		int height = getValueOfVariable("height") - ((paddingHeight) - (2 * DESIRED_PADDING));
+		double xTex = ((double) getValueOfVariable("x") + (padding[PAD_LEFT] - GameManager.SETTINGS.desiredPadding)) / imageSize;
+		double yTex = ((double) getValueOfVariable("y") + (padding[PAD_TOP] - GameManager.SETTINGS.desiredPadding)) / imageSize;
+		int width = getValueOfVariable("width") - (paddingWidth - (2 * GameManager.SETTINGS.desiredPadding));
+		int height = getValueOfVariable("height") - ((paddingHeight) - (2 * GameManager.SETTINGS.desiredPadding));
 		double quadWidth = width * horizontalPerPixelSize;
 		double quadHeight = height * verticalPerPixelSize;
 		double xTexSize = (double) width / imageSize;
 		double yTexSize = (double) height / imageSize;
-		double xOff = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - DESIRED_PADDING) * horizontalPerPixelSize;
-		double yOff = (getValueOfVariable("yoffset") + (padding[PAD_TOP] - DESIRED_PADDING)) * verticalPerPixelSize;
+		double xOff = (getValueOfVariable("xoffset") + padding[PAD_LEFT] - GameManager.SETTINGS.desiredPadding) * horizontalPerPixelSize;
+		double yOff = (getValueOfVariable("yoffset") + (padding[PAD_TOP] - GameManager.SETTINGS.desiredPadding)) * verticalPerPixelSize;
 		double xAdvance = (getValueOfVariable("xadvance") - paddingWidth) * horizontalPerPixelSize;
 		return new Character(id, xTex, yTex, xTexSize, yTexSize, xOff, yOff, quadWidth, quadHeight, xAdvance);
 	}

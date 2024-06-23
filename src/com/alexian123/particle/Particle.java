@@ -6,7 +6,6 @@ import org.lwjgl.util.vector.Vector3f;
 import com.alexian123.engine.GameManager;
 import com.alexian123.game.Camera;
 import com.alexian123.texture.ParticleTexture;
-import com.alexian123.util.Constants;
 
 public class Particle {
 	
@@ -79,7 +78,7 @@ public class Particle {
 	}
 
 	public boolean update(Camera camera) {
-		velocity.y += Constants.GRAVITY * gravityComplient * GameManager.getFrameTimeSeconds();
+		velocity.y += GameManager.SETTINGS.gravity * gravityComplient * GameManager.getFrameTimeSeconds();
 		change.set(velocity);
 		change.scale(GameManager.getFrameTimeSeconds());
 		Vector3f.add(change, position, position);

@@ -3,6 +3,7 @@ package com.alexian123.font;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.engine.GameManager;
 import com.alexian123.engine.TextManager;
 import com.alexian123.util.gl.Vao;
 
@@ -14,10 +15,7 @@ import com.alexian123.util.gl.Vao;
  */
 public class GUIText {
 	
-	private static final float DEFAULT_CHARACTER_WIDTH = 0.5f;
-	private static final float DEFAULT_CHARACTER_EDGE = 0.1f;
-	private static final float DEFAULT_BORDER_WIDTH = 0.0f;
-	private static final float DEFAULT_BORDER_EDGE = 0.4f;
+
 
 	private String textString;
 	private float fontSize;
@@ -36,10 +34,10 @@ public class GUIText {
 	private boolean centerText = false;
 	
 	private Vector2f offset = new Vector2f(0f, 0f);
-	private float characterWidth = DEFAULT_CHARACTER_WIDTH;
-	private float characterEdge = DEFAULT_CHARACTER_EDGE;
-	private float borderWidth = DEFAULT_BORDER_WIDTH;
-	private float borderEdge = DEFAULT_BORDER_EDGE;
+	private float characterWidth = GameManager.SETTINGS.defaultCharacterWidth;
+	private float characterEdge = GameManager.SETTINGS.defaultCharacterEdge;
+	private float borderWidth = GameManager.SETTINGS.defaultBorderWidth;
+	private float borderEdge = GameManager.SETTINGS.defaultBorderEdge;
 	
 	private boolean visible = false;
 

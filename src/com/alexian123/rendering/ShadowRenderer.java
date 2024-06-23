@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+import com.alexian123.engine.GameManager;
 import com.alexian123.entity.AnimatedEntity;
 import com.alexian123.entity.Entity;
 import com.alexian123.model.ModelMesh;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.ShaderProgram;
 import com.alexian123.texture.ModelTexture;
-import com.alexian123.util.Constants;
 import com.alexian123.util.enums.EntityType;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
@@ -45,7 +45,7 @@ public class ShadowRenderer {
 		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 		int id = shader.getProgramID();
 		mvpMatrix = new UniformMat4(UniformName.MVP_MATRIX, id);
-		jointTransforms = new UniformArrayMat4(UniformName.JOINT_TRANSFORMS, Constants.MAX_JOINTS, id);
+		jointTransforms = new UniformArrayMat4(UniformName.JOINT_TRANSFORMS, GameManager.SETTINGS.maxJoints, id);
 		isAnimated = new UniformBoolean(UniformName.IS_ANIMATED, id);
 	}
 

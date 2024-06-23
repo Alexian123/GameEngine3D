@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import com.alexian123.engine.GameManager;
 import com.alexian123.entity.AnimatedEntity;
 import com.alexian123.entity.Entity;
 import com.alexian123.game.Camera;
@@ -16,7 +17,6 @@ import com.alexian123.model.ModelMesh;
 import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.ShaderProgram;
 import com.alexian123.texture.ModelTexture;
-import com.alexian123.util.Constants;
 import com.alexian123.util.enums.EntityType;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
@@ -60,13 +60,13 @@ public class EntityRenderer {
 		viewMatrix = new UniformMat4(UniformName.VIEW_MATRIX, id);
 		transformationMatrix = new UniformMat4(UniformName.TRANSFORMATION_MATRIX, id);
 		toShadowMapSpace = new UniformMat4(UniformName.TO_SHADOW_MAP_SPACE, id);
-		jointTransforms = new UniformArrayMat4(UniformName.JOINT_TRANSFORMS, Constants.MAX_JOINTS, id);
+		jointTransforms = new UniformArrayMat4(UniformName.JOINT_TRANSFORMS, GameManager.SETTINGS.maxJoints, id);
 		clipPlane = new UniformVec4(UniformName.CLIP_PLANE, id);
 		fogColor = new UniformVec3(UniformName.FOG_COLOR, id);
 		atlasOffset = new UniformVec2(UniformName.ATLAS_OFFSET, id);
-		lightPosition = new UniformArrayVec3(UniformName.LIGHT_POSITION, Constants.MAX_LIGHTS, id);
-		lightColor = new UniformArrayVec3(UniformName.LIGHT_COLOR, Constants.MAX_LIGHTS, id);
-		attenuation = new UniformArrayVec3(UniformName.ATTENUATION, Constants.MAX_LIGHTS, id);
+		lightPosition = new UniformArrayVec3(UniformName.LIGHT_POSITION, GameManager.SETTINGS.maxLights, id);
+		lightColor = new UniformArrayVec3(UniformName.LIGHT_COLOR, GameManager.SETTINGS.maxLights, id);
+		attenuation = new UniformArrayVec3(UniformName.ATTENUATION, GameManager.SETTINGS.maxLights, id);
 		fogDensity = new UniformFloat(UniformName.FOG_DENSITY, id);
 		fogGradient = new UniformFloat(UniformName.FOG_GRADIENT, id);
 		shineDamper = new UniformFloat(UniformName.SHINE_DAMPER, id);
@@ -87,11 +87,11 @@ public class EntityRenderer {
 		isAnimated = new UniformBoolean(UniformName.IS_ANIMATED, id);
 		
 		shader.start();
-		projectionMatrix.load(Constants.PROJECTION_MATRIX);
-		shadowDistance.load(Constants.SHADOW_DISTANCE);
-		shadowTransition.load(Constants.SHADOW_TRANSITION);
-		shadowMapSize.load(Constants.SHADOW_MAP_SIZE);
-		ambientLight.load(Constants.AMBIENT_LIGHT);
+		projectionMatrix.load(GameManager.SETTINGS.projectionMatrix.getValue());
+		shadowDistance.load(GameManager.SETTINGS.shadowDistance);
+		shadowTransition.load(GameManager.SETTINGS.shadowTransition);
+		shadowMapSize.load(GameManager.SETTINGS.shadowMapSize);
+		ambientLight.load(GameManager.SETTINGS.ambientLight);
 		shadowMap.load(0);
 		colorTexture.load(1);
 		lightingMap.load(2);
@@ -104,9 +104,9 @@ public class EntityRenderer {
 		shader.start();
 		clipPlane.load(clipPlaneVal);
 		toShadowMapSpace.load(toShadowMapSpaceMatrix);
-		fogColor.load(Constants.FOG_COLOR);
-		fogDensity.load(Constants.FOG_DENSITY);
-		fogGradient.load(Constants.FOG_GRADIENT);
+		fogColor.load(GameManager.SETTINGS.fogColor.getValue());
+		fogDensity.load(GameManager.SETTINGS.fogDensity);
+		fogGradient.load(GameManager.SETTINGS.fogGradient);
 		
 		for (TexturedModel model : entities.keySet()) {
 			loadLights(model, lights, camera);
@@ -127,9 +127,9 @@ public class EntityRenderer {
 	}
 	
 	private void loadLights(TexturedModel model, List<Light> lights, Camera camera) {
-		Vector3f[] positions = new Vector3f[Constants.MAX_LIGHTS];
-		Vector3f[] colors = new Vector3f[Constants.MAX_LIGHTS];
-		Vector3f[] attenuations = new Vector3f[Constants.MAX_LIGHTS];
+		Vector3f[] positions = new Vector3f[GameManager.SETTINGS.maxLights];
+		Vector3f[] colors = new Vector3f[GameManager.SETTINGS.maxLights];
+		Vector3f[] attenuations = new Vector3f[GameManager.SETTINGS.maxLights];
 		if (model.getTexture().hasNormalMap()) {
 			useNormalMap.load(true);
 			storeLightsData(positions, colors, attenuations, lights, camera.getViewMatrix());
@@ -143,7 +143,7 @@ public class EntityRenderer {
 	}
 	
 	private void storeLightsData(Vector3f[] positions, Vector3f[] colors, Vector3f[] attenuations, List<Light> lights) {
-		for (int i = 0; i < Constants.MAX_LIGHTS; ++i) {
+		for (int i = 0; i < GameManager.SETTINGS.maxLights; ++i) {
 			Light light = (i < lights.size()) ? lights.get(i) : Light.NO_LIGHT;
 			positions[i] = light.getPosition();
 			colors[i] = light.getColor();
@@ -152,7 +152,7 @@ public class EntityRenderer {
 	}
 	
 	private void storeLightsData(Vector3f[] positions, Vector3f[] colors, Vector3f[] attenuations, List<Light> lights, Matrix4f view) {
-		for (int i = 0; i < Constants.MAX_LIGHTS; ++i) {
+		for (int i = 0; i < GameManager.SETTINGS.maxLights; ++i) {
 			Light light = (i < lights.size()) ? lights.get(i) : Light.NO_LIGHT;
 			positions[i] = getEyeSpaceLightPosition(light, view);
 			colors[i] = light.getColor();
@@ -197,7 +197,7 @@ public class EntityRenderer {
 		Matrix4f matrix = MatrixCreator.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 		transformationMatrix.load(matrix);
 		atlasOffset.load(new Vector2f(entity.getTextureXOffset(), entity.getTextureYOffset()));
-		pcfCount.load(entity.isNoShading() ? -1 : Constants.PCF_COUNT);
+		pcfCount.load(entity.isNoShading() ? -1 : GameManager.SETTINGS.pcfCount);
 		if (entity.getType() == EntityType.ANIMATED) {
 			AnimatedEntity animatedEntity = (AnimatedEntity) entity;
 			isAnimated.load(true);

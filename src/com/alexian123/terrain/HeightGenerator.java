@@ -2,12 +2,10 @@ package com.alexian123.terrain;
 
 import java.util.Random;
 
+import com.alexian123.engine.GameManager;
+
 public class HeightGenerator {
-	
-	private static final float AMPLITUDE = 70f;
-	private static final float ROUGHNESS = 0.1f;
-	private static final int OCTAVES = 4;
-	
+		
 	private static final int X_NOISE_COEF = 49632;
 	private static final int Z_NOISE_COEF = 325176;
 	
@@ -31,10 +29,10 @@ public class HeightGenerator {
 	
 	public float generateHeight(int x, int z) {
 		float total = 0;
-		float d = (float) Math.pow(2, OCTAVES - 1);
-		for(int i = 0; i < OCTAVES; ++i){
+		float d = (float) Math.pow(2, GameManager.SETTINGS.terrainOctaves - 1);
+		for(int i = 0; i < GameManager.SETTINGS.terrainOctaves; ++i){
 			float freq = (float) (Math.pow(2, i) / d);
-			float amp = (float) Math.pow(ROUGHNESS, i) * AMPLITUDE;
+			float amp = (float) Math.pow(GameManager.SETTINGS.terrainRoughness, i) * GameManager.SETTINGS.terrainAmplitude;
 			total += getInterpolatedNoise((x + xOffset) * freq, (z + zOffset) * freq) * amp;
 		}
 		return total;

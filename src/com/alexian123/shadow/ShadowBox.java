@@ -5,8 +5,8 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import com.alexian123.engine.GameManager;
 import com.alexian123.game.Camera;
-import com.alexian123.util.Constants;
 
 /**
  * Represents the 3D cuboidal area of the world in which objects will cast
@@ -64,9 +64,9 @@ public class ShadowBox {
 		Vector3f forwardVector = new Vector3f(Matrix4f.transform(rotation, FORWARD, null));
 
 		Vector3f toFar = new Vector3f(forwardVector);
-		toFar.scale(Constants.SHADOW_DISTANCE);
+		toFar.scale(GameManager.SETTINGS.shadowDistance);
 		Vector3f toNear = new Vector3f(forwardVector);
-		toNear.scale(Constants.NEAR_PLANE);
+		toNear.scale(GameManager.SETTINGS.nearPlane);
 		Vector3f centerNear = Vector3f.add(toNear, camera.getPosition(), null);
 		Vector3f centerFar = Vector3f.add(toFar, camera.getPosition(), null);
 
@@ -101,7 +101,7 @@ public class ShadowBox {
 				minZ = point.z;
 			}
 		}
-		maxZ += Constants.SHADOWBOX_OFFSET;
+		maxZ += GameManager.SETTINGS.shadowboxOffset;
 
 	}
 
@@ -223,9 +223,8 @@ public class ShadowBox {
 	 * but means that distant objects wouldn't cast shadows.
 	 */
 	private void calculateWidthsAndHeights() {
-		farWidth = (float) (Constants.SHADOW_DISTANCE * Math.tan(Math.toRadians(Constants.FOV)));
-		nearWidth = (float) (Constants.NEAR_PLANE
-				* Math.tan(Math.toRadians(Constants.FOV)));
+		farWidth = (float) (GameManager.SETTINGS.shadowDistance * Math.tan(Math.toRadians(GameManager.SETTINGS.fov)));
+		nearWidth = (float) (GameManager.SETTINGS.nearPlane * Math.tan(Math.toRadians(GameManager.SETTINGS.fov)));
 		farHeight = farWidth / getAspectRatio();
 		nearHeight = nearWidth / getAspectRatio();
 	}

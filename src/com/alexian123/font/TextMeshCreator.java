@@ -3,9 +3,10 @@ package com.alexian123.font;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alexian123.engine.GameManager;
+
 public class TextMeshCreator {
 
-	protected static final double LINE_HEIGHT = 0.03f;
 	protected static final int SPACE_ASCII = 32;
 
 	private MetaFile metaData;
@@ -74,7 +75,7 @@ public class TextMeshCreator {
 				curserX += metaData.getSpaceWidth() * text.getFontSize();
 			}
 			curserX = 0;
-			curserY += LINE_HEIGHT * text.getFontSize();
+			curserY += GameManager.SETTINGS.lineHeight * text.getFontSize();
 		}		
 		return new TextMeshData(listToArray(vertices), listToArray(textureCoords));
 	}

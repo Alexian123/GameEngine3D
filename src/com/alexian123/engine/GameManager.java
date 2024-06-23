@@ -2,10 +2,12 @@ package com.alexian123.engine;
 
 import org.lwjgl.Sys;
 
+import com.alexian123.game.Settings;
 import com.alexian123.game.Game;
-import com.alexian123.util.Constants;
 
 public class GameManager {
+	
+	public static final Settings SETTINGS = Settings.importFrom("config.ini");
 
 	private static Game game;
 	
@@ -17,13 +19,12 @@ public class GameManager {
 	public static void init(Game game) {
 		if (!isInitialized) {
 			GameManager.game = game;
-			DisplayManager.init(Constants.DEFAULT_WINDOW_TITLE, Constants.DEFAULT_SCREEN_WIDTH, Constants.DEFAULT_SCREEN_HEIGHT);
+			DisplayManager.init(SETTINGS.windowTitle, SETTINGS.screenWidth, SETTINGS.screenHeight);
 			RenderingManager.init(game.getLoader(), game.getClock(), game.getCamera());
 			lastFrameTime = getCurrentTime();
 			isInitialized = false;
 		}
 	}
-
 	
 	public static void run() {	
 		while (!DisplayManager.displayShouldClose() && game.isRunning()) {
@@ -42,12 +43,12 @@ public class GameManager {
 	}
 	
 	private static long getCurrentTime() { // milliseconds
-		return Sys.getTime() * (int) Constants.MILLISECONDS_PER_SECOND / Sys.getTimerResolution();
+		return Sys.getTime() * (int) SETTINGS.millisecondsPerSecond / Sys.getTimerResolution();
 	}
 	
 	private static void updateFrameTime() {
 		long currentFrameTime = getCurrentTime();
-		timeDelta = (currentFrameTime - lastFrameTime) / Constants.MILLISECONDS_PER_SECOND;  // seconds
+		timeDelta = (currentFrameTime - lastFrameTime) / SETTINGS.millisecondsPerSecond;  // seconds
 		lastFrameTime = currentFrameTime;
 	}
 }

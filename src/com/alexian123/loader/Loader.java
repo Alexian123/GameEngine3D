@@ -6,13 +6,13 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alexian123.engine.GameManager;
 import com.alexian123.font.FontType;
 import com.alexian123.loader.data.AnimatedMeshData;
 import com.alexian123.loader.data.ModelData;
 import com.alexian123.loader.data.ModelDataNM;
 import com.alexian123.loader.data.TextureData;
 import com.alexian123.model.ModelMesh;
-import com.alexian123.util.Constants;
 import com.alexian123.util.gl.TextureSampler;
 import com.alexian123.util.gl.Vao;
 
@@ -96,7 +96,7 @@ public class Loader {
 	}
 	
 	public TextureSampler loadTexture(String fileName) {
-		TextureData data = decodeTexture(Constants.TEXTURES_DIR + fileName + Constants.TEXTURE_FILE_EXTENSION);
+		TextureData data = decodeTexture(GameManager.SETTINGS.texturesDir + fileName + GameManager.SETTINGS.textureFileExtension);
 		TextureSampler sampler = new TextureSampler(data.getWidth(), data.getHeight(), data.getBuffer())
 				.withMipmapping(0f)
 				.withAnisotropicFiltering();
@@ -104,10 +104,10 @@ public class Loader {
 	}
 	
 	public FontType loadFont(String fontName) {
-		TextureData data = decodeTexture(Constants.FONTS_DIR + fontName + Constants.TEXTURE_FILE_EXTENSION);
+		TextureData data = decodeTexture(GameManager.SETTINGS.fontsDir + fontName + GameManager.SETTINGS.textureFileExtension);
 		TextureSampler sampler = new TextureSampler(data.getWidth(), data.getHeight(), data.getBuffer())
 				.withMipmapping(0f);
-		return new FontType(sampler, Constants.FONTS_DIR + fontName + Constants.FONT_FILE_EXTENSION);
+		return new FontType(sampler, GameManager.SETTINGS.fontsDir + fontName + GameManager.SETTINGS.fontFileExtension);
 	}
 	
 	/** 
@@ -119,7 +119,7 @@ public class Loader {
 		ByteBuffer[] faces = new ByteBuffer[fileNames.length];
 		int width = 0, height = 0;
 		for (int i = 0; i < fileNames.length; ++i) {
-			TextureData data = decodeTexture(Constants.TEXTURES_DIR + fileNames[i] + Constants.TEXTURE_FILE_EXTENSION);
+			TextureData data = decodeTexture(GameManager.SETTINGS.texturesDir + fileNames[i] + GameManager.SETTINGS.textureFileExtension);
 			width = data.getWidth();
 			height = data.getHeight();
 			faces[i] = data.getBuffer();

@@ -1,9 +1,7 @@
 package com.alexian123.water;
 
 public class Water {
-	
-	public static final float TILE_SIZE = 60.0f;
-	
+
 	private final float height;
 	private final float x;
 	private final float z;

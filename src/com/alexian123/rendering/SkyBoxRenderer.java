@@ -9,7 +9,6 @@ import com.alexian123.game.Clock;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.ModelMesh;
 import com.alexian123.shader.ShaderProgram;
-import com.alexian123.util.Constants;
 import com.alexian123.util.enums.TimeOfDay;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
@@ -130,7 +129,7 @@ public class SkyBoxRenderer {
 		cubeMap1 = new UniformInt(UniformName.CUBE_MAP_1, id);
 		
 		shader.start();
-		projectionMatrix.load(Constants.PROJECTION_MATRIX);
+		projectionMatrix.load(GameManager.SETTINGS.projectionMatrix.getValue());
 		cubeMap0.load(0);
 		cubeMap1.load(1);
 		lowerLimit.load(0.0f);
@@ -141,7 +140,7 @@ public class SkyBoxRenderer {
 	public void render(Camera camera) {
 		shader.start();
 		viewMatrix.load(getModifiedViewMatrix(camera));
-		fogColor.load(Constants.FOG_COLOR);
+		fogColor.load(GameManager.SETTINGS.fogColor.getValue());
 		cube.getVao().bind(0);
 		bindTextures();
 		GLControl.drawArraysT(cube.getVertexCount());

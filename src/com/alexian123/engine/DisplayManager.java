@@ -8,8 +8,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.PixelFormat;
 
-import com.alexian123.util.Constants;
-
 public class DisplayManager {
 	
 	private static boolean isInitialized = false;
@@ -33,7 +31,7 @@ public class DisplayManager {
 	}
 	
 	public static void updateDisplay() {
-		Display.sync(Constants.FPS_CAP);
+		Display.sync(GameManager.SETTINGS.fpsCap);
 		Display.update();
 	}
 	

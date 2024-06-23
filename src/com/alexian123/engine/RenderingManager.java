@@ -3,6 +3,7 @@ package com.alexian123.engine;
 import java.util.List;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.alexian123.game.Camera;
@@ -14,7 +15,6 @@ import com.alexian123.rendering.SkyBoxRenderer;
 import com.alexian123.rendering.TerrainRenderer;
 import com.alexian123.rendering.WaterRenderer;
 import com.alexian123.texture.GUITexture;
-import com.alexian123.util.Constants;
 import com.alexian123.util.enums.DepthBufferType;
 import com.alexian123.util.gl.Fbo;
 import com.alexian123.util.gl.GLControl;
@@ -116,6 +116,7 @@ public class RenderingManager {
 	private static void prepare() {
 		GLControl.enableDepthTest();
 		GLControl.clearColorAndDepthBuffers();
-		GLControl.clearColor(Constants.FOG_COLOR.x, Constants.FOG_COLOR.y, Constants.FOG_COLOR.z);
+		Vector3f fogColor = GameManager.SETTINGS.fogColor.getValue();
+		GLControl.clearColor(fogColor.x, fogColor.y, fogColor.z);
 	}
 }

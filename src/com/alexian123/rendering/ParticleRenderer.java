@@ -6,6 +6,7 @@ import java.util.Map;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.engine.GameManager;
 import com.alexian123.game.Camera;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.ModelMesh;
@@ -13,7 +14,6 @@ import com.alexian123.particle.Particle;
 import com.alexian123.particle.ParticleSystem;
 import com.alexian123.shader.ShaderProgram;
 import com.alexian123.texture.ParticleTexture;
-import com.alexian123.util.Constants;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
 import com.alexian123.util.gl.uniforms.UniformFloat;
@@ -37,7 +37,7 @@ public class ParticleRenderer {
 	
 	public ParticleRenderer(Loader loader) {
 		quad = loader.loadToVao(VERTICES, 2);
-		quad.getVao().createInstancedBuffer(INSTANCE_DATA_LENGTH * Constants.MAX_PARTICLES);
+		quad.getVao().createInstancedBuffer(INSTANCE_DATA_LENGTH * GameManager.SETTINGS.maxParticles);
 		for (int i = 1; i <= 6; ++i) {
 			quad.getVao().addInstancedAttribute(i, i != 6 ? 4 : 1, INSTANCE_DATA_LENGTH, (i - 1) * 4);
 		}
@@ -48,7 +48,7 @@ public class ParticleRenderer {
 		atlasDimension = new UniformFloat(UniformName.ATLAS_DIMENSION, id);
 		
 		shader.start();
-		projectionMatrix.load(Constants.PROJECTION_MATRIX);
+		projectionMatrix.load(GameManager.SETTINGS.projectionMatrix.getValue());
 		shader.stop();
 	}
 	
@@ -59,7 +59,7 @@ public class ParticleRenderer {
 			bindTexture(system.getTexture());
 			List<Particle> particleList = particles.get(system);
 			pointer = 0;
-			int size = Math.min(Constants.MAX_PARTICLES, particleList.size());
+			int size = Math.min(GameManager.SETTINGS.maxParticles, particleList.size());
 			float[] vboData = new float[size * INSTANCE_DATA_LENGTH];
 			for (int i = 0; i < size; ++i) {
 				Particle particle = particleList.get(i);

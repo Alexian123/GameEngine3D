@@ -6,13 +6,13 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import com.alexian123.engine.GameManager;
 import com.alexian123.game.Camera;
 import com.alexian123.lighting.Light;
 import com.alexian123.model.ModelMesh;
 import com.alexian123.shader.ShaderProgram;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.TerrainTexturePack;
-import com.alexian123.util.Constants;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
 import com.alexian123.util.gl.TextureSampler;
@@ -51,9 +51,9 @@ public class TerrainRenderer {
 		toShadowMapSpace = new UniformMat4(UniformName.TO_SHADOW_MAP_SPACE, id);
 		clipPlane = new UniformVec4(UniformName.CLIP_PLANE, id);
 		fogColor = new UniformVec3(UniformName.FOG_COLOR, id);
-		lightPosition = new UniformArrayVec3(UniformName.LIGHT_POSITION, Constants.MAX_LIGHTS, id);
-		lightColor = new UniformArrayVec3(UniformName.LIGHT_COLOR, Constants.MAX_LIGHTS, id);
-		attenuation = new UniformArrayVec3(UniformName.ATTENUATION, Constants.MAX_LIGHTS, id);
+		lightPosition = new UniformArrayVec3(UniformName.LIGHT_POSITION, GameManager.SETTINGS.maxLights, id);
+		lightColor = new UniformArrayVec3(UniformName.LIGHT_COLOR, GameManager.SETTINGS.maxLights, id);
+		attenuation = new UniformArrayVec3(UniformName.ATTENUATION, GameManager.SETTINGS.maxLights, id);
 		fogDensity = new UniformFloat(UniformName.FOG_DENSITY, id);
 		fogGradient = new UniformFloat(UniformName.FOG_GRADIENT, id);
 		shineDamper = new UniformFloat(UniformName.SHINE_DAMPER, id);
@@ -71,12 +71,12 @@ public class TerrainRenderer {
 		shadowMap = new UniformInt(UniformName.SHADOW_MAP, id);
 		
 		shader.start();
-		projectionMatrix.load(Constants.PROJECTION_MATRIX);
-		shadowDistance.load(Constants.SHADOW_DISTANCE);
-		shadowTransition.load(Constants.SHADOW_TRANSITION);
-		shadowMapSize.load(Constants.SHADOW_MAP_SIZE);
-		pcfCount.load(Constants.PCF_COUNT);
-		ambientLight.load(Constants.AMBIENT_LIGHT);
+		projectionMatrix.load(GameManager.SETTINGS.projectionMatrix.getValue());
+		shadowDistance.load(GameManager.SETTINGS.shadowDistance);
+		shadowTransition.load(GameManager.SETTINGS.shadowTransition);
+		shadowMapSize.load(GameManager.SETTINGS.shadowMapSize);
+		pcfCount.load(GameManager.SETTINGS.pcfCount);
+		ambientLight.load(GameManager.SETTINGS.ambientLight);
 		bgTexture.load(0);
 		rTexture.load(1);
 		gTexture.load(2);
@@ -91,9 +91,9 @@ public class TerrainRenderer {
 		shader.start();
 		clipPlane.load(clipPlaneVal);
 		toShadowMapSpace.load(toShadowMapSpaceMatrix);
-		fogColor.load(Constants.FOG_COLOR);
-		fogDensity.load(Constants.FOG_DENSITY);
-		fogGradient.load(Constants.FOG_GRADIENT);
+		fogColor.load(GameManager.SETTINGS.fogColor.getValue());
+		fogDensity.load(GameManager.SETTINGS.fogDensity);
+		fogGradient.load(GameManager.SETTINGS.fogGradient);
 		loadLights(lights);
 		viewMatrix.load(camera.getViewMatrix());
 		for (Terrain terrain : terrains) {
@@ -110,10 +110,10 @@ public class TerrainRenderer {
 	}
 	
 	private void loadLights(List<Light> lights) {
-		Vector3f[] positions = new Vector3f[Constants.MAX_LIGHTS];
-		Vector3f[] colors = new Vector3f[Constants.MAX_LIGHTS];
-		Vector3f[] attenuations = new Vector3f[Constants.MAX_LIGHTS];
-		for (int i = 0; i < Constants.MAX_LIGHTS; ++i) {
+		Vector3f[] positions = new Vector3f[GameManager.SETTINGS.maxLights];
+		Vector3f[] colors = new Vector3f[GameManager.SETTINGS.maxLights];
+		Vector3f[] attenuations = new Vector3f[GameManager.SETTINGS.maxLights];
+		for (int i = 0; i < GameManager.SETTINGS.maxLights; ++i) {
 			Light light = (i < lights.size()) ? lights.get(i) : Light.NO_LIGHT;
 			positions[i] = light.getPosition();
 			colors[i] = light.getColor();

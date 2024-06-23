@@ -9,15 +9,15 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.alexian123.engine.GameManager;
 import com.alexian123.loader.data.ModelDataNM;
 import com.alexian123.loader.data.VertexT;
-import com.alexian123.util.Constants;
 
 public class OBJFileLoaderNM {
 
 	public static ModelDataNM loadOBJ(String objFileName) {
 		InputStreamReader isr = new InputStreamReader(OBJFileLoader.class.getResourceAsStream(
-				Constants.NM_MODELS_DIR + objFileName + Constants.MODEL_FILE_EXTENSION));
+				GameManager.SETTINGS.nmModelsDir + objFileName + GameManager.SETTINGS.modelFileExtension));
 		BufferedReader reader = new BufferedReader(isr);
 		String line;
 		List<VertexT> vertices = new ArrayList<>();

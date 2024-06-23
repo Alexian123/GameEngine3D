@@ -16,7 +16,6 @@ import com.alexian123.model.TexturedModel;
 import com.alexian123.rendering.ShadowRenderer;
 import com.alexian123.shadow.ShadowBox;
 import com.alexian123.shadow.ShadowFrameBuffer;
-import com.alexian123.util.Constants;
 import com.alexian123.util.gl.GLControl;
 import com.alexian123.util.gl.TextureSampler;
 
@@ -58,7 +57,7 @@ public class ShadowManager {
 	public static void init(Camera camera) {
 		if (!isInitialized) {
 			shadowBox = new ShadowBox(lightViewMatrix, camera);
-			fbo = new ShadowFrameBuffer(Constants.SHADOW_MAP_SIZE, Constants.SHADOW_MAP_SIZE);
+			fbo = new ShadowFrameBuffer(GameManager.SETTINGS.shadowMapSize, GameManager.SETTINGS.shadowMapSize);
 			renderer = new ShadowRenderer(projectionViewMatrix);
 			isInitialized = true;
 		}

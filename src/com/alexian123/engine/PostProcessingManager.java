@@ -10,7 +10,6 @@ import com.alexian123.rendering.postProcessing.HorizontalBlur;
 import com.alexian123.rendering.postProcessing.IDualInputFilter;
 import com.alexian123.rendering.postProcessing.ISingleInputFilter;
 import com.alexian123.rendering.postProcessing.VerticalBlur;
-import com.alexian123.util.Constants;
 import com.alexian123.util.gl.GLControl;
 import com.alexian123.util.gl.TextureSampler;
 
@@ -31,10 +30,10 @@ public class PostProcessingManager {
 			quad = loader.loadToVao(VERTICES, 2);
 			int displayWidth = Display.getWidth();
 			int displayHeight = Display.getHeight();
-			hBlur = new HorizontalBlur(displayWidth / Constants.BLUR_LEVEL, displayHeight / Constants.BLUR_LEVEL);
-			vBlur = new VerticalBlur(displayWidth / Constants.BLUR_LEVEL, displayHeight / Constants.BLUR_LEVEL);
-			combineFilter = new CombineFilter(Constants.BLOOM_FACTOR, displayWidth, displayHeight);
-			contrastChanger = new ContrastChanger(Constants.CONTRAST);
+			hBlur = new HorizontalBlur(displayWidth / GameManager.SETTINGS.blurLevel, displayHeight / GameManager.SETTINGS.blurLevel);
+			vBlur = new VerticalBlur(displayWidth / GameManager.SETTINGS.blurLevel, displayHeight / GameManager.SETTINGS.blurLevel);
+			combineFilter = new CombineFilter(GameManager.SETTINGS.bloomFactor, displayWidth, displayHeight);
+			contrastChanger = new ContrastChanger(GameManager.SETTINGS.contrast);
 			isInitialized = true;
 		}
 	}

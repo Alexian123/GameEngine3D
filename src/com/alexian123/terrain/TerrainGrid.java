@@ -3,6 +3,8 @@ package com.alexian123.terrain;
 import java.util.Arrays;
 import java.util.List;
 
+import com.alexian123.engine.GameManager;
+
 public class TerrainGrid {
 	
 	private final int dimension;
@@ -29,8 +31,8 @@ public class TerrainGrid {
 	}
 	
 	public Terrain getTerrainAt(float worldX, float worldZ) {
-		int gridX = (int) (worldX / Terrain.SIZE);
-		int gridZ = (int) (worldZ / Terrain.SIZE);
+		int gridX = (int) (worldX / GameManager.SETTINGS.terrainTileSize);
+		int gridZ = (int) (worldZ / GameManager.SETTINGS.terrainTileSize);
 		int index = gridX * dimension + gridZ;
 		Terrain t = null;
 		if (index >= 0 && index < dimension * dimension) {

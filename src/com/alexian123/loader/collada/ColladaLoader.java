@@ -2,17 +2,17 @@ package com.alexian123.loader.collada;
 
 import com.alexian123.loader.data.AnimatedModelData;
 import com.alexian123.loader.data.AnimationData;
+import com.alexian123.engine.GameManager;
 import com.alexian123.loader.data.AnimatedMeshData;
 import com.alexian123.loader.data.SkeletonData;
 import com.alexian123.loader.data.SkinningData;
-import com.alexian123.util.Constants;
 import com.alexian123.util.xml.XmlNode;
 import com.alexian123.util.xml.XmlParser;
 
 public class ColladaLoader {
 
 	public static AnimatedModelData loadColladaModel(String fileName, int maxWeights) {
-		XmlNode node = XmlParser.loadXmlFile(Constants.ANIMATED_MODELS_DIR + fileName + Constants.ANIMATED_MODEL_FILE_EXTENSION);
+		XmlNode node = XmlParser.loadXmlFile(GameManager.SETTINGS.animatedModelsDir + fileName + GameManager.SETTINGS.animatedModelFileExtension);
 
 		SkinLoader skinLoader = new SkinLoader(node.getChild("library_controllers"), maxWeights);
 		SkinningData skinningData = skinLoader.extractSkinData();
@@ -27,7 +27,7 @@ public class ColladaLoader {
 	}
 
 	public static AnimationData loadColladaAnimation(String fileName) {
-		XmlNode node = XmlParser.loadXmlFile(Constants.ANIMATIONS_DIR + fileName + Constants.ANIMATION_FILE_EXTENSION);
+		XmlNode node = XmlParser.loadXmlFile(GameManager.SETTINGS.animationsDir + fileName + GameManager.SETTINGS.animationFileExtension);
 		XmlNode animNode = node.getChild("library_animations");
 		XmlNode jointsNode = node.getChild("library_visual_scenes");
 		AnimationLoader loader = new AnimationLoader(animNode, jointsNode);

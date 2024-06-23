@@ -7,13 +7,8 @@ import com.alexian123.animation.Animation;
 import com.alexian123.engine.GameManager;
 import com.alexian123.model.animated.AnimatedModel;
 import com.alexian123.terrain.Terrain;
-import com.alexian123.util.Constants;
 
 public class Player extends AnimatedEntity {
-	
-	private static final float RUN_SPEED = 20.0f;	// units/s
-	private static final float TURN_SPEED = 160.0f;	// degrees/s
-	private static final float JUMP_POWER = 20.0f;
 	
 	private Animation animation;
 	
@@ -36,7 +31,7 @@ public class Player extends AnimatedEntity {
 		float dz = (float) (distance * Math.cos(Math.toRadians(rotation.y)));
 		position.x += dx;
 		position.z += dz;
-		currrentYSpeed += Constants.GRAVITY * GameManager.getFrameTimeSeconds();
+		currrentYSpeed += GameManager.SETTINGS.gravity * GameManager.getFrameTimeSeconds();
 		position.y += currrentYSpeed * GameManager.getFrameTimeSeconds();
 		float terrainHeight = 0.0f;
 		if (terrain != null) {
@@ -61,18 +56,18 @@ public class Player extends AnimatedEntity {
 	private void getKeyboardInput() {
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			model.updateAnimation();
-			currentRunSpeed = RUN_SPEED;
+			currentRunSpeed = GameManager.SETTINGS.playerRunSpeed;
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
 			model.updateAnimation();
-			currentRunSpeed = -RUN_SPEED;
+			currentRunSpeed = -GameManager.SETTINGS.playerRunSpeed;
 		} else {
 			currentRunSpeed = 0;
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			currentTurnSpeed = TURN_SPEED;
+			currentTurnSpeed = GameManager.SETTINGS.playerTurnSpeed;
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			currentTurnSpeed = -TURN_SPEED;
+			currentTurnSpeed = -GameManager.SETTINGS.playerTurnSpeed;
 		} else {
 			currentTurnSpeed = 0;
 		}
@@ -84,7 +79,7 @@ public class Player extends AnimatedEntity {
 	
 	private void jump() {
 		if (!isAirborne) {
-			currrentYSpeed = JUMP_POWER;
+			currrentYSpeed = GameManager.SETTINGS.playerJumpPower;
 			isAirborne = true;
 		}
 	}

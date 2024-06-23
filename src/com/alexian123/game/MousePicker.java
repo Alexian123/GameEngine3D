@@ -7,14 +7,11 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import com.alexian123.engine.GameManager;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.terrain.TerrainGrid;
-import com.alexian123.util.Constants;
 
 public class MousePicker {
-	
-	private static final int RECURSION_COUNT = 200;
-	private static final float RAY_RANGE = 600;
 	
 	private final TerrainGrid terrainGrid;
 	
@@ -41,8 +38,8 @@ public class MousePicker {
 		cameraPosition = camera.getPosition();
 		viewMatrix = camera.getViewMatrix();
 		currentRay = calculateMouseRay();
-		if (intersectionInRange(0, RAY_RANGE, currentRay)) {
-			currentTerrainPoint = binarySearch(0, 0, RAY_RANGE, currentRay);
+		if (intersectionInRange(0, GameManager.SETTINGS.mousePickerRayRange, currentRay)) {
+			currentTerrainPoint = binarySearch(0, 0, GameManager.SETTINGS.mousePickerRayRange, currentRay);
 		} else {
 			currentTerrainPoint = null;
 		}
@@ -68,7 +65,8 @@ public class MousePicker {
 	}
 	
 	private Vector4f clipToEyeSpace(Vector4f clipCoords) {
-		Matrix4f inverseProjectionMatrix = Matrix4f.invert(Constants.PROJECTION_MATRIX, null);
+		Matrix4f projectionMatrix = GameManager.SETTINGS.projectionMatrix.getValue();
+		Matrix4f inverseProjectionMatrix = Matrix4f.invert(projectionMatrix, null);
 		Vector4f eyeCoords = Matrix4f.transform(inverseProjectionMatrix, clipCoords, null);
 		return new Vector4f(eyeCoords.x, eyeCoords.y, -1f, 0f);
 	}
@@ -87,7 +85,7 @@ public class MousePicker {
 	
 	private Vector3f binarySearch(int count, float start, float finish, Vector3f ray) {
 		float half = start + ((finish - start) / 2f);
-		if (count >= RECURSION_COUNT) {
+		if (count >= GameManager.SETTINGS.mousePickerRecursionCount) {
 			Vector3f endPoint = getPointOnRay(ray, half);
 			Terrain terrain = terrainGrid.getTerrainAt(endPoint.getX(), endPoint.getZ());
 			if (terrain != null) {

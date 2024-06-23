@@ -1,14 +1,13 @@
 package com.alexian123.util.mathematics;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class MatrixCreator {
 	
-	public static Matrix4f createProjectionMatrix(float fov, float farPlane, float nearPlane) {
-		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
+	public static Matrix4f createProjectionMatrix(float fov, float farPlane, float nearPlane, float displayWidth, float displayHeight) {
+		float aspectRatio = displayWidth / displayHeight;
 		float xScale = (float) (1.0f / Math.tan(Math.toRadians(fov / 2.0f)));
 		float yScale = xScale * aspectRatio;
 		float frustumLength = farPlane - nearPlane;

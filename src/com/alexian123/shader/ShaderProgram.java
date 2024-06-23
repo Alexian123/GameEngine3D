@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
-import com.alexian123.util.Constants;
+import com.alexian123.engine.GameManager;
 
 public class ShaderProgram {
 	
@@ -18,8 +18,8 @@ public class ShaderProgram {
 	private boolean isRunning = false;
 	
 	public ShaderProgram(String vertexShader, String fragmentShader) {
-		vertexShaderID = loadShader(Constants.VERTEX_SHADERS_DIR + vertexShader + Constants.VERTEX_SHADER_SUFFIX, GL20.GL_VERTEX_SHADER);
-		fragmentShaderID = loadShader(Constants.FRAGMENT_SHADERS_DIR + fragmentShader + Constants.FRAGMENT_SHADER_SUFFIX, GL20.GL_FRAGMENT_SHADER);
+		vertexShaderID = loadShader(GameManager.SETTINGS.vertexShadersDir + vertexShader + GameManager.SETTINGS.vertexShaderSuffix, GL20.GL_VERTEX_SHADER);
+		fragmentShaderID = loadShader(GameManager.SETTINGS.fragmentShadersDir + fragmentShader + GameManager.SETTINGS.fragmentShaderSuffix, GL20.GL_FRAGMENT_SHADER);
 		programID = GL20.glCreateProgram();
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);

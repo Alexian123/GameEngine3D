@@ -1,5 +1,6 @@
 package com.alexian123.loader.collada;
 
+import com.alexian123.engine.GameManager;
 import com.alexian123.loader.Loader;
 import com.alexian123.loader.data.AnimatedModelData;
 import com.alexian123.loader.data.JointData;
@@ -8,12 +9,11 @@ import com.alexian123.model.ModelMesh;
 import com.alexian123.model.animated.AnimatedModel;
 import com.alexian123.model.animated.Joint;
 import com.alexian123.texture.ModelTexture;
-import com.alexian123.util.Constants;
 
 public class AnimatedModelFileLoader {
 
 	public static AnimatedModel loadEntity(Loader loader, String modelFile, String textureFile) {
-		AnimatedModelData entityData = ColladaLoader.loadColladaModel(modelFile, Constants.MAX_WEIGHTS);
+		AnimatedModelData entityData = ColladaLoader.loadColladaModel(modelFile, GameManager.SETTINGS.maxWeights);
 		ModelMesh mesh = loader.loadToVao(entityData.getMeshData());
 		ModelTexture texture = new ModelTexture(loader.loadTexture(textureFile));
 		SkeletonData skeletonData = entityData.getJointsData();

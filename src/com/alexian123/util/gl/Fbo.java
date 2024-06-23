@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import com.alexian123.util.Constants;
+import com.alexian123.engine.GameManager;
 import com.alexian123.util.enums.DepthBufferType;
 
 public class Fbo {
@@ -250,7 +250,7 @@ public class Fbo {
 		depthBuffer = GL30.glGenRenderbuffers();
 		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, depthBuffer);
 		if (multisampled) {
-			GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, Constants.NUM_MULTISAMPLES, GL14.GL_DEPTH_COMPONENT24, width, height);	
+			GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, GameManager.SETTINGS.numMultisamples, GL14.GL_DEPTH_COMPONENT24, width, height);	
 		} else {
 			GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL14.GL_DEPTH_COMPONENT24, width, height);	
 		}
@@ -261,7 +261,7 @@ public class Fbo {
 	private int createMultisampleColorAttachment(int attachment) {
 		int colorBuffer = GL30.glGenRenderbuffers();
 		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, colorBuffer);
-		GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, Constants.NUM_MULTISAMPLES, GL11.GL_RGBA8, width, height);
+		GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, GameManager.SETTINGS.numMultisamples, GL11.GL_RGBA8, width, height);
 		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, attachment, GL30.GL_RENDERBUFFER, colorBuffer);
 		return colorBuffer;
 	}

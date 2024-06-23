@@ -11,7 +11,6 @@ import com.alexian123.lighting.Light;
 import com.alexian123.loader.Loader;
 import com.alexian123.model.ModelMesh;
 import com.alexian123.shader.ShaderProgram;
-import com.alexian123.util.Constants;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
 import com.alexian123.util.gl.TextureSampler;
@@ -33,8 +32,7 @@ public class WaterRenderer {
 	private static final String FRAGMENT_SHADER_FILE = "water";
 	
 	private static final float[] VERTICES = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
-
-	private static final float WAVE_SPEED = 0.03f;
+	
 	private static final int NUM_TEXTURES = 5;
 	
 	private final TextureSampler[] textures = new TextureSampler[NUM_TEXTURES];
@@ -68,9 +66,9 @@ public class WaterRenderer {
 		modelMatrix = new UniformMat4(UniformName.MODEL_MATRIX, id);
 		fogColor = new UniformVec3(UniformName.FOG_COLOR, id);
 		cameraPosition = new UniformVec3(UniformName.CAMERA_POSITION, id);
-		lightPosition = new UniformArrayVec3(UniformName.LIGHT_POSITION, Constants.MAX_LIGHTS, id);
-		lightColor = new UniformArrayVec3(UniformName.LIGHT_COLOR, Constants.MAX_LIGHTS, id);
-		attenuation = new UniformArrayVec3(UniformName.ATTENUATION, Constants.MAX_LIGHTS, id);
+		lightPosition = new UniformArrayVec3(UniformName.LIGHT_POSITION, GameManager.SETTINGS.maxLights, id);
+		lightColor = new UniformArrayVec3(UniformName.LIGHT_COLOR, GameManager.SETTINGS.maxLights, id);
+		attenuation = new UniformArrayVec3(UniformName.ATTENUATION, GameManager.SETTINGS.maxLights, id);
 		nearPlane = new UniformFloat(UniformName.NEAR_PLANE, id);
 		farPlane = new UniformFloat(UniformName.FAR_PLANE, id);
 		moveFactor = new UniformFloat(UniformName.MOVE_FACTOR, id);
@@ -92,13 +90,13 @@ public class WaterRenderer {
 		reflection.load(2);
 		refraction.load(3);
 		depthMap.load(4);
-		projectionMatrix.load(Constants.PROJECTION_MATRIX);
-		shineDamper.load(20f);
-		reflectivity.load(0.5f);
-		nearPlane.load(Constants.NEAR_PLANE);
-		farPlane.load(Constants.FAR_PLANE);
-		tilingFactor.load(4.0f);
-		waveStrength.load(0.04f);
+		projectionMatrix.load(GameManager.SETTINGS.projectionMatrix.getValue());
+		shineDamper.load(GameManager.SETTINGS.waterShineDamper);
+		reflectivity.load(GameManager.SETTINGS.waterReflectivity);
+		nearPlane.load(GameManager.SETTINGS.nearPlane);
+		farPlane.load(GameManager.SETTINGS.farPlane);
+		tilingFactor.load(GameManager.SETTINGS.waterTilingFactor);
+		waveStrength.load(GameManager.SETTINGS.waterWaveStrength);
 		shader.stop();
 		
 		textures[0] = dudvTexture;
@@ -106,13 +104,13 @@ public class WaterRenderer {
 	}
 
 	public void render(List<Water> waters, Camera camera, List<Light> lights) {
-		move += WAVE_SPEED * GameManager.getFrameTimeSeconds();
+		move += GameManager.SETTINGS.waterWaveSpeed * GameManager.getFrameTimeSeconds();
 		move %= 1;
 		for (Water water : waters) {
 			shader.start();
 			prepareRender(camera, water.getFbos(), lights);
 			Matrix4f matrix = MatrixCreator.createTransformationMatrix(
-					new Vector3f(water.getX(), water.getHeight(), water.getZ()), new Vector3f(0, 0, 0), Water.TILE_SIZE);
+					new Vector3f(water.getX(), water.getHeight(), water.getZ()), new Vector3f(0, 0, 0), GameManager.SETTINGS.waterTileSize);
 			modelMatrix.load(matrix);
 			GLControl.drawArraysT(quad.getVertexCount());
 			quad.getVao().unbind(0);
@@ -130,9 +128,9 @@ public class WaterRenderer {
 		cameraPosition.load(camera.getPosition());
 		moveFactor.load(move);
 		loadLights(lights);
-		fogColor.load(Constants.FOG_COLOR);
-		fogDensity.load(Constants.FOG_DENSITY);
-		fogGradient.load(Constants.FOG_GRADIENT);
+		fogColor.load(GameManager.SETTINGS.fogColor.getValue());
+		fogDensity.load(GameManager.SETTINGS.fogDensity);
+		fogGradient.load(GameManager.SETTINGS.fogGradient);
 		quad.getVao().bind(0);
 		textures[2] = fbos.getReflectionTexture();
 		textures[3] = fbos.getRefractionTexture();
@@ -144,10 +142,10 @@ public class WaterRenderer {
 	}
 	
 	private void loadLights(List<Light> lights) {
-		Vector3f[] positions = new Vector3f[Constants.MAX_LIGHTS];
-		Vector3f[] colors = new Vector3f[Constants.MAX_LIGHTS];
-		Vector3f[] attenuations = new Vector3f[Constants.MAX_LIGHTS];
-		for (int i = 0; i < Constants.MAX_LIGHTS; ++i) {
+		Vector3f[] positions = new Vector3f[GameManager.SETTINGS.maxLights];
+		Vector3f[] colors = new Vector3f[GameManager.SETTINGS.maxLights];
+		Vector3f[] attenuations = new Vector3f[GameManager.SETTINGS.maxLights];
+		for (int i = 0; i < GameManager.SETTINGS.maxLights; ++i) {
 			Light light = (i < lights.size()) ? lights.get(i) : Light.NO_LIGHT;
 			positions[i] = light.getPosition();
 			colors[i] = light.getColor();

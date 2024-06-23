@@ -11,7 +11,6 @@ import org.lwjgl.util.vector.Vector4f;
 import com.alexian123.engine.GameManager;
 import com.alexian123.engine.ParticleManager;
 import com.alexian123.texture.ParticleTexture;
-import com.alexian123.util.Constants;
 
 public class ParticleSystem {
 	
@@ -50,7 +49,7 @@ public class ParticleSystem {
 		this.center = center;
 		
 		// create available particles
-		for (int i = 0; i < Constants.MAX_PARTICLES; ++i) {
+		for (int i = 0; i < GameManager.SETTINGS.maxParticles; ++i) {
 			new Particle(this);
 		}
 	}
