@@ -1,6 +1,5 @@
 package com.alexian123.rendering;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +17,6 @@ import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.ShaderProgram;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.util.Constants;
-import com.alexian123.util.enums.AttributeName;
 import com.alexian123.util.enums.EntityType;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
@@ -41,8 +39,6 @@ public class EntityRenderer {
 	
 	private static final int MAX_NUM_TEXTURES = 4;
 	
-	private final Map<Integer, AttributeName> attributes = new HashMap<>();
-	
 	private final TextureSampler[] textures = new TextureSampler[MAX_NUM_TEXTURES];
 	
 	private final ShaderProgram shader;
@@ -58,14 +54,7 @@ public class EntityRenderer {
 	private final UniformBoolean useFakeLighting, useLightingMap, useNormalMap, isAnimated;
 	
 	public EntityRenderer(TextureSampler shadowMapSampler) {
-		attributes.put(0, AttributeName.POSITION);
-		attributes.put(1, AttributeName.TEXTURE_COORD);
-		attributes.put(2, AttributeName.NORMAL);
-		attributes.put(3, AttributeName.TANGENT);
-		attributes.put(4, AttributeName.JOINT_INDICES);
-		attributes.put(5, AttributeName.WEIGHTS);
-		
-		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 		int id = shader.getProgramID();
 		projectionMatrix = new UniformMat4(UniformName.PROJECTION_MATRIX, id);
 		viewMatrix = new UniformMat4(UniformName.VIEW_MATRIX, id);

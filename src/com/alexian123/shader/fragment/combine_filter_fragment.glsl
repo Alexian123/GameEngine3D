@@ -4,14 +4,14 @@ in vec2 textureCoord;
 
 out vec4 outColor;
 
-uniform sampler2D colorTexture;
-uniform sampler2D highlightTexture;
+uniform sampler2D texture1;
+uniform sampler2D texture2;
 
-uniform float bloomFactor;
+uniform float combineFactor;
 
 void main(void) {
 
-	vec4 sceneColor = texture(colorTexture, textureCoord);
-	vec4 highlightColor = texture(highlightTexture, textureCoord);
-	outColor = sceneColor + highlightColor * bloomFactor;
+	vec4 color1 = texture(texture1, textureCoord);
+	vec4 color2 = texture(texture2, textureCoord);
+	outColor = color1 + color2 * combineFactor;
 }

@@ -1,8 +1,8 @@
-#version 400 core
+#version 330
 
 #define MAX_LIGHTS 4
 
-in vec2 position;
+layout (location = 0) in vec2 position;
 
 out vec4 clipSpace;
 out vec2 textureCoord;

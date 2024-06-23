@@ -1,6 +1,5 @@
 package com.alexian123.rendering;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,6 @@ import com.alexian123.particle.ParticleSystem;
 import com.alexian123.shader.ShaderProgram;
 import com.alexian123.texture.ParticleTexture;
 import com.alexian123.util.Constants;
-import com.alexian123.util.enums.AttributeName;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
 import com.alexian123.util.gl.uniforms.UniformFloat;
@@ -29,8 +27,6 @@ public class ParticleRenderer {
 	private static final String VERTEX_SHADER_FILE = "particle";
 	private static final String FRAGMENT_SHADER_FILE = "particle";
 	
-	private final Map<Integer, AttributeName> attributes = new HashMap<>();
-	
 	private final ModelMesh quad;
 	
 	private final ShaderProgram shader;
@@ -40,18 +36,13 @@ public class ParticleRenderer {
 	private int pointer = 0;
 	
 	public ParticleRenderer(Loader loader) {
-		attributes.put(0, AttributeName.POSITION);
-		attributes.put(1, AttributeName.MODEL_VIEW_MATRIX);
-		attributes.put(5, AttributeName.ATLAS_OFFSETS);
-		attributes.put(6, AttributeName.BLEND_FACTOR);
-		
 		quad = loader.loadToVao(VERTICES, 2);
 		quad.getVao().createInstancedBuffer(INSTANCE_DATA_LENGTH * Constants.MAX_PARTICLES);
 		for (int i = 1; i <= 6; ++i) {
 			quad.getVao().addInstancedAttribute(i, i != 6 ? 4 : 1, INSTANCE_DATA_LENGTH, (i - 1) * 4);
 		}
 		
-		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 		int id = shader.getProgramID();
 		projectionMatrix = new UniformMat4(UniformName.PROJECTION_MATRIX, id);
 		atlasDimension = new UniformFloat(UniformName.ATLAS_DIMENSION, id);

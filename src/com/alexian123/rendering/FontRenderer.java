@@ -1,13 +1,11 @@
 package com.alexian123.rendering;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.alexian123.font.FontType;
 import com.alexian123.font.GUIText;
 import com.alexian123.shader.ShaderProgram;
-import com.alexian123.util.enums.AttributeName;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
 import com.alexian123.util.gl.Vao;
@@ -19,8 +17,6 @@ public class FontRenderer {
 	
 	private static final String VERTEX_SHADER_FILE = "font";
 	private static final String FRAGMENT_SHADER_FILE = "font";
-
-	private final Map<Integer, AttributeName> attributes = new HashMap<>();
 	
 	private final ShaderProgram shader;
 	private final UniformVec2 translation, offset;
@@ -28,9 +24,7 @@ public class FontRenderer {
 	private final UniformFloat charWidth, charEdge, borderWidth, borderEdge;
 
 	public FontRenderer() {
-		attributes.put(0, AttributeName.POSITION);
-		attributes.put(1, AttributeName.TEXTURE_COORD);
-		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 		int id = shader.getProgramID();
 		translation = new UniformVec2(UniformName.TRANSLATION, id);
 		offset = new UniformVec2(UniformName.OFFSET, id);

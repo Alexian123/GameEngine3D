@@ -1,8 +1,6 @@
 package com.alexian123.rendering;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -14,7 +12,6 @@ import com.alexian123.loader.Loader;
 import com.alexian123.model.ModelMesh;
 import com.alexian123.shader.ShaderProgram;
 import com.alexian123.util.Constants;
-import com.alexian123.util.enums.AttributeName;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
 import com.alexian123.util.gl.TextureSampler;
@@ -40,8 +37,6 @@ public class WaterRenderer {
 	private static final float WAVE_SPEED = 0.03f;
 	private static final int NUM_TEXTURES = 5;
 	
-	private final Map<Integer, AttributeName> attributes = new HashMap<>();
-	
 	private final TextureSampler[] textures = new TextureSampler[NUM_TEXTURES];
 	
 	private float move = 0;
@@ -61,14 +56,12 @@ public class WaterRenderer {
 	
 	
 	public WaterRenderer(Loader loader) {
-		attributes.put(0, AttributeName.POSITION);
-		
 		quad = loader.loadToVao(VERTICES, 2);
 		
 		dudvTexture = loader.loadTexture(DUDV_MAP_FILE);
 		normalTexture = loader.loadTexture(NORMAL_MAP_FILE);
 		
-		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 		int id = shader.getProgramID();
 		projectionMatrix = new UniformMat4(UniformName.PROJECTION_MATRIX, id);
 		viewMatrix = new UniformMat4(UniformName.VIEW_MATRIX, id);

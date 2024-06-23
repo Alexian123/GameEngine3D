@@ -1,6 +1,5 @@
 package com.alexian123.rendering;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +12,6 @@ import com.alexian123.model.TexturedModel;
 import com.alexian123.shader.ShaderProgram;
 import com.alexian123.texture.ModelTexture;
 import com.alexian123.util.Constants;
-import com.alexian123.util.enums.AttributeName;
 import com.alexian123.util.enums.EntityType;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
@@ -26,8 +24,6 @@ public class ShadowRenderer {
 	
 	private static final String VERTEX_SHADER_FILE = "shadow";
 	private static final String FRAGMENT_SHADER_FILE = "shadow";
-	
-	private final Map<Integer, AttributeName> attributes = new HashMap<>();
 
 	private final Matrix4f projectionViewMatrix;
 	
@@ -46,13 +42,7 @@ public class ShadowRenderer {
 	 */
 	public ShadowRenderer(Matrix4f projectionViewMatrix) {	
 		this.projectionViewMatrix = projectionViewMatrix;
-		
-		attributes.put(0, AttributeName.POSITION);
-		attributes.put(1, AttributeName.TEXTURE_COORD);
-		attributes.put(4, AttributeName.JOINT_INDICES);
-		attributes.put(5, AttributeName.WEIGHTS);
-		
-		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 		int id = shader.getProgramID();
 		mvpMatrix = new UniformMat4(UniformName.MVP_MATRIX, id);
 		jointTransforms = new UniformArrayMat4(UniformName.JOINT_TRANSFORMS, Constants.MAX_JOINTS, id);

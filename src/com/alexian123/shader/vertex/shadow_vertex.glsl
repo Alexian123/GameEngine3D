@@ -1,12 +1,12 @@
-#version 150
+#version 330
 
 #define MAX_JOINTS 50
 #define MAX_WEIGHTS 3
 
-in vec3 position;
-in vec2 textureCoord;
-in ivec3 jointIndices;
-in vec3 weights;
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 textureCoord;
+layout (location = 4) in ivec3 jointIndices;
+layout (location = 5) in vec3 weights;
 
 out vec2 passTextureCoord;
 

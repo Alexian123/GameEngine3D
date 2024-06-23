@@ -1,10 +1,10 @@
-#version 150
+#version 330
 
 #define NUM_PIXELS 11
 #define MIN_OFFSET -5
 #define MAX_OFFSET 5
 
-in vec2 position;
+layout (location = 0) in vec2 position;
 
 out vec2 blurTextureCoords[NUM_PIXELS];
 

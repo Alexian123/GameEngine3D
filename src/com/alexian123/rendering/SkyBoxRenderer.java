@@ -1,8 +1,5 @@
 package com.alexian123.rendering;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -13,7 +10,6 @@ import com.alexian123.loader.Loader;
 import com.alexian123.model.ModelMesh;
 import com.alexian123.shader.ShaderProgram;
 import com.alexian123.util.Constants;
-import com.alexian123.util.enums.AttributeName;
 import com.alexian123.util.enums.TimeOfDay;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
@@ -98,8 +94,6 @@ public class SkyBoxRenderer {
 	
 	private static final int NUM_TEXTURES = 2;
 	
-	private final Map<Integer, AttributeName> attributes = new HashMap<>();
-	
 	private final TextureSampler[] textures = new TextureSampler[NUM_TEXTURES];
 	
 	private float rotation = 0f;
@@ -118,15 +112,13 @@ public class SkyBoxRenderer {
 	
 	
 	public SkyBoxRenderer(Loader loader, Clock clock) {
-		attributes.put(0, AttributeName.POSITION);
-		
 		this.clock = clock;
 		
 		cube = loader.loadToVao(VERTICES, 3);
 		dayTextureID = loader.loadCubeMap(DAY_TEXTURE_FILES);
 		nightTextureID = loader.loadCubeMap(NIGHT_TEXTURE_FILES);
 		
-		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 		int id = shader.getProgramID();
 		projectionMatrix = new UniformMat4(UniformName.PROJECTION_MATRIX, id);
 		viewMatrix = new UniformMat4(UniformName.VIEW_MATRIX, id);

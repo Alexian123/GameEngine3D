@@ -45,6 +45,9 @@ public class Constants {
 	
 	public static final float AMBIENT_LIGHT = 0.4f;
 	public static final float BLOOM_FACTOR = 0.5f;
+	public static final float CONTRAST = 0.3f;
+	
+	public static final int BLUR_LEVEL = 3;
 	
 	public static final Vector3f FOG_COLOR = new Vector3f(0.5444f, 0.62f, 0.69f);
 	public static final float FOG_DENSITY = 0.003f;
@@ -55,8 +58,6 @@ public class Constants {
 	public static final float SHADOW_DISTANCE = 200f;
 	public static final float SHADOW_TRANSITION = 10f;
 	public static final float SHADOWBOX_OFFSET = 20f;
-	
-	public static final int BLUR_LEVEL = 3;
 	
 	public static final int NUM_MULTISAMPLES = 4;
 	

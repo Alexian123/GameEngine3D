@@ -1,9 +1,9 @@
-#version 140
+#version 330
 
-in vec2 position;
-in mat4 modelViewMatrix;
-in vec4 atlasOffsets;
-in float blendFactor;
+layout (location = 0) in vec2 position;
+layout (location = 1) in mat4 modelViewMatrix;
+layout (location = 5) in vec4 atlasOffsets;
+layout (location = 6) in float blendFactor;
 
 out vec2 currentTextureCoord;
 out vec2 nextTextureCoord;

@@ -29,6 +29,9 @@ public class ImageRenderer {
 	}
 
 	public TextureSampler getOutputTexture() {
-		return fbo.getColorTexture();
+		if (fbo != null) {
+			return fbo.getColorTexture();
+		}
+		return null;
 	}
 }

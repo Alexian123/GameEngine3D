@@ -1,15 +1,15 @@
-#version 150 core
+#version 330
 
 #define MAX_JOINTS 50
 #define MAX_WEIGHTS 3
 #define MAX_LIGHTS 4
 
-in vec3 position;
-in vec2 textureCoord;
-in vec3 normal;
-in vec3 tangent;
-in ivec3 jointIndices;
-in vec3 weights;
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 textureCoord;
+layout (location = 2) in vec3 normal;
+layout (location = 3) in vec3 tangent;
+layout (location = 4) in ivec3 jointIndices;
+layout (location = 5) in vec3 weights;
 
 out vec2 passTextureCoord;
 out vec3 surfaceNormal;

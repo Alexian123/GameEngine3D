@@ -1,8 +1,6 @@
 package com.alexian123.rendering;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -15,7 +13,6 @@ import com.alexian123.shader.ShaderProgram;
 import com.alexian123.terrain.Terrain;
 import com.alexian123.texture.TerrainTexturePack;
 import com.alexian123.util.Constants;
-import com.alexian123.util.enums.AttributeName;
 import com.alexian123.util.enums.UniformName;
 import com.alexian123.util.gl.GLControl;
 import com.alexian123.util.gl.TextureSampler;
@@ -34,8 +31,6 @@ public class TerrainRenderer {
 	
 	private static final int NUM_TEXTURES = 6;
 	
-	private final Map<Integer, AttributeName> attributes = new HashMap<>();
-	
 	protected final TextureSampler[] textures = new TextureSampler[NUM_TEXTURES];
 	
 	private final ShaderProgram shader;
@@ -48,11 +43,7 @@ public class TerrainRenderer {
 	private final UniformInt shadowMapSize, pcfCount, bgTexture, rTexture, gTexture, bTexture, blendMap, shadowMap;
 	
 	public TerrainRenderer(TextureSampler shadowMapSampler) {
-		attributes.put(0, AttributeName.POSITION);
-		attributes.put(1, AttributeName.TEXTURE_COORD);
-		attributes.put(2, AttributeName.NORMAL);
-		
-		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE, attributes);
+		shader = new ShaderProgram(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 		int id = shader.getProgramID();
 		projectionMatrix = new UniformMat4(UniformName.PROJECTION_MATRIX, id);
 		viewMatrix = new UniformMat4(UniformName.VIEW_MATRIX, id);

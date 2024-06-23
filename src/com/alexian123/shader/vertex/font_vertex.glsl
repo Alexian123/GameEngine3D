@@ -1,7 +1,7 @@
 #version 330
 
-in vec2 position;
-in vec2 textureCoord;
+layout (location = 0) in vec2 position;
+layout (location = 1) in vec2 textureCoord;
 
 out vec2 passTextureCoord;
 
