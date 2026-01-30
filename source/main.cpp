@@ -4,6 +4,39 @@
 #include <vector>
 #include <string>
 
+struct Vec2
+{
+	float x = 0.0f;
+	float y = 0.0f;
+};
+
+Vec2 offset{};
+
+static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (action == GLFW_PRESS) {
+		switch (key) {
+		case GLFW_KEY_ESCAPE:
+			glfwSetWindowShouldClose(window, GL_TRUE);
+			break;
+		case GLFW_KEY_W:
+			offset.y += 0.1f;
+			break;
+		case GLFW_KEY_A:
+			offset.x -= 0.1f;
+			break;
+		case GLFW_KEY_S:
+			offset.y -= 0.1f;
+			break;
+		case GLFW_KEY_D:
+			offset.x += 0.1f;
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 int main()
 {
 #if defined (__LINUX__)
@@ -26,6 +59,7 @@ int main()
 		return -1;
 	}
 
+	glfwSetKeyCallback(window, keyboard_callback);
 	glfwMakeContextCurrent(window);
 
 	// Initialize GLEW
@@ -41,10 +75,11 @@ int main()
 		layout(location = 0) in vec3 position;
 		layout(location = 1) in vec3 color;
 		out vec3 vColor;
+		uniform vec2 uOffset;
 		void main()
 		{
 			vColor = color;
-			gl_Position = vec4(position, 1.0);
+			gl_Position = vec4(position.xy + uOffset.xy, position.z, 1.0);
 		}
 	)";
 
@@ -138,7 +173,9 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind VBO
 	glBindVertexArray(0); // Unbind VAO
 
+	// Get uniform locations
 	GLint uColorLocation = glGetUniformLocation(shaderProgram, "uColor");
+	GLint uOffsetLocation = glGetUniformLocation(shaderProgram, "uOffset");
 
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
@@ -147,6 +184,7 @@ int main()
 
 		glUseProgram(shaderProgram);
 		glUniform4f(uColorLocation, 0.8f, 0.3f, 0.2f, 1.0f);
+		glUniform2f(uOffsetLocation, offset.x, offset.y);
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
 
