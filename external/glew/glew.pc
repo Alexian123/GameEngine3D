@@ -1,6 +1,6 @@
-prefix=C:/Development/Course/Repo/GD-Engine/out/install/x64-Debug
+prefix=C:/Users/Alexian/source/repos/GameEngine3D/out/install/x64-Debug
 exec_prefix=${prefix}
-libdir=C:/Development/Course/Repo/GD-Engine/out/install/x64-Debug/lib
+libdir=C:/Users/Alexian/source/repos/GameEngine3D/out/install/x64-Debug/lib
 includedir=${prefix}/include
 
 Name: glew
