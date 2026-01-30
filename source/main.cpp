@@ -7,7 +7,7 @@ int main()
 
 	engine.setApplication(game);
 
-	if (engine.init()) {
+	if (engine.init(1280, 720)) {
 		engine.run();
 	}
 

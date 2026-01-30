@@ -1,13 +1,55 @@
 #include "Engine.h"
 #include "Application.h"
 
+#include <iostream>
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 namespace engine
 {
-	bool Engine::init()
+	bool Engine::init(int windowWidth, int windowHeight)
 	{
 		if (!application) {
 			return false;
 		}
+		
+		// Linux platform hint
+#if defined (__LINUX__)
+		glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+#endif
+		// Initialize GLFW
+		if (!glfwInit()) {
+			std::cerr << "Failed to initialize GLFW" << std::endl;
+			return false;
+		}
+
+		// Set OpenGL version 3.3 core
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+		// Create window
+		window = glfwCreateWindow(windowWidth, windowHeight, "GameEngine3D", nullptr, nullptr);
+		if (!window) {
+			std::cerr << "Failed to create GLFW window" << std::endl;
+			glfwTerminate();
+			return false;
+		}
+		this->windowHeight = windowHeight;
+		this->windowWidth = windowWidth;
+
+		//glfwSetKeyCallback(window, keyboard_callback);
+		glfwMakeContextCurrent(window);
+
+		// Initialize GLEW
+		if (glewInit() != GLEW_OK) {
+			std::cerr << "Failed to initialize GLEW" << std::endl;
+			glfwDestroyWindow(window);
+			glfwTerminate();
+			return false;
+		}
+
 		return application->init();
 	}
 
@@ -17,11 +59,18 @@ namespace engine
 			return;
 		}
 		lastTimePoint = std::chrono::high_resolution_clock::now();
-		while (!application->getShouldClose()) {
+		while (!glfwWindowShouldClose(window) && !application->getShouldClose()) {
+			// Proccess events
+			glfwPollEvents();
+
+			// Update application
 			auto currentTimePoint = std::chrono::high_resolution_clock::now();
 			std::chrono::duration<float> deltaTime = currentTimePoint - lastTimePoint;
 			lastTimePoint = currentTimePoint;
 			application->update(deltaTime.count());
+
+			// Render frame
+			glfwSwapBuffers(window);
 		}
 	}
 
@@ -30,6 +79,9 @@ namespace engine
 		if (application) {
 			application->cleanup();
 			application.reset();
+			glfwDestroyWindow(window);
+			glfwTerminate();
+			window = nullptr;
 		}
 	}
 
