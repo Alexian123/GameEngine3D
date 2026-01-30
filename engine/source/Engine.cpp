@@ -8,6 +8,12 @@
 
 namespace engine
 {
+	Engine& Engine::getInstance()
+	{
+		static Engine instance;
+		return instance;
+	}
+
 	bool Engine::init(int windowWidth, int windowHeight)
 	{
 		if (!application) {
@@ -39,7 +45,7 @@ namespace engine
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
 
-		//glfwSetKeyCallback(window, keyboard_callback);
+		glfwSetKeyCallback(window, keyCallback);
 		glfwMakeContextCurrent(window);
 
 		// Initialize GLEW
@@ -93,5 +99,20 @@ namespace engine
 	Application* Engine::getApplication() const
 	{
 		return application.get();
+	}
+
+	InputManager& Engine::getInputManager()
+	{
+		return inputManager;
+	}
+
+	void Engine::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		auto& inputManager = Engine::getInstance().getInputManager();
+		if (action == GLFW_PRESS) {
+			inputManager.setKeyPressState(key, true);
+		} else if (action == GLFW_RELEASE) {
+			inputManager.setKeyPressState(key, false);
+		}
 	}
 }

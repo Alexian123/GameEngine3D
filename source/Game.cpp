@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include <GLFW/glfw3.h>
+
 bool Game::init()
 {
 	return true;
@@ -9,7 +11,10 @@ bool Game::init()
 
 void Game::update(float deltaTime)
 {
-	std::cout << "dt: " << deltaTime << " seconds" << std::endl;
+	auto& inputManager = engine::Engine::getInstance().getInputManager();
+	if (inputManager.getKeyPressState(GLFW_KEY_ESCAPE)) {
+		setShouldClose(true);
+	}
 }
 
 void Game::cleanup()
