@@ -106,6 +106,11 @@ namespace engine
 		return inputManager;
 	}
 
+	GraphicsAPI& Engine::getGraphicsAPI()
+	{
+		return graphicsAPI;
+	}
+
 	void Engine::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		auto& inputManager = Engine::getInstance().getInputManager();

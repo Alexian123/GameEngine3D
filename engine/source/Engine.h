@@ -4,6 +4,7 @@
 #include <chrono>
 
 #include "input/InputManager.h"
+#include "graphics/GraphicsAPI.h"
 
 struct GLFWwindow;
 
@@ -16,10 +17,11 @@ namespace engine
 	private:
 		std::unique_ptr<Application> application;
 		std::chrono::steady_clock::time_point lastTimePoint;
-		int windowWidth;
-		int windowHeight;
+		int windowWidth = 1280;
+		int windowHeight = 720;
 		GLFWwindow* window = nullptr;
 		InputManager inputManager;
+		GraphicsAPI graphicsAPI;
 
 	public:
 		static Engine& getInstance();
@@ -32,6 +34,7 @@ namespace engine
 		Application* getApplication() const;
 
 		InputManager& getInputManager();
+		GraphicsAPI& getGraphicsAPI();
 
 	private:
 		static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
