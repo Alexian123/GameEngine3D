@@ -10,6 +10,7 @@ namespace engine
 {
 	class ShaderProgram;
 	class Material;
+	class Mesh;
 
 	class GraphicsAPI
 	{
@@ -22,8 +23,9 @@ namespace engine
 		GLuint createVertexBuffer(const std::vector<float>& vertices);
 		GLuint createIndexBuffer(const std::vector<uint32_t>& indices);
 
-
 		void bindShaderProgram(ShaderProgram* shaderProgram);
 		void bindMaterial(Material* material);
+		void bindMesh(Mesh* mesh);
+		void drawMesh(Mesh* mesh);
 	};
 }

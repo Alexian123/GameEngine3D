@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include <iostream>
+#include <vector>
 
 #include <GLFW/glfw3.h>
 
@@ -33,6 +34,30 @@ bool Game::init()
 	auto& graphicsAPI = engine::Engine::getInstance().getGraphicsAPI();
 	auto shaderProgram = graphicsAPI.createShaderProgram(vertexShaderSource, fragmentShaderSource);
 	material.setShaderProgram(shaderProgram);
+
+	std::vector<float> vertices = {
+		 0.5f,  0.5f, 0.0f,		1.0f, 0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f,		0.0f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 0.0f,
+	};
+
+	std::vector<unsigned int> indices = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	engine::VertexLayout vertexLayout;
+
+	// Position attribute
+	vertexLayout.elements.push_back({ 0, 3, GL_FLOAT, 0 });
+
+	// Color attribute
+	vertexLayout.elements.push_back({ 1, 3, GL_FLOAT, sizeof(float) * 3 });
+
+	vertexLayout.stride = sizeof(float) * 6; // 3 for position + 3 for color
+
+	mesh = std::make_unique<engine::Mesh>(vertexLayout, vertices, indices);
 
 	return true;
 }

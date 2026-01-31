@@ -1,6 +1,7 @@
 #include "GraphicsAPI.h"
 #include "ShaderProgram.h"
 #include "render/Material.h"
+#include "render/Mesh.h"
 
 #include <iostream>
 
@@ -90,6 +91,20 @@ namespace engine
 	{
 		if (material) {
 			material->bind();
+		}
+	}
+
+	void engine::GraphicsAPI::bindMesh(Mesh* mesh)
+	{
+		if (mesh) {
+			mesh->bind();
+		}
+	}
+
+	void engine::GraphicsAPI::drawMesh(Mesh* mesh)
+	{
+		if (mesh) {
+			mesh->draw();
 		}
 	}
 }
