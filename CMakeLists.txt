@@ -15,6 +15,9 @@ set(PROJECT_SOURCE_FILES
 # Include GLEW library
 include_directories(engine/external/glew/include)
 
+# Include GLM library
+include_directories(engine/external/glm-1.0.1)
+
 # Add the application
 include_directories(source)
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_FILES})

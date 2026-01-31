@@ -42,8 +42,13 @@ include_directories(external/glew/include)
 set_property(TARGET glew_s PROPERTY FOLDER GLEW)
 set_property(TARGET glew PROPERTY FOLDER GLEW)
 
+# Add GLM library
+add_subdirectory(external/glm-1.0.1/glm)
+include_directories(external/glm-1.0.1)
+
 # Link all external libraries
 target_link_libraries(${PROJECT_NAME} 
     glfw 
     glew_s
+	glm
 )
