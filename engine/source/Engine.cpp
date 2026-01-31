@@ -48,7 +48,11 @@ namespace engine
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
 
+		// Set input callbacks
 		glfwSetKeyCallback(window, keyCallback);
+		glfwSetMouseButtonCallback(window, mouseButtonCallback);
+		glfwSetCursorPosCallback(window, cursorPosCallback);
+
 		glfwMakeContextCurrent(window);
 
 		// Initialize GLEW
@@ -99,6 +103,9 @@ namespace engine
 			graphicsAPI.clearBuffer();
 			renderQueue.draw(graphicsAPI, camData);
 			glfwSwapBuffers(window);
+
+			// Update last mouse position
+			inputManager.setLastMousePos(inputManager.getCurrentMousePos());
 		}
 	}
 
@@ -156,5 +163,23 @@ namespace engine
 		} else if (action == GLFW_RELEASE) {
 			inputManager.setKeyPressState(key, false);
 		}
+	}
+
+	void Engine::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+	{
+		auto& inputManager = Engine::getInstance().getInputManager();
+		if (action == GLFW_PRESS) {
+			inputManager.setMouseBtnPressState(button, true);
+		} else if (action == GLFW_RELEASE) {
+			inputManager.setMouseBtnPressState(button, false);
+		}
+	}
+
+	void Engine::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
+	{
+		auto& inputManager = Engine::getInstance().getInputManager();
+		auto lastPos = inputManager.getCurrentMousePos();
+		inputManager.setLastMousePos(lastPos);
+		inputManager.setCurrentMousePos(glm::vec2(static_cast<float>(xpos), static_cast<float>(ypos)));
 	}
 }

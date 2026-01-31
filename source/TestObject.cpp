@@ -69,19 +69,7 @@ void TestObject::update(float deltaTime)
 {
 	engine::GameObject::update(deltaTime);
 
-	auto& inputManager = engine::Engine::getInstance().getInputManager();
-	auto position = getPosition();
-	if (inputManager.getKeyPressState(GLFW_KEY_W)) {
-		position.y += 0.0001f;
-	}
-	else if (inputManager.getKeyPressState(GLFW_KEY_A)) {
-		position.x -= 0.0001f;
-	}
-	else if (inputManager.getKeyPressState(GLFW_KEY_S)) {
-		position.y -= 0.0001f;
-	}
-	else if (inputManager.getKeyPressState(GLFW_KEY_D)) {
-		position.x += 0.0001f;
-	}
-	setPosition(position);
+	//auto& inputManager = engine::Engine::getInstance().getInputManager();
+	//auto position = getPosition();
+	
 }
