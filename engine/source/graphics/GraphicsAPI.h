@@ -8,6 +8,7 @@
 namespace engine
 {
 	class ShaderProgram;
+	class Material;
 
 	class GraphicsAPI
 	{
@@ -18,5 +19,6 @@ namespace engine
 		);
 
 		void bindShaderProgram(ShaderProgram* shaderProgram);
+		void bindMaterial(Material* material);
 	};
 }

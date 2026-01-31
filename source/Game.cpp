@@ -32,6 +32,7 @@ bool Game::init()
 
 	auto& graphicsAPI = engine::Engine::getInstance().getGraphicsAPI();
 	auto shaderProgram = graphicsAPI.createShaderProgram(vertexShaderSource, fragmentShaderSource);
+	material.setShaderProgram(shaderProgram);
 
 	return true;
 }
