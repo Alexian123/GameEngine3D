@@ -8,6 +8,8 @@ set(PROJECT_SOURCE_FILES
   source/main.cpp # entry point
   source/Game.h
   source/Game.cpp
+  source/TestObject.h
+  source/TestObject.cpp
 )
 
 # Include GLEW library
