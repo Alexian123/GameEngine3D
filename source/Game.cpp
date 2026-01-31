@@ -24,10 +24,9 @@ bool Game::init()
 		#version 330 core
 		in vec3 vColor;
 		out vec4 fragColor;
-		uniform vec4 uColor;
 		void main()
 		{
-			fragColor = vec4(vColor, 1.0) * uColor;
+			fragColor = vec4(vColor, 1.0);
 		}
 	)";
 
@@ -68,6 +67,13 @@ void Game::update(float deltaTime)
 	if (inputManager.getKeyPressState(GLFW_KEY_ESCAPE)) {
 		setShouldClose(true);
 	}
+
+	engine::RenderCmd cmd;
+	cmd.material = &material;
+	cmd.mesh = mesh.get();
+
+	auto& renderQueue = engine::Engine::getInstance().getRenderQueue();
+	renderQueue.enqueue(cmd);
 }
 
 void Game::cleanup()

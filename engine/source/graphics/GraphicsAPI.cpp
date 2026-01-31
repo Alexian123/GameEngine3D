@@ -1,5 +1,5 @@
-#include "GraphicsAPI.h"
-#include "ShaderProgram.h"
+#include "graphics/GraphicsAPI.h"
+#include "graphics/ShaderProgram.h"
 #include "render/Material.h"
 #include "render/Mesh.h"
 
@@ -78,6 +78,16 @@ namespace engine
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind EBO
 		return ebo;
+	}
+
+	void GraphicsAPI::setClearColor(float r, float g, float b, float a)
+	{
+		glClearColor(r, g, b, a);
+	}
+
+	void GraphicsAPI::clearBuffer()
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void GraphicsAPI::bindShaderProgram(ShaderProgram* shaderProgram)

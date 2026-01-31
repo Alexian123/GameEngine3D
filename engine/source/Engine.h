@@ -5,6 +5,7 @@
 
 #include "input/InputManager.h"
 #include "graphics/GraphicsAPI.h"
+#include "render/RenderQueue.h"
 
 struct GLFWwindow;
 
@@ -22,6 +23,7 @@ namespace engine
 		GLFWwindow* window = nullptr;
 		InputManager inputManager;
 		GraphicsAPI graphicsAPI;
+		RenderQueue renderQueue;
 
 	public:
 		static Engine& getInstance();
@@ -35,6 +37,7 @@ namespace engine
 
 		InputManager& getInputManager();
 		GraphicsAPI& getGraphicsAPI();
+		RenderQueue& getRenderQueue();
 
 	private:
 		static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

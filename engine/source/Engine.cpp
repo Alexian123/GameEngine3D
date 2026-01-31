@@ -76,6 +76,9 @@ namespace engine
 			application->update(deltaTime.count());
 
 			// Render frame
+			graphicsAPI.setClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+			graphicsAPI.clearBuffer();
+			renderQueue.draw(graphicsAPI);
 			glfwSwapBuffers(window);
 		}
 	}
@@ -109,6 +112,11 @@ namespace engine
 	GraphicsAPI& Engine::getGraphicsAPI()
 	{
 		return graphicsAPI;
+	}
+
+	RenderQueue& Engine::getRenderQueue()
+	{
+		return renderQueue;
 	}
 
 	void Engine::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
