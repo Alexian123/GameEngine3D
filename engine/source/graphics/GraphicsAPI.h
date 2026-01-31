@@ -15,6 +15,8 @@ namespace engine
 	class GraphicsAPI
 	{
 	public:
+		bool init();
+
 		std::shared_ptr<ShaderProgram> createShaderProgram(
 			const std::string& vertexShaderSource, 
 			const std::string& fragmentShaderSource
@@ -24,7 +26,7 @@ namespace engine
 		GLuint createIndexBuffer(const std::vector<uint32_t>& indices);
 
 		void setClearColor(float r, float g, float b, float a);
-		void clearBuffer();
+		void clearBuffers();
 
 		void bindShaderProgram(ShaderProgram* shaderProgram);
 		void bindMaterial(Material* material);

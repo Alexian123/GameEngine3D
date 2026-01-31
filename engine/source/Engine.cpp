@@ -63,6 +63,7 @@ namespace engine
 			return false;
 		}
 
+		graphicsAPI.init();
 		return application->init();
 	}
 
@@ -100,7 +101,7 @@ namespace engine
 
 			// Render frame
 			graphicsAPI.setClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-			graphicsAPI.clearBuffer();
+			graphicsAPI.clearBuffers();
 			renderQueue.draw(graphicsAPI, camData);
 			glfwSwapBuffers(window);
 
