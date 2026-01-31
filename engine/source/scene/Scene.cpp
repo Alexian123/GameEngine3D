@@ -137,4 +137,14 @@ namespace engine
 
 		return result;
 	}
+
+	void Scene::setMainCamera(GameObject* camera)
+	{
+		mainCamera = camera;
+	}
+
+	GameObject* Scene::getMainCamera()
+	{
+		return mainCamera;
+	}
 }

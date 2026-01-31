@@ -6,6 +6,7 @@
 #include "input/InputManager.h"
 #include "graphics/GraphicsAPI.h"
 #include "render/RenderQueue.h"
+#include "scene/Scene.h"
 
 struct GLFWwindow;
 
@@ -24,6 +25,7 @@ namespace engine
 		InputManager inputManager;
 		GraphicsAPI graphicsAPI;
 		RenderQueue renderQueue;
+		std::unique_ptr<Scene> currentScene;
 
 	public:
 		static Engine& getInstance();
@@ -38,6 +40,9 @@ namespace engine
 		InputManager& getInputManager();
 		GraphicsAPI& getGraphicsAPI();
 		RenderQueue& getRenderQueue();
+
+		void setCurrentScene(Scene* scene);
+		Scene* getCurrentScene();
 
 	private:
 		static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

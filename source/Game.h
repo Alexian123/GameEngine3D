@@ -7,7 +7,7 @@
 class Game : public engine::Application
 {
 private:
-	engine::Scene scene;
+	engine::Scene* scene = nullptr;
 
 public:
 	bool init() override;

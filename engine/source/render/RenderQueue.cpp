@@ -11,7 +11,7 @@ namespace engine
 		commands.push_back(cmd);
 	}
 
-	void RenderQueue::draw(GraphicsAPI& graphicsAPI)
+	void RenderQueue::draw(GraphicsAPI& graphicsAPI, const CameraData& cameraData)
 	{
 		for (const auto& cmd : commands) {
 			if (cmd.material && cmd.mesh) {
@@ -19,6 +19,8 @@ namespace engine
 				auto shaderProgram = cmd.material->getShaderProgram();
 				if (shaderProgram) {
 					shaderProgram->setUniform("uModelMatrix", cmd.modelMatrix);
+					shaderProgram->setUniform("uViewMatrix", cameraData.viewMatrix);
+					shaderProgram->setUniform("uProjectionMatrix", cameraData.projectionMatrix);
 				}
 				graphicsAPI.bindMesh(cmd.mesh);
 				graphicsAPI.drawMesh(cmd.mesh);

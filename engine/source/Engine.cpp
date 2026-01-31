@@ -1,5 +1,8 @@
 #include "Engine.h"
 #include "Application.h"
+#include "scene/GameObject.h"
+#include "scene/Component.h"
+#include "scene/components/CameraComponent.h"
 
 #include <iostream>
 
@@ -75,10 +78,26 @@ namespace engine
 			lastTimePoint = currentTimePoint;
 			application->update(deltaTime.count());
 
+			// Update camera data
+			CameraData camData;
+			int width = 0, height = 0;
+			glfwGetWindowSize(window, &width, &height);
+			float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+			if (currentScene) {
+				auto camObj = currentScene->getMainCamera();
+				if (camObj) {
+					auto camComp = camObj->getComponent<CameraComponent>();
+					if (camComp) {
+						camData.viewMatrix = camComp->getViewMatrix();
+						camData.projectionMatrix = camComp->getProjectionMatrix(aspectRatio);
+					}
+				}
+			}
+
 			// Render frame
 			graphicsAPI.setClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 			graphicsAPI.clearBuffer();
-			renderQueue.draw(graphicsAPI);
+			renderQueue.draw(graphicsAPI, camData);
 			glfwSwapBuffers(window);
 		}
 	}
@@ -117,6 +136,16 @@ namespace engine
 	RenderQueue& Engine::getRenderQueue()
 	{
 		return renderQueue;
+	}
+
+	void Engine::setCurrentScene(Scene* scene)
+	{
+		currentScene.reset(scene);
+	}
+
+	Scene* Engine::getCurrentScene()
+	{
+		return currentScene.get();
 	}
 
 	void Engine::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)

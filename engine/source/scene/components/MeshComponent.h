@@ -11,6 +11,7 @@ namespace engine
 
 	class MeshComponent : public Component
 	{
+		COMPONENT_TYPE_ID_IMPL(MeshComponent)
 	private:
 		std::shared_ptr<Material> material;
 		std::shared_ptr<Mesh> mesh;

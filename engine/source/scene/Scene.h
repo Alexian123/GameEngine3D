@@ -12,6 +12,7 @@ namespace engine
 	{
 	private:
 		std::vector<std::unique_ptr<GameObject>> objects;
+		GameObject* mainCamera = nullptr;
 
 	public:
 		void update(float deltaTime);
@@ -29,5 +30,8 @@ namespace engine
 		}
 
 		bool setParent(GameObject* obj, GameObject* parent);
+
+		void setMainCamera(GameObject* camera);
+		GameObject* getMainCamera();
 	};
 }

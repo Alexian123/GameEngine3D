@@ -39,6 +39,18 @@ namespace engine
 
 		void addComponent(Component* component);
 
+		template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<Component, T>>>
+		T* getComponent()
+		{
+			size_t typeId = Component::staticTypeId<T>();
+			for (auto& component : components) {
+				if (component->getTypeId() == typeId) {
+					return static_cast<T*>(component.get());
+				}
+			}
+			return nullptr;
+		}
+
 		const glm::vec3& getPosition() const;
 		void setPosition(const glm::vec3& position);
 

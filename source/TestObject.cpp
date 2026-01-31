@@ -12,10 +12,13 @@ TestObject::TestObject()
 		layout(location = 1) in vec3 color;
 		out vec3 vColor;
 		uniform mat4 uModelMatrix;
+		uniform mat4 uViewMatrix;
+		uniform mat4 uProjectionMatrix;
 		void main()
 		{
 			vColor = color;
-			gl_Position = uModelMatrix * vec4(position, 1.0);
+			mat4 mvpMatrix = uProjectionMatrix * uViewMatrix * uModelMatrix;
+			gl_Position = mvpMatrix * vec4(position, 1.0);
 		}
 	)";
 
