@@ -1,4 +1,4 @@
-#include "ShaderProgram.h"
+#include "graphics/ShaderProgram.h"
 
 namespace engine
 {
@@ -31,6 +31,12 @@ namespace engine
 	{
 		GLint location = getUniformLocation(name);
 		glUniform1f(location, value);
+	}
+
+	void ShaderProgram::setUniform(const std::string& name, float v0, float v1)
+	{
+		GLint location = getUniformLocation(name);
+		glUniform2f(location, v0, v1);
 	}
 
 }

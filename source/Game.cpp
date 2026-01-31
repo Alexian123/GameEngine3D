@@ -64,9 +64,24 @@ bool Game::init()
 void Game::update(float deltaTime)
 {
 	auto& inputManager = engine::Engine::getInstance().getInputManager();
+
 	if (inputManager.getKeyPressState(GLFW_KEY_ESCAPE)) {
 		setShouldClose(true);
 	}
+	else if (inputManager.getKeyPressState(GLFW_KEY_W)) {
+		offsetY += 0.0001f;
+	}
+	else if (inputManager.getKeyPressState(GLFW_KEY_A)) {
+		offsetX -= 0.0001f;
+	}
+	else if (inputManager.getKeyPressState(GLFW_KEY_S)) {
+		offsetY -= 0.0001f;
+	}
+	else if (inputManager.getKeyPressState(GLFW_KEY_D)) {
+		offsetX += 0.0001f;
+	}
+
+	material.setParameter("uOffset", offsetX, offsetY);
 
 	engine::RenderCmd cmd;
 	cmd.material = &material;
