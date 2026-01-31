@@ -2,6 +2,7 @@
 #include "render/Material.h"
 #include "render/Mesh.h"
 #include "graphics/GraphicsAPI.h"
+#include "graphics/ShaderProgram.h"
 
 namespace engine
 {
@@ -15,6 +16,10 @@ namespace engine
 		for (const auto& cmd : commands) {
 			if (cmd.material && cmd.mesh) {
 				graphicsAPI.bindMaterial(cmd.material);
+				auto shaderProgram = cmd.material->getShaderProgram();
+				if (shaderProgram) {
+					shaderProgram->setUniform("uModelMatrix", cmd.modelMatrix);
+				}
 				graphicsAPI.bindMesh(cmd.mesh);
 				graphicsAPI.drawMesh(cmd.mesh);
 			}

@@ -1,5 +1,7 @@
 #include "graphics/ShaderProgram.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace engine
 {
 	ShaderProgram::ShaderProgram(GLuint id) : programID(id)
@@ -39,4 +41,9 @@ namespace engine
 		glUniform2f(location, v0, v1);
 	}
 
+	void ShaderProgram::setUniform(const std::string& name, const glm::mat4& mat)
+	{
+		auto location = getUniformLocation(name);
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+	}
 }

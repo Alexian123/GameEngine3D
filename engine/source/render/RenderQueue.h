@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include <glm/mat4x4.hpp>
+
 namespace engine
 {
 	class Material;
@@ -12,6 +14,7 @@ namespace engine
 	{
 		Material* material = nullptr;
 		Mesh* mesh = nullptr;
+		glm::mat4 modelMatrix = glm::mat4(1.0f);
 	};
 
 	class RenderQueue

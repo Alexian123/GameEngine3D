@@ -16,7 +16,8 @@ namespace engine
 		std::unordered_map<std::string, std::pair<float, float>> vec2Params;
 
 	public:
-		void setShaderProgram(const std::shared_ptr<ShaderProgram>& program); 
+		void setShaderProgram(const std::shared_ptr<ShaderProgram>& program);
+		ShaderProgram* getShaderProgram();
 
 		void setParameter(const std::string& name, float value);
 		void setParameter(const std::string& name, float v0, float v1);

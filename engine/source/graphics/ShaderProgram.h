@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include <GL/glew.h>
+#include <glm/mat4x4.hpp>
 
 namespace engine
 {
@@ -28,5 +29,6 @@ namespace engine
 
 		void setUniform(const std::string& name, float value);
 		void setUniform(const std::string& name, float v0, float v1);
+		void setUniform(const std::string& name, const glm::mat4& mat);
 	};
 }

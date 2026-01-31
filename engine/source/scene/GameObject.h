@@ -4,6 +4,9 @@
 #include <vector>
 #include <memory>
 
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+
 namespace engine
 {
 	class GameObject
@@ -13,6 +16,11 @@ namespace engine
 		GameObject* parent = nullptr;
 		std::vector<std::unique_ptr<GameObject>> children;
 		bool alive = true;
+
+		// Transform components
+		glm::vec3 position = glm::vec3(0.0f);
+		glm::vec3 rotation = glm::vec3(0.0f);
+		glm::vec3 scale = glm::vec3(1.0f);
 
 	public:
 		virtual ~GameObject() = default;
@@ -25,6 +33,18 @@ namespace engine
 		bool isAlive() const;
 
 		void markForCleanup();
+
+		const glm::vec3& getPosition() const;
+		void setPosition(const glm::vec3& position);
+
+		const glm::vec3& getRotation() const;
+		void setRotation(const glm::vec3& rotation);
+
+		const glm::vec3& getScale() const;
+		void setScale(const glm::vec3& scale);
+
+		glm::mat4 getLocalTransformMatrix() const;
+		glm::mat4 getWorldTransformMatrix() const;
 
 	protected:
 		GameObject() = default;

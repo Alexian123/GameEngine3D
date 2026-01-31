@@ -11,11 +11,11 @@ TestObject::TestObject()
 		layout(location = 0) in vec3 position;
 		layout(location = 1) in vec3 color;
 		out vec3 vColor;
-		uniform vec2 uOffset;
+		uniform mat4 uModelMatrix;
 		void main()
 		{
 			vColor = color;
-			gl_Position = vec4(position.xy + uOffset.xy, position.z, 1.0);
+			gl_Position = uModelMatrix * vec4(position, 1.0);
 		}
 	)";
 
@@ -63,25 +63,25 @@ void TestObject::update(float deltaTime)
 	engine::GameObject::update(deltaTime);
 
 	auto& inputManager = engine::Engine::getInstance().getInputManager();
-
+	auto position = getPosition();
 	if (inputManager.getKeyPressState(GLFW_KEY_W)) {
-		offsetY += 0.0001f;
+		position.y += 0.0001f;
 	}
 	else if (inputManager.getKeyPressState(GLFW_KEY_A)) {
-		offsetX -= 0.0001f;
+		position.x -= 0.0001f;
 	}
 	else if (inputManager.getKeyPressState(GLFW_KEY_S)) {
-		offsetY -= 0.0001f;
+		position.y -= 0.0001f;
 	}
 	else if (inputManager.getKeyPressState(GLFW_KEY_D)) {
-		offsetX += 0.0001f;
+		position.x += 0.0001f;
 	}
-
-	material.setParameter("uOffset", offsetX, offsetY);
+	setPosition(position);
 
 	engine::RenderCmd cmd;
 	cmd.material = &material;
 	cmd.mesh = mesh.get();
+	cmd.modelMatrix = getWorldTransformMatrix();
 
 	auto& renderQueue = engine::Engine::getInstance().getRenderQueue();
 	renderQueue.enqueue(cmd);
