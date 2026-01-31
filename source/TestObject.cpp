@@ -31,7 +31,9 @@ TestObject::TestObject()
 
 	auto& graphicsAPI = engine::Engine::getInstance().getGraphicsAPI();
 	auto shaderProgram = graphicsAPI.createShaderProgram(vertexShaderSource, fragmentShaderSource);
-	material.setShaderProgram(shaderProgram);
+
+	auto material = std::make_shared<engine::Material>();
+	material->setShaderProgram(shaderProgram);
 
 	std::vector<float> vertices = {
 		 0.5f,  0.5f, 0.0f,		1.0f, 0.0f, 0.0f,
@@ -55,7 +57,9 @@ TestObject::TestObject()
 
 	vertexLayout.stride = sizeof(float) * 6; // 3 for position + 3 for color
 
-	mesh = std::make_shared<engine::Mesh>(vertexLayout, vertices, indices);
+	auto mesh = std::make_shared<engine::Mesh>(vertexLayout, vertices, indices);
+
+	addComponent(new engine::MeshComponent(material, mesh));
 }
 
 void TestObject::update(float deltaTime)
@@ -77,12 +81,4 @@ void TestObject::update(float deltaTime)
 		position.x += 0.0001f;
 	}
 	setPosition(position);
-
-	engine::RenderCmd cmd;
-	cmd.material = &material;
-	cmd.mesh = mesh.get();
-	cmd.modelMatrix = getWorldTransformMatrix();
-
-	auto& renderQueue = engine::Engine::getInstance().getRenderQueue();
-	renderQueue.enqueue(cmd);
 }

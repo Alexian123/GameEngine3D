@@ -7,6 +7,8 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
+#include "scene/Component.h"
+
 namespace engine
 {
 	class GameObject
@@ -15,6 +17,7 @@ namespace engine
 		std::string name;
 		GameObject* parent = nullptr;
 		std::vector<std::unique_ptr<GameObject>> children;
+		std::vector<std::unique_ptr<Component>> components;
 		bool alive = true;
 
 		// Transform components
@@ -33,6 +36,8 @@ namespace engine
 		bool isAlive() const;
 
 		void markForCleanup();
+
+		void addComponent(Component* component);
 
 		const glm::vec3& getPosition() const;
 		void setPosition(const glm::vec3& position);

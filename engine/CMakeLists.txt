@@ -24,6 +24,10 @@ set(PROJECT_SOURCE_FILES
 	source/scene/GameObject.cpp
 	source/scene/Scene.h
 	source/scene/Scene.cpp
+	source/scene/Component.h
+	source/scene/Component.cpp
+	source/scene/components/MeshComponent.h
+	source/scene/components/MeshComponent.cpp
 )
 
 include_directories(source)
