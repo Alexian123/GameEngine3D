@@ -1,5 +1,5 @@
-#include "Engine.h"
-#include "Application.h"
+#include "core/Engine.h"
+#include "core/Application.h"
 #include "scene/GameObject.h"
 #include "scene/Component.h"
 #include "scene/components/CameraComponent.h"

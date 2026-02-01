@@ -1,5 +1,5 @@
 #include "scene/components/PlayerControllerComponent.h"
-#include "Engine.h"
+#include "core/Engine.h"
 #include "input/InputManager.h"
 
 #include <GLFW/glfw3.h>
@@ -44,14 +44,20 @@ namespace engine
 		if (inputManager.getKeyPressState(GLFW_KEY_W)) {
 			position += forward * movementSpeed * deltaTime;
 		}
-		else if (inputManager.getKeyPressState(GLFW_KEY_A)) {
+		if (inputManager.getKeyPressState(GLFW_KEY_A)) {
 			position -= right * movementSpeed * deltaTime;
 		}
-		else if (inputManager.getKeyPressState(GLFW_KEY_S)) {
+		if (inputManager.getKeyPressState(GLFW_KEY_S)) {
 			position -= forward * movementSpeed * deltaTime;
 		}
-		else if (inputManager.getKeyPressState(GLFW_KEY_D)) {
+		if (inputManager.getKeyPressState(GLFW_KEY_D)) {
 			position += right * movementSpeed * deltaTime;
+		}
+		if (inputManager.getKeyPressState(GLFW_KEY_SPACE)) {
+			position.y += movementSpeed * deltaTime;
+		}
+		if (inputManager.getKeyPressState(GLFW_KEY_LEFT_SHIFT)) {
+			position.y -= movementSpeed * deltaTime;
 		}
 		owner->setPosition(position);
 	}

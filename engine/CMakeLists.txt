@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 3.10)
 project(Engine)
 
 set(PROJECT_SOURCE_FILES
-	source/Engine.h
-	source/Engine.cpp
-	source/Application.h
-	source/Application.cpp
+	source/core/Engine.h
+	source/core/Engine.cpp
+	source/core/Application.h
+	source/core/Application.cpp
 	source/input/InputManager.h
 	source/input/InputManager.cpp
 	source/graphics/ShaderProgram.h
