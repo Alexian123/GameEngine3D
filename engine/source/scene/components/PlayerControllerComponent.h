@@ -9,7 +9,7 @@ namespace engine
 		COMPONENT_TYPE_ID_IMPL(PlayerControllerComponent)
 
 	private:
-		float mouseSensitivity = 0.5f;
+		float mouseSensitivity = 2.5f;
 		float movementSpeed = 1.0f;
 
 	public:

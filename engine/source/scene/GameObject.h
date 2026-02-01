@@ -6,6 +6,7 @@
 
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "scene/Component.h"
 
@@ -22,7 +23,7 @@ namespace engine
 
 		// Transform components
 		glm::vec3 position = glm::vec3(0.0f);
-		glm::vec3 rotation = glm::vec3(0.0f);
+		glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 		glm::vec3 scale = glm::vec3(1.0f);
 
 	public:
@@ -54,8 +55,8 @@ namespace engine
 		const glm::vec3& getPosition() const;
 		void setPosition(const glm::vec3& position);
 
-		const glm::vec3& getRotation() const;
-		void setRotation(const glm::vec3& rotation);
+		const glm::quat& getRotation() const;
+		void setRotation(const glm::quat& rotation);
 
 		const glm::vec3& getScale() const;
 		void setScale(const glm::vec3& scale);

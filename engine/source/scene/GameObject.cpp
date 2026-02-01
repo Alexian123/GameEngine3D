@@ -64,12 +64,12 @@ namespace engine
 		this->position = position;
 	}
 
-	const glm::vec3& GameObject::getRotation() const
+	const glm::quat& GameObject::getRotation() const
 	{
 		return rotation;
 	}
 
-	void GameObject::setRotation(const glm::vec3& rotation)
+	void GameObject::setRotation(const glm::quat& rotation)
 	{
 		this->rotation = rotation;
 	}
@@ -90,10 +90,7 @@ namespace engine
 
 		mat = glm::translate(mat, position); // Translation
 
-		// Rotation (radians)
-		mat = glm::rotate(mat, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f)); // Rotate around X axis
-		mat = glm::rotate(mat, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotate around Y axis
-		mat = glm::rotate(mat, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f)); // Rotate around Z axis
+		mat = mat * glm::mat4_cast(rotation); // Quaternion rotation
 
 		mat = glm::scale(mat, scale); // Scaling
 
