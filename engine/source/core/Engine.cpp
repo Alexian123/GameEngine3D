@@ -24,7 +24,7 @@ namespace engine
 		}
 		
 		// Linux platform hint
-#if defined (__LINUX__)
+#if defined (__linux__)
 		glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
 #endif
 		// Initialize GLFW
@@ -154,6 +154,11 @@ namespace engine
 	Scene* Engine::getCurrentScene()
 	{
 		return currentScene.get();
+	}
+
+	FileSystem& Engine::getFileSystem()
+	{
+		return fileSystem;
 	}
 
 	void Engine::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)

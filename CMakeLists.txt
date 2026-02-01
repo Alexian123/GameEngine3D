@@ -23,8 +23,12 @@ include_directories(source)
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_FILES})
 
 # Add Engine subdirectory
+add_compile_definitions(GLEW_NO_GLU)
 add_subdirectory(engine "${CMAKE_CURRENT_BINARY_DIR}/engine_build")
 include_directories(engine/source)
+
+# Include std_image library
+include_directories(engine/external/stb_image)
 
 # Link Engine lib
 target_link_libraries(${PROJECT_NAME} 

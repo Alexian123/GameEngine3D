@@ -1,8 +1,23 @@
 #include "Game.h"
 #include "TestObject.h"
 
+#include <iostream>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 bool Game::init()
 {
+	auto& fs = engine::Engine::getInstance().getFileSystem();
+	auto path = fs.getAssetsDir() / "brick.png";
+
+	int width, height, channels;
+	unsigned char* data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
+
+	if (data) {
+		std::cout << "Image loaded" << std::endl;
+	}
+
 	scene = new engine::Scene();
 
 	auto camera = scene->createObject("Camera");

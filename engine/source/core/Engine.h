@@ -7,6 +7,7 @@
 #include "graphics/GraphicsAPI.h"
 #include "render/RenderQueue.h"
 #include "scene/Scene.h"
+#include "io/FileSystem.h"
 
 struct GLFWwindow;
 
@@ -26,6 +27,7 @@ namespace engine
 		GraphicsAPI graphicsAPI;
 		RenderQueue renderQueue;
 		std::unique_ptr<Scene> currentScene;
+		FileSystem fileSystem;
 
 	public:
 		static Engine& getInstance();
@@ -43,6 +45,8 @@ namespace engine
 
 		void setCurrentScene(Scene* scene);
 		Scene* getCurrentScene();
+
+		FileSystem& getFileSystem();
 
 	private:
 		static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
